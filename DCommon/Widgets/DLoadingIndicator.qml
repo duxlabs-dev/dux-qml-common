@@ -19,8 +19,8 @@ Item {
     readonly property real dampingRatio: 0.6
     readonly property real stiffness: 200
     readonly property real visibilityThreshold: 0.1
-    // An empty or missing list draws a circle.
-    readonly property var profiles: (shapes?.length > 0 ? shapes : ["circle"]).map(kind => Shapes.polarProfile(kind, samples))
+    // A shape is a catalog name or its own polar radii; other radii, or no shape at all, draw a circle.
+    readonly property var profiles: Shapes.profilesOf(shapes, samples)
     onProfilesChanged: profileTexture.requestPaint()
     readonly property var centers: profiles.map(radii => {
         const bounds = Shapes.polarBounds(radii);
@@ -36,7 +36,9 @@ Item {
     // Indexes into shapes; one out of range draws the nearest shape.
     property int fromShape: step % profiles.length
     property int toShape: (step + 1) % profiles.length
-    readonly property real morph: springAt((elapsed - step * morphInterval) / 1000)
+    // Callers on their own clock (running: false) bind fromShape, toShape, morph and angle (in degrees) instead.
+    property real morph: springAt((elapsed - step * morphInterval) / 1000)
+    property real angle: morph * 90 + (step + 1) * 90 + elapsed % rotationDuration / rotationDuration * 360
 
     implicitWidth: size
     implicitHeight: size
@@ -89,7 +91,7 @@ Item {
         property real fromRow: Math.max(0, Math.min(rows - 1, root.fromShape))
         property real toRow: Math.max(0, Math.min(rows - 1, root.toShape))
         property real progress: Math.max(0, Math.min(1, root.morph))
-        property real angle: (root.morph * 90 + (root.step + 1) * 90 + root.elapsed % root.rotationDuration / root.rotationDuration * 360) * Math.PI / 180
+        property real angle: root.angle * Math.PI / 180
         property real rows: root.profiles.length
         property real samples: root.samples
 

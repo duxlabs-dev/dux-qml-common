@@ -80,6 +80,19 @@ function polarProfile(kind, samples) {
     return radii;
 }
 
+// A shape is a catalog name or its own polar radii: samples values in [0, 1], up to 0.5 for the unit box.
+function profileOf(kind, samples) {
+    if (typeof kind === "string")
+        return polarProfile(kind, samples);
+    const radii = kind?.length === samples && Array.prototype.every.call(kind, radius => radius >= 0 && radius <= 1);
+    return radii ? kind : polarProfile("circle", samples);
+}
+
+// Other radii, or no shape at all, draw a circle.
+function profilesOf(shapes, samples) {
+    return shapes?.length > 0 ? Array.from(shapes, kind => profileOf(kind, samples)) : [profileOf(null, samples)];
+}
+
 function polarPoints(radii, scale) {
     return radii.map((radius, i) => {
         const angle = -Math.PI + 2 * Math.PI * i / radii.length;
