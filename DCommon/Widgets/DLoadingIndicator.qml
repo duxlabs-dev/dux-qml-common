@@ -11,7 +11,7 @@ Item {
     property color color: contained ? Style.onPrimaryContainer : Style.primary
     property bool running: visible
 
-    readonly property var shapes: ["softBurst", "cookie9", "pentagon", "pill", "sunny", "cookie4", "oval"]
+    property var shapes: ["softBurst", "cookie9", "pentagon", "pill", "sunny", "cookie4", "oval"]
     readonly property int samples: 256
     readonly property real activeRatio: 38 / 48
     readonly property int morphInterval: 650
@@ -19,7 +19,9 @@ Item {
     readonly property real dampingRatio: 0.6
     readonly property real stiffness: 200
     readonly property real visibilityThreshold: 0.1
-    readonly property var profiles: shapes.map(kind => Shapes.polarProfile(kind, samples))
+    // An empty or missing list draws a circle.
+    readonly property var profiles: (shapes?.length > 0 ? shapes : ["circle"]).map(kind => Shapes.polarProfile(kind, samples))
+    onProfilesChanged: profileTexture.requestPaint()
     readonly property var centers: profiles.map(radii => {
         const bounds = Shapes.polarBounds(radii);
         return Qt.point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
@@ -31,6 +33,9 @@ Item {
 
     property real elapsed: 0
     readonly property int step: Math.floor(elapsed / morphInterval)
+    // Indexes into shapes; one out of range draws the nearest shape.
+    property int fromShape: step % profiles.length
+    property int toShape: (step + 1) % profiles.length
     readonly property real morph: springAt((elapsed - step * morphInterval) / 1000)
 
     implicitWidth: size
@@ -51,7 +56,7 @@ Item {
         id: profileTexture
 
         width: root.samples
-        height: root.shapes.length
+        height: root.profiles.length
         visible: false
         onPaint: {
             const context = getContext("2d");
@@ -73,21 +78,19 @@ Item {
     }
 
     ShaderEffect {
-        readonly property int fromShape: root.step % root.shapes.length
-        readonly property int toShape: (root.step + 1) % root.shapes.length
-        readonly property point fromCenter: root.centers[fromShape]
-        readonly property point toCenter: root.centers[toShape]
+        readonly property point fromCenter: root.centers[fromRow]
+        readonly property point toCenter: root.centers[toRow]
 
         property var profiles: profileTexture
         property color color: root.color
         property point offset: Qt.point((fromCenter.x + (toCenter.x - fromCenter.x) * progress) * unitPx, (fromCenter.y + (toCenter.y - fromCenter.y) * progress) * unitPx)
         property real sizePx: width
         property real unitPx: width * root.shapeScale
-        property real fromRow: fromShape
-        property real toRow: toShape
+        property real fromRow: Math.max(0, Math.min(rows - 1, root.fromShape))
+        property real toRow: Math.max(0, Math.min(rows - 1, root.toShape))
         property real progress: Math.max(0, Math.min(1, root.morph))
         property real angle: (root.morph * 90 + (root.step + 1) * 90 + root.elapsed % root.rotationDuration / root.rotationDuration * 360) * Math.PI / 180
-        property real rows: root.shapes.length
+        property real rows: root.profiles.length
         property real samples: root.samples
 
         anchors.centerIn: parent
