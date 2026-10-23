@@ -7,7 +7,8 @@ layout(std140, binding = 0) uniform buf {
     mat4 qt_Matrix;
     float qt_Opacity;
     vec4 color;
-    vec2 offset;
+    vec2 fromCenter;
+    vec2 toCenter;
     float sizePx;
     float unitPx;
     float fromRow;
@@ -35,7 +36,8 @@ void main() {
     vec2 p = (qt_TexCoord0 - 0.5) * ubuf.sizePx;
     float c = cos(ubuf.angle);
     float s = sin(ubuf.angle);
-    vec2 v = vec2(p.x * c + p.y * s, p.y * c - p.x * s) + ubuf.offset;
+    // Mixed here, not in QML: a new point every frame of the morph would be garbage for the JS heap.
+    vec2 v = vec2(p.x * c + p.y * s, p.y * c - p.x * s) + mix(ubuf.fromCenter, ubuf.toCenter, ubuf.progress) * ubuf.unitPx;
 
     float rho = length(v);
     float u = (atan(v.y, v.x) / TAU + 0.5) * ubuf.samples;

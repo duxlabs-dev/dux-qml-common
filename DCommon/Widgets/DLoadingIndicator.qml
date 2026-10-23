@@ -85,7 +85,6 @@ Item {
 
         property var profiles: profileTexture
         property color color: root.color
-        property point offset: Qt.point((fromCenter.x + (toCenter.x - fromCenter.x) * progress) * unitPx, (fromCenter.y + (toCenter.y - fromCenter.y) * progress) * unitPx)
         property real sizePx: width
         property real unitPx: width * root.shapeScale
         property real fromRow: Math.max(0, Math.min(rows - 1, root.fromShape))
