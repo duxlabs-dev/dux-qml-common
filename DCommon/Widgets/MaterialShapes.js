@@ -93,28 +93,37 @@ function profilesOf(shapes, samples) {
     return shapes?.length > 0 ? Array.from(shapes, kind => profileOf(kind, samples)) : [profileOf(null, samples)];
 }
 
-function polarPoints(radii, scale) {
-    return radii.map((radius, i) => {
-        const angle = -Math.PI + 2 * Math.PI * i / radii.length;
-        return [Math.cos(angle) * radius * scale, Math.sin(angle) * radius * scale];
-    });
-}
-
+// Sample i lies at angle -pi + 2 pi i / n, as polarProfile takes them. No array is built: it runs on every morph of an animated shape.
 function polarBounds(radii) {
-    const points = polarPoints(radii, 1);
-    const xs = points.map(point => point[0]);
-    const ys = points.map(point => point[1]);
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (let i = 0; i < radii.length; i++) {
+        const angle = -Math.PI + 2 * Math.PI * i / radii.length;
+        const x = Math.cos(angle) * radii[i];
+        const y = Math.sin(angle) * radii[i];
+        minX = Math.min(minX, x);
+        maxX = Math.max(maxX, x);
+        minY = Math.min(minY, y);
+        maxY = Math.max(maxY, y);
+    }
     return {
-        x: Math.min(...xs),
-        y: Math.min(...ys),
-        width: Math.max(...xs) - Math.min(...xs),
-        height: Math.max(...ys) - Math.min(...ys)
+        x: minX,
+        y: minY,
+        width: maxX - minX,
+        height: maxY - minY
     };
 }
 
 // Compose divides by the control-point box, which is the unit square for these normalized shapes.
 function morphScale(profiles) {
-    return Math.min(1, ...profiles.map(radii => 1 / (2 * Math.max(...radii))));
+    let scale = 1;
+    for (let p = 0; p < profiles.length; p++) {
+        const radii = profiles[p];
+        let max = -Infinity;
+        for (let i = 0; i < radii.length; i++)
+            max = Math.max(max, radii[i]);
+        scale = Math.min(scale, 1 / (2 * max));
+    }
+    return scale;
 }
 
 function buildPath(kind, width, height, square) {
