@@ -129,3 +129,6 @@ distro/void/masterdir*/
 
 # Often gets built
 core/dms
+
+# IDE settings
+.idea/

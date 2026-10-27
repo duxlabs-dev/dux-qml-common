@@ -108,7 +108,8 @@ FocusScope {
     }
 
     property int triggerHeight: Style.iconButtonSize
-    property real triggerRadius: Style.cornerRadiusXS
+    // Tracks windowRadius like the menu list does, clamped to a pill so it can't over-round.
+    property real triggerRadius: Math.min(Style.cornerRadiusL, triggerHeight / 2)
     readonly property int menuItemHeight: Style.menuItemHeight
     readonly property int menuPadding: Style.spacingS
     readonly property real menuItemRadius: Math.max(0, Style.windowRadius - menuPadding)
