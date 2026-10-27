@@ -152,7 +152,7 @@ Item {
         }
 
         background: Rectangle {
-            color: Style.inverseSurface
+            color: Style.tooltipSurface
             radius: Style.cornerRadiusXS
         }
 
@@ -163,7 +163,7 @@ Item {
             text: tooltip.text
             font.pixelSize: Style.fontSizeSmall
             font.family: Style.fontFamily
-            color: Style.inverseOnSurface
+            color: Style.tooltipText
             textFormat: root.multiline ? Text.PlainText : Text.AutoText
             wrapMode: root.multiline ? Text.WrapAnywhere : Text.NoWrap
             maximumLineCount: root.multiline ? 2147483647 : 1

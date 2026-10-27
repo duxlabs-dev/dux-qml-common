@@ -124,6 +124,12 @@ var SPEC = {
     popoutElevationEnabled: {
         def: true
     },
+    tooltipSurfaceColor: {
+        def: "default"
+    },
+    tooltipSurfaceCustomColor: {
+        def: "#6750A4"
+    },
     scrollbarsEnabled: {
         def: true
     },
