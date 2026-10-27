@@ -12,6 +12,9 @@ FocusScope {
     property string homePath: FilePaths.home
     property color chipColor: Style.chipSurface
     property bool editing: false
+    property bool editable: true
+    property bool flat: false
+    signal editRequested
     property bool jumpMode: false
     property bool connecting: false
     property var backend: null
@@ -82,6 +85,10 @@ FocusScope {
     }
 
     function startEditing() {
+        if (!editable) {
+            editRequested();
+            return;
+        }
         beginEditing(false, path);
         field.selectAll();
     }
@@ -437,6 +444,7 @@ FocusScope {
                             label: segment.modelData.iconName === "home" ? I18n.tr("Home", "file browser quick access location") : segment.modelData.label
                             iconName: segment.modelData.iconName
                             path: segment.modelData.path
+                            flat: bar.flat
                             chipColor: "transparent"
                             current: segment.index === bar.segments.length - 1
                             dropEnabled: bar.dropEnabled
