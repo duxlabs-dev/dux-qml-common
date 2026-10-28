@@ -159,9 +159,6 @@ Item {
         font.weight: root.digitWeight
         font.italic: root.italic
         font.family: root.fontFamily !== "" ? root.fontFamily : resolvedFontFamily
-        font.features: ({
-                "tnum": 1
-            })
         color: root.accentColor
         horizontalAlignment: Text.AlignHCenter
     }

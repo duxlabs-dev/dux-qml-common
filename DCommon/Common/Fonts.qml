@@ -16,11 +16,44 @@ Singleton {
     readonly property string system: Qt.application.font.family
     readonly property string systemMono: "monospace"
 
+    function widestDigit(font) {
+        metrics.font = font;
+        let widest = "0";
+        let widestAdvance = 0;
+        for (const digit of "0123456789") {
+            const advance = metrics.advanceWidth(digit);
+            if (advance <= widestAdvance)
+                continue;
+            widestAdvance = advance;
+            widest = digit;
+        }
+        return widest;
+    }
+
+    // QTextLayout adds the last glyph's ink overhang past its cached integer advance (qtextlayout.cpp negativeRightBearing)
+    function textWidth(font, text) {
+        if (text === "")
+            return 0;
+        metrics.font = font;
+        const last = text.slice(-1);
+        const trailing = /\d/.test(last) ? "0123456789" : last;
+        let overhang = 0;
+        for (const glyph of trailing) {
+            const box = metrics.boundingRect(glyph);
+            overhang = Math.max(overhang, box.x + box.width - Math.round(metrics.advanceWidth(glyph)));
+        }
+        return metrics.advanceWidth(text) + overhang;
+    }
+
     function selectableFamilies(defaultFamily) {
         const bundled = bundledFamilies.filter(f => f !== defaultFamily);
         const installed = Qt.fontFamilies().filter(f => !f.startsWith(".") && f !== defaultFamily && !bundled.includes(f));
         installed.sort();
         return bundled.concat(installed);
+    }
+
+    FontMetrics {
+        id: metrics
     }
 
     FontLoader {

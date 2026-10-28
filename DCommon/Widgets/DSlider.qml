@@ -605,7 +605,6 @@ Controls.Control {
                 contentItem: NumericText {
                     id: tooltipText
 
-                    isMonospace: false
                     text: slider.formatValue(slider.valueOverride >= 0 ? slider.valueOverride : slider.value)
                     reserveText: {
                         let widest = "";
@@ -622,7 +621,6 @@ Controls.Control {
                     font.pixelSize: Style.fontSizeSmall
                     color: slider.fillTextColor
                     font.weight: Style.fontWeightMedium
-                    horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.hintingPreference: Font.PreferFullHinting
                 }

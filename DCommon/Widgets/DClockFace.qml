@@ -40,11 +40,9 @@ Item {
         "family": digitFamily,
         "pixelSize": referenceSize,
         "weight": variableFont ? Font.Normal : staticWeight,
-        "features": {
-            "tnum": 1
-        },
         "variableAxes": digitAxes
     })
+    readonly property string widestDigit: Fonts.widestDigit(metricsFont)
     readonly property rect digitInk: digitMetrics.tightBoundingRect
     readonly property real inkRatio: Math.max(0.01, digitInk.height / referenceSize)
     readonly property real rowAdvance: Math.max(0.01, rowMetrics.advanceWidth / referenceSize)
@@ -86,13 +84,13 @@ Item {
     TextMetrics {
         id: fullMetrics
         font: root.metricsFont
-        text: root.hours + ":" + root.minutes + ":" + root.seconds
+        text: (root.hours + ":" + root.minutes + ":" + root.seconds).replace(/\d/g, root.widestDigit)
     }
 
     TextMetrics {
         id: rowMetrics
         font: root.metricsFont
-        text: root.vertical ? (root.hours.length > root.minutes.length ? root.hours : root.minutes) : root.timeText
+        text: (root.vertical ? (root.hours.length > root.minutes.length ? root.hours : root.minutes) : root.timeText).replace(/\d/g, root.widestDigit)
     }
 
     Digits {
@@ -141,9 +139,6 @@ Item {
         font.family: root.digitFamily
         // only Normal resolves to the variable face, other weights pick axis-less static instances
         font.weight: root.variableFont ? Font.Normal : root.staticWeight
-        font.features: ({
-                "tnum": 1
-            })
         font.variableAxes: root.digitAxes
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignTop

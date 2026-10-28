@@ -5,22 +5,10 @@ StyledText {
     id: root
 
     property string reserveText: ""
-    readonly property real reservedWidth: reserveText !== "" ? Math.max(implicitWidth, reserveMetrics.width) : implicitWidth
+    readonly property string reserveTemplate: (reserveText || text).replace(/\d/g, Fonts.widestDigit(font))
+    readonly property real reservedWidth: Math.ceil(Math.max(implicitWidth, Fonts.textWidth(font, reserveTemplate)))
 
-    isMonospace: true
+    width: reservedWidth
     wrapMode: Text.NoWrap
-    font.features: {
-        "tnum": 1
-    }
-
-    StyledTextMetrics {
-        id: reserveMetrics
-        isMonospace: root.isMonospace
-        font.pixelSize: root.font.pixelSize
-        font.family: root.font.family
-        font.weight: root.font.weight
-        font.hintingPreference: root.font.hintingPreference
-        font.features: root.font.features
-        text: root.reserveText
-    }
+    horizontalAlignment: Text.AlignHCenter
 }

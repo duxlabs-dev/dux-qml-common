@@ -253,7 +253,6 @@ FocusScope {
                         anchors.centerIn: parent
                         text: root.pad(root.displayHour)
                         reserveText: "00"
-                        isMonospace: false
                         font.pixelSize: Style.fontSizeDisplayLarge
                         font.weight: Style.fontWeightMedium
                         color: root._minuteMode ? Style.surfaceText : Style.onPrimaryContainer
@@ -309,7 +308,6 @@ FocusScope {
                         anchors.centerIn: parent
                         text: root.pad(root._minute)
                         reserveText: "00"
-                        isMonospace: false
                         font.pixelSize: Style.fontSizeDisplayLarge
                         font.weight: Style.fontWeightMedium
                         color: root._minuteMode ? Style.onPrimaryContainer : Style.surfaceText
@@ -514,7 +512,6 @@ FocusScope {
                             anchors.centerIn: parent
                             text: root._minuteMode || parent.innerRing ? root.pad(parent.value) : parent.value
                             reserveText: "00"
-                            isMonospace: false
                             font.pixelSize: parent.innerRing ? Style.fontSizeSmall : Style.fontSizeMedium
                             font.weight: parent.selected ? Style.fontWeightBold : Style.fontWeightMedium
                             color: parent.selected ? Style.onPrimary : Style.surfaceText
