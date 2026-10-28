@@ -137,15 +137,17 @@ MouseArea {
             target: root
             side: root.tooltipSide
             enabled: !root.disabled
-            onShownChanged: {
-                if (shown) {
+
+            readonly property bool idle: !shown && !presenting
+            onIdleChanged: {
+                if (!idle) {
                     releaseTimer.stop();
                     return;
                 }
                 releaseTimer.restart();
             }
 
-            // matches the DTooltipV2 exit fade
+            // idle turns true while the tooltip is still inside its own close() call, so wait before destroying it
             Timer {
                 id: releaseTimer
                 interval: Style.shorterDuration

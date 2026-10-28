@@ -192,8 +192,8 @@ StyledRect {
     SpringMotion {
         id: labelMotion
         enabled: root.outlined && !Style.springMotionDisabled
-        stiffness: Style.textFieldSpatialStiffness
-        damping: 2 * Style.textFieldSpatialDampingRatio * Math.sqrt(stiffness)
+        stiffness: Style.springPreset("fastSpatial", Style.currentAnimationBaseDuration).stiffness
+        damping: Style.springPreset("fastSpatial", Style.currentAnimationBaseDuration).damping
     }
 
     SpringMotion {
@@ -224,8 +224,8 @@ StyledRect {
         property SpringMotion progress: SpringMotion {
             value: 1
             enabled: root.outlined && root.enabled && !Style.springMotionDisabled
-            stiffness: Style.textFieldFastEffectsStiffness
-            damping: 2 * Math.sqrt(stiffness)
+            stiffness: Style.springPreset("fastEffects", Style.currentAnimationBaseDuration).stiffness
+            damping: Style.springPreset("fastEffects", Style.currentAnimationBaseDuration).damping
         }
     }
 
@@ -677,8 +677,8 @@ StyledRect {
     SpringMotion {
         id: placeholderMotion
         enabled: root.outlined && !Style.springMotionDisabled
-        stiffness: root.placeholderVisible ? Style.textFieldSlowEffectsStiffness : Style.textFieldFastEffectsStiffness
-        damping: 2 * Math.sqrt(stiffness)
+        stiffness: Style.springPreset(root.placeholderVisible ? "slowEffects" : "fastEffects", Style.currentAnimationBaseDuration).stiffness
+        damping: Style.springPreset(root.placeholderVisible ? "slowEffects" : "fastEffects", Style.currentAnimationBaseDuration).damping
     }
 
     onPlaceholderVisibleChanged: placeholderMotion.retarget(placeholderVisible ? 1 : 0)

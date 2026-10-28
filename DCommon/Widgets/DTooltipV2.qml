@@ -11,10 +11,11 @@ Item {
     property alias delay: tooltip.delay
     property Item sourceItem: null
     readonly property var sourceWindow: sourceItem?.Window.window ?? null
+    readonly property bool presenting: tooltip.visible
 
     onSourceItemChanged: {
         if (!sourceItem)
-            tooltip.close();
+            root.fadeOut();
     }
 
     function show(text, item, offsetX, offsetY, preferredSide) {
@@ -76,6 +77,10 @@ Item {
         tooltip.x = Math.max(Style.spacingXS, Math.min(parentWidth - tooltipWidth - Style.spacingXS, targetX + (offsetX || 0)));
         tooltip.y = Math.max(Style.spacingXS, Math.min(parentHeight - tooltipHeight - Style.spacingXS, targetY + (offsetY || 0)));
 
+        if (tooltip.visible) {
+            root.reveal();
+            return;
+        }
         tooltip.open();
     }
 
@@ -102,8 +107,24 @@ Item {
     }
 
     function hide() {
-        tooltip.close();
-        sourceItem = null;
+        root.sourceItem = null;
+        root.fadeOut();
+    }
+
+    function reveal() {
+        scaleMotion.retarget(1);
+        fadeMotion.retarget(1);
+    }
+
+    function fadeOut() {
+        if (!tooltip.visible) {
+            tooltip.close();
+            return;
+        }
+        scaleMotion.retarget(Style.tooltipEnterScale);
+        fadeMotion.retarget(0);
+        if (!fadeMotion.running)
+            tooltip.close();
     }
 
     onVisibleChanged: {
@@ -128,8 +149,38 @@ Item {
         }
     }
 
+    SpringMotion {
+        id: scaleMotion
+        value: 1
+        enabled: !Style.springMotionDisabled
+        stiffness: Style.springPreset("fastSpatial", Style.currentAnimationBaseDuration).stiffness
+        damping: Style.springPreset("fastSpatial", Style.currentAnimationBaseDuration).damping
+    }
+
+    SpringMotion {
+        id: fadeMotion
+        value: 1
+        enabled: !Style.springMotionDisabled
+        stiffness: Style.springPreset("fastEffects", Style.currentAnimationBaseDuration).stiffness
+        damping: Style.springPreset("fastEffects", Style.currentAnimationBaseDuration).damping
+        onRunningChanged: {
+            if (!running && target === 0)
+                tooltip.close();
+        }
+    }
+
     ToolTip {
         id: tooltip
+
+        opacity: Math.max(0, Math.min(1, fadeMotion.value))
+        scale: scaleMotion.value
+        enter: null
+        exit: null
+        onAboutToShow: {
+            scaleMotion.snapTo(Style.tooltipEnterScale);
+            fadeMotion.snapTo(0);
+            root.reveal();
+        }
 
         implicitWidth: Math.min(textContent.implicitWidth, Style.tooltipMaxWidth) + leftPadding + rightPadding
         leftPadding: Style.spacingM
@@ -170,28 +221,6 @@ Item {
             elide: root.multiline ? Text.ElideNone : Text.ElideRight
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-        }
-
-        enter: Transition {
-            enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
-            DAnim {
-                property: "opacity"
-                from: 0
-                to: 1
-                duration: Style.expressiveDurations.expressiveEffects
-                easing.bezierCurve: Style.expressiveCurves.expressiveEffects
-            }
-        }
-
-        exit: Transition {
-            enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
-            DAnim {
-                property: "opacity"
-                from: 1
-                to: 0
-                duration: Style.shorterDuration
-                easing.bezierCurve: Style.expressiveCurves.expressiveEffects
-            }
         }
     }
 }

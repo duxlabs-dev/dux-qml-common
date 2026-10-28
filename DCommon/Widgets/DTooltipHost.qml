@@ -10,6 +10,7 @@ Item {
     property MouseArea hoverArea: null
     property string side: "bottom"
     property bool shown: false
+    readonly property bool presenting: tooltipLoader?.item?.presenting ?? false
 
     readonly property bool hoverAreaHovered: hoverArea ? hoverArea.containsMouse : false
 

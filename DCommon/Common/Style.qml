@@ -362,13 +362,10 @@ Singleton {
     readonly property real fieldHeight: theme?.fieldHeight ?? Math.round(fontSizeMedium * 3) + densityLevel * spacingXS
     readonly property real fieldHeightLarge: theme?.fieldHeightLarge ?? 48 + densityLevel * spacingXS
     readonly property real outlinedFieldLabelLineHeight: theme?.outlinedFieldLabelLineHeight ?? 16
-    readonly property real textFieldSpatialStiffness: theme?.textFieldSpatialStiffness ?? 800
-    readonly property real textFieldSpatialDampingRatio: theme?.textFieldSpatialDampingRatio ?? 1
-    readonly property real textFieldFastEffectsStiffness: theme?.textFieldFastEffectsStiffness ?? 3800
-    readonly property real textFieldSlowEffectsStiffness: theme?.textFieldSlowEffectsStiffness ?? 800
     readonly property real textEditHeight: theme?.textEditHeight ?? Math.round(fontSizeMedium * 8)
-    readonly property real tooltipMaxWidth: theme?.tooltipMaxWidth ?? 500
+    readonly property real tooltipMaxWidth: theme?.tooltipMaxWidth ?? 300
     readonly property int tooltipDelay: theme?.tooltipDelay ?? 400
+    readonly property real tooltipEnterScale: theme?.tooltipEnterScale ?? 0.8
     readonly property real scrollbarThickness: theme?.scrollbarThickness ?? 6
     readonly property real scrollbarGap: theme?.scrollbarGap ?? spacingXS
     readonly property int scrollbarHideDelay: theme?.scrollbarHideDelay ?? 1200
