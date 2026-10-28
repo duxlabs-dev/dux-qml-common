@@ -21,7 +21,7 @@ Rectangle {
 
     width: Math.min(240, windowWidth - Style.spacingL * 2)
     height: Style.buttonHeightS
-    radius: Style.fullRadius(width, height)
+    radius: Style.pillControls ? Style.fullRadius(width, height) : Style.cornerRadiusL
     color: triggerArea.containsMouse ? Style.surfaceHover : Style.chipSurface
     border.color: iconPopup.visible ? Style.primary : Style.outlineVariant
     border.width: Style.outlineWidth
@@ -262,7 +262,7 @@ Rectangle {
 
                                             width: Style.buttonHeightS
                                             height: Style.buttonHeightS
-                                            radius: tile.selected ? tile.width / 2 : Style.cornerRadiusS
+                                            radius: tile.selected && Style.shapeMorph ? tile.width / 2 : Style.cornerRadiusS
                                             color: tile.selected ? Style.primaryContainer : iconMouseArea.containsMouse ? Style.surfaceHover : Style.withAlpha(Style.surfaceHover, 0)
 
                                             DIcon {

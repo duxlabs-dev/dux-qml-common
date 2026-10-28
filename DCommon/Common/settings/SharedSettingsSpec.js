@@ -99,7 +99,7 @@ var SPEC = {
         onChange: "updateCompositorLayout"
     },
     fixedRadius: {
-        def: 12,
+        def: 16,
         coerce: Shape.normalizeFixedRadius,
         onChange: "updateCompositorLayout"
     },

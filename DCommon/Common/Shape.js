@@ -21,7 +21,7 @@ function normalizeStrength(value) {
 
 function normalizeFixedRadius(value) {
     if (typeof value !== "number" || !isFinite(value))
-        return corners.m;
+        return corners.l;
     return Math.round(Math.max(0, Math.min(maxFixedRadius, value)));
 }
 
@@ -35,9 +35,10 @@ function scaleForStrength(strength) {
     return normalizeStrength(strength) / 50;
 }
 
+// Tokens under m keep their proportion so grouped rows and segmented buttons stay joined.
 function radius(token, scale, fixed) {
     if (fixed >= 0)
-        return fixed;
+        return Math.round(Math.min(fixed, corners[token] * fixed / corners.m));
     return Math.round(corners[token] * scale);
 }
 
@@ -54,10 +55,13 @@ function fullRadius(width, height, scale, fixed) {
     return half * Math.min(1, scale);
 }
 
-function buttonRadius(width, height, sizeHeight, pressed, round, scale, fixed) {
-    if (!pressed && round)
+function buttonRadius(width, height, sizeHeight, pressed, round, scale, fixed, morph = true, pill = true) {
+    if (!pill)
+        return radius("l", scale, fixed);
+    const morphed = pressed && morph;
+    if (!morphed && round)
         return fullRadius(width, height, scale, fixed);
-    return radius(buttonCorner(sizeHeight, pressed), scale, fixed);
+    return radius(buttonCorner(sizeHeight, morphed), scale, fixed);
 }
 
 function buttonCorner(sizeHeight, pressed) {

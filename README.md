@@ -48,6 +48,8 @@ DC.Host.files = filesBackend
 
 The stubs in `Common/` and `Services/` are the full list of what the library reads. `Services/FilesBackend.qml` implements the whole file browser backend over an in-memory tree. If a widget needs a new property, add it to the stub in the same change, or the gallery won't run.
 
+The theme's `shapeMorph` and `pillControls` bools are false in the shell's Classic interface style; a theme without them reads as true. `Style.buttonRadius` follows both: no press morph, and one `cornerRadiusL` for every control instead of pills. `DButtonGroup` without pills spaces its segments by `spacingXS` and rounds every corner, so they read as separate buttons.
+
 ## Development
 
 The repo root is a runnable quickshell config with the stubs and a widget gallery:

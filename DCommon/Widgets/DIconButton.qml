@@ -14,7 +14,7 @@ DActionButton {
     readonly property bool medium: size === "m"
     readonly property bool filled: variant === "filled" || variant === "tonal" || (checkable && checked)
     readonly property real squareRadius: Style.buttonRadius(width, height, buttonSize, false, false)
-    readonly property real roundRadius: Style.fullRadius(width, height)
+    readonly property real roundRadius: Style.buttonRadius(width, height, buttonSize, false, true)
     readonly property real horizontalInset: {
         switch (widthMode) {
         case "narrow":
@@ -29,6 +29,8 @@ DActionButton {
     width: iconSize + horizontalInset * 2
     iconSize: Style.iconSize
     radius: {
+        if (!Style.shapeMorph)
+            return round ? roundRadius : squareRadius;
         if (pressed)
             return Style.buttonRadius(width, height, buttonSize, true, false);
         return round !== (checkable && checked) ? roundRadius : squareRadius;

@@ -3,7 +3,7 @@ import qs.DCommon.Common
 
 DTextField {
     fieldHeight: Style.fieldHeightLarge
-    cornerRadius: Style.fullRadius(width, height)
+    cornerRadius: Style.pillControls ? Style.fullRadius(width, height) : Style.cornerRadiusL
     normalBorderColor: Style.outlineVariant
     focusedBorderColor: Style.focusRingWidth > 0 ? Style.focusRingColor : normalBorderColor
     borderWidth: Style.outlineWidth

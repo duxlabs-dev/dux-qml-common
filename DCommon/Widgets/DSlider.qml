@@ -138,7 +138,8 @@ Controls.Control {
         }
     }
     readonly property real outsideCorner: Style.scaledRadius(trackCornerRadius, trackHeight / 2)
-    readonly property real insideCorner: Style.scaledRadius(Style.sliderTrackInsideCornerRadius, trackHeight / 2)
+    // Fixed corner mode would round the inner ends to the full radius and split the track into two pills.
+    readonly property real insideCorner: Math.min(Style.sliderTrackInsideCornerRadius * Style.shapeScale, trackHeight / 2)
     readonly property real visualRatio: mirrored ? 1 - ratio : ratio
     readonly property int tickCount: {
         if (step <= 1)

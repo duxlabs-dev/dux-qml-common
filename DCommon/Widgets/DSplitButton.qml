@@ -130,11 +130,11 @@ Item {
         id: segment
 
         property bool isTrailing: false
-        readonly property real outerRadius: Style.fullRadius(width, root.visualHeight)
+        readonly property real outerRadius: Style.pillControls ? Style.fullRadius(width, root.visualHeight) : Style.cornerRadiusL
         property real innerRadius: {
-            if (pressed)
+            if (pressed && Style.shapeMorph)
                 return Math.min(outerRadius, root.metrics.activeInnerRadius);
-            if (isTrailing && root.expanded)
+            if (isTrailing && root.expanded && Style.shapeMorph)
                 return outerRadius;
             return Math.min(outerRadius, root.metrics.innerRadius);
         }

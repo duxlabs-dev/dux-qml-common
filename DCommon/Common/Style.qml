@@ -227,6 +227,8 @@ Singleton {
     readonly property real cornerRadiusSmall: cornerRadiusS
     readonly property real cornerRadiusLarge: cornerRadiusL
     readonly property real windowRadius: theme?.windowRadius ?? cornerRadiusL
+    readonly property bool shapeMorph: theme?.shapeMorph ?? true
+    readonly property bool pillControls: theme?.pillControls ?? true
 
     function iconRasterSize(size) {
         return Math.max(32, Math.ceil(size / 16) * 16);
@@ -241,10 +243,7 @@ Singleton {
     }
 
     function buttonRadius(width, height, sizeHeight, pressed, round) {
-        if (!pressed && round)
-            return fullRadius(width, height);
-        const token = Shape.buttonCorner(sizeHeight, pressed);
-        return root["cornerRadius" + token.toUpperCase()];
+        return Shape.buttonRadius(width, height, sizeHeight, pressed, round, shapeScale, fixedRadius, shapeMorph, pillControls);
     }
 
     readonly property int densityLevel: theme?.densityLevel ?? 0

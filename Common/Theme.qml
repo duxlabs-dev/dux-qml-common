@@ -214,8 +214,11 @@ Singleton {
         return Shape.fullRadius(width, height, shapeScale, fixedRadius);
     }
 
+    property bool shapeMorph: true
+    property bool pillControls: true
+
     function buttonRadius(width, height, sizeHeight, pressed, round) {
-        return Shape.buttonRadius(width, height, sizeHeight, pressed, round, shapeScale, fixedRadius);
+        return Shape.buttonRadius(width, height, sizeHeight, pressed, round, shapeScale, fixedRadius, shapeMorph, pillControls);
     }
 
     readonly property int densityLevel: 0

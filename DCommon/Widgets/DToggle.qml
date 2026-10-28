@@ -121,7 +121,7 @@ FocusScope {
         id: toggleTrack
 
         readonly property bool pressed: input.pressed
-        readonly property real thumbSize: pressed ? Style.switchThumbPressed : (toggle.checked || toggle.thumbIcon ? Style.switchThumbSelected : Style.switchThumbUnselected)
+        readonly property real thumbSize: pressed && Style.shapeMorph ? Style.switchThumbPressed : (toggle.checked || toggle.thumbIcon ? Style.switchThumbSelected : Style.switchThumbUnselected)
         readonly property real edgeLeft: (trackHeight - Style.switchThumbSelected) / 2
         readonly property real edgeRight: width - Style.switchThumbSelected - edgeLeft
         readonly property real thumbTarget: toggle.checked ? edgeRight : edgeLeft

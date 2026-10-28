@@ -38,14 +38,15 @@ Row {
             return -1;
         return (maximumWidth - spacing * (count - 1)) / count - Style.spacingXS;
     }
-    readonly property real outerRadius: Style.fullRadius(buttonHeight, buttonHeight)
-    readonly property real innerRadius: Math.min(Style.cornerRadiusS, outerRadius)
+    readonly property real outerRadius: Style.pillControls ? Style.fullRadius(buttonHeight, buttonHeight) : Style.cornerRadiusL
+    // Separate whole buttons when selection no longer changes their shape.
+    readonly property real innerRadius: Style.pillControls ? Math.min(Style.cornerRadiusS, outerRadius) : outerRadius
     readonly property real pressedInnerRadius: Math.min(Style.cornerRadiusXS, outerRadius)
 
     signal selectionChanged(int index, bool selected)
     signal animationCompleted
 
-    spacing: Style.groupedListGap
+    spacing: Style.pillControls ? Style.groupedListGap : Style.spacingXS
     LayoutMirroring.enabled: I18n.isRtl
     LayoutMirroring.childrenInherit: true
 
@@ -157,8 +158,9 @@ Row {
             property bool visualLast: index === repeater.count - 1
             property bool prevSelected: index > 0 ? root.isSelected(index - 1) : false
             property bool nextSelected: index < repeater.count - 1 ? root.isSelected(index + 1) : false
-            readonly property real leftRadius: visualFirst ? root.outerRadius : (pressed ? root.pressedInnerRadius : (selected ? root.outerRadius : root.innerRadius))
-            readonly property real rightRadius: visualLast ? root.outerRadius : (pressed ? root.pressedInnerRadius : (selected ? root.outerRadius : root.innerRadius))
+            readonly property real joinRadius: !Style.shapeMorph ? root.innerRadius : (pressed ? root.pressedInnerRadius : (selected ? root.outerRadius : root.innerRadius))
+            readonly property real leftRadius: visualFirst ? root.outerRadius : joinRadius
+            readonly property real rightRadius: visualLast ? root.outerRadius : joinRadius
             readonly property color contentColor: !root.enabled ? Style.onSurface_38 : (selected ? root.selectedContentColor : root.unselectedContentColor)
 
             readonly property real contentNaturalWidth: (checkIcon.visible ? checkIcon.width + contentRow.spacing : 0) + (optionIcon.visible ? optionIcon.width + (buttonText.visible ? contentRow.spacing : 0) : 0) + (buttonText.visible ? buttonText.implicitWidth : 0)

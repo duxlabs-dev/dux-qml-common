@@ -11,7 +11,7 @@ DActionButton {
     buttonSize: LockMetrics.keyboardKeySize
     backgroundColor: isShift ? Style.primaryContainer : Style.secondaryContainer
     iconColor: isShift ? Style.onPrimaryContainer : Style.onSecondaryContainer
-    radius: pressed ? Style.cornerRadiusS : Style.cornerRadiusM
+    radius: pressed && Style.shapeMorph ? Style.cornerRadiusS : Style.cornerRadiusM
     shapeDuration: LockMetrics.effectsDuration
     shapeCurve: Style.expressiveCurves.expressiveEffects
     stateDuration: LockMetrics.effectsDuration

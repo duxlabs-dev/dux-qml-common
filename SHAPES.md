@@ -2,11 +2,11 @@
 
 `Style.radiusStrength` ranges from 0 to 100. The default, 50, uses the Material shape scale. Zero removes configurable corner rounding. 100 doubles every baseline. Full corners stop at half the shorter side.
 
-`Style.fixedRadius` replaces the scale when it is 0 or more: every token returns that pixel value and full corners cap at it. Minus one, the default, keeps the strength scale. Fixed values clamp to 0 through 32.
+`Style.fixedRadius` caps the scale when it is 0 or more: `m` and every larger token return that pixel value, smaller tokens keep their proportion to `m` so joined rows and segmented buttons still read as one surface, and full corners cap at it. `scaledRadius(base, limit)` still replaces its base with the fixed value, capped by `limit`. Minus one, the default, keeps the strength scale. Fixed values clamp to 0 through 32.
 
 Set `theme.radiusStrength` and `theme.fixedRadius` when injecting a theme. Older hosts can still supply `theme.cornerRadius`; `Style` converts it to strength. `cornerRadius` remains an alias for `cornerRadiusM`. The 2-unit `cornerRadiusXXS` is a DMS extension for small details.
 
-Use named tokens for fixed corners. Use `Style.fullRadius(width, height)` for pills and round controls, `Style.buttonRadius(width, height, sizeHeight, pressed, round)` for button states, and `Style.scaledRadius(baseRadius, limit)` for component metrics such as slider track corners. `cornerRadiusFull` remains a compatibility sentinel; use the dimension-aware helper for new code.
+Use named tokens for fixed corners. Use `Style.fullRadius(width, height)` for pills and round controls, `Style.buttonRadius(width, height, sizeHeight, pressed, round)` for button states, and `Style.scaledRadius(baseRadius, limit)` for component metrics such as slider track corners. `cornerRadiusFull` remains a compatibility sentinel; use the dimension-aware helper for new code. `buttonRadius` follows the theme's `pillControls` and `shapeMorph` bools (both false in the shell's Classic interface style): no pills and no press morph, one `l` corner for every control.
 
 Strength is a DMS preference, not a Material token. Radii scale by `strength / 50` on both sides of the default, so each slider step moves the same amount. Legacy medium radii map to the nearest integer strength: 0 → 0, 6 → 25, 12 → 50, 16 → 67, 24 and above → 100. Component token corrections can change individual shapes after migration.
 

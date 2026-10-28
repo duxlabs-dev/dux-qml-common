@@ -167,7 +167,7 @@ Item {
             y: root.weekdayRowHeight + root.cellGap + Math.floor(index / root.columns) * (root.cellHeight + root.cellGap)
             width: root.cellWidth
             height: root.cellHeight
-            radius: Math.min(pressed ? Style.cornerRadiusXS : root.cellRadius, Math.min(width, height) / 2)
+            radius: Math.min(pressed && Style.shapeMorph ? Style.cornerRadiusXS : root.cellRadius, Math.min(width, height) / 2)
 
             Behavior on radius {
                 enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
