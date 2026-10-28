@@ -35,11 +35,17 @@ function scaleForStrength(strength) {
     return normalizeStrength(strength) / 50;
 }
 
-// Tokens under m keep their proportion so grouped rows and segmented buttons stay joined.
 function radius(token, scale, fixed) {
     if (fixed >= 0)
-        return Math.round(Math.min(fixed, corners[token] * fixed / corners.m));
+        return fixed;
     return Math.round(corners[token] * scale);
+}
+
+// A corner joined to a larger one keeps its proportion to m under a fixed radius, so grouped rows and segmented buttons stay one surface.
+function innerRadius(token, scale, fixed) {
+    if (fixed >= 0)
+        return Math.round(Math.min(fixed, corners[token] * fixed / corners.m));
+    return radius(token, scale, fixed);
 }
 
 function scaledRadius(radius, limit, scale, fixed) {

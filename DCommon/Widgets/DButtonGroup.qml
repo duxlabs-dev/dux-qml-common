@@ -40,8 +40,8 @@ Row {
     }
     readonly property real outerRadius: Style.pillControls ? Style.fullRadius(buttonHeight, buttonHeight) : Style.cornerRadiusL
     // Separate whole buttons when selection no longer changes their shape.
-    readonly property real innerRadius: Style.pillControls ? Math.min(Style.cornerRadiusS, outerRadius) : outerRadius
-    readonly property real pressedInnerRadius: Math.min(Style.cornerRadiusXS, outerRadius)
+    readonly property real innerRadius: Style.pillControls ? Math.min(Style.innerRadius("s"), outerRadius) : outerRadius
+    readonly property real pressedInnerRadius: Math.min(Style.innerRadius("xs"), outerRadius)
 
     signal selectionChanged(int index, bool selected)
     signal animationCompleted

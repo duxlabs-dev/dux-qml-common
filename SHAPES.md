@@ -2,7 +2,7 @@
 
 `Style.radiusStrength` ranges from 0 to 100. The default, 50, uses the Material shape scale. Zero removes configurable corner rounding. 100 doubles every baseline. Full corners stop at half the shorter side.
 
-`Style.fixedRadius` caps the scale when it is 0 or more: `m` and every larger token return that pixel value, smaller tokens keep their proportion to `m` so joined rows and segmented buttons still read as one surface, and full corners cap at it. `scaledRadius(base, limit)` still replaces its base with the fixed value, capped by `limit`. Minus one, the default, keeps the strength scale. Fixed values clamp to 0 through 32.
+`Style.fixedRadius` replaces the scale when it is 0 or more: every named token returns that pixel value, full corners cap at it, and `scaledRadius(base, limit)` replaces its base with it, capped by `limit`. `Style.innerRadius(token)` is the exception for a corner joined to a larger one: under a fixed radius it keeps the token's proportion to `m`, so grouped rows and segmented buttons still read as one surface. `groupedListInnerRadius` uses it. Minus one, the default, keeps the strength scale. Fixed values clamp to 0 through 32.
 
 Set `theme.radiusStrength` and `theme.fixedRadius` when injecting a theme. Older hosts can still supply `theme.cornerRadius`; `Style` converts it to strength. `cornerRadius` remains an alias for `cornerRadiusM`. The 2-unit `cornerRadiusXXS` is a DMS extension for small details.
 

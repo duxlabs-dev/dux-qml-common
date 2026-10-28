@@ -40,10 +40,12 @@ test("slider corners scale once and stay within the track", () => {
     assert.equal(shape.scaledRadius(2, 12, 0), 0);
 });
 
-test("fixed radius caps tokens from m up, scales the smaller ones and caps full corners", () => {
-    assert.deepEqual(["xxs", "xs", "s", "m", "l", "xxl"].map(token => shape.radius(token, 2, 16)), [3, 5, 11, 16, 16, 16]);
-    assert.deepEqual(["xxs", "xs", "s", "m", "lIncreased", "xlIncreased"].map(token => shape.radius(token, 2, 32)), [5, 11, 21, 32, 32, 32]);
+test("fixed radius replaces every token, keeps joined corners proportional and caps full corners", () => {
+    assert.deepEqual(["xxs", "xs", "s", "m", "l", "xxl"].map(token => shape.radius(token, 2, 16)), [16, 16, 16, 16, 16, 16]);
+    assert.deepEqual(["xxs", "xs", "s", "m", "l", "xxl"].map(token => shape.innerRadius(token, 2, 16)), [3, 5, 11, 16, 16, 16]);
+    assert.deepEqual(["xxs", "xs", "s", "m", "lIncreased", "xlIncreased"].map(token => shape.innerRadius(token, 2, 32)), [5, 11, 21, 32, 32, 32]);
     assert.deepEqual(["xs", "s", "m", "xl"].map(token => shape.radius(token, 2, 0)), [0, 0, 0, 0]);
+    assert.equal(shape.innerRadius("xs", 2, -1), shape.corners.xs * 2);
     assert.equal(shape.radius("m", 2, -1), shape.corners.m * 2);
     assert.equal(shape.fullRadius(160, 40, 1, 8), 8);
     assert.equal(shape.fullRadius(10, 40, 1, 8), 5);

@@ -238,6 +238,10 @@ Singleton {
         return Shape.scaledRadius(radius, limit, shapeScale, fixedRadius);
     }
 
+    function innerRadius(token) {
+        return Shape.innerRadius(token, shapeScale, fixedRadius);
+    }
+
     function fullRadius(width, height) {
         return Shape.fullRadius(width, height, shapeScale, fixedRadius);
     }
@@ -251,7 +255,7 @@ Singleton {
     readonly property real menuRowHeight: menuItemHeight + densityLevel * spacingXS
     readonly property real menuPadding: spacingS + densityLevel * spacingXXS
     readonly property real groupedListGap: theme?.groupedListGap ?? spacingXXS
-    readonly property real groupedListInnerRadius: theme?.groupedListInnerRadius ?? cornerRadiusXS
+    readonly property real groupedListInnerRadius: theme?.groupedListInnerRadius ?? innerRadius("xs")
     readonly property real groupedListOuterRadius: theme?.groupedListOuterRadius ?? cornerRadiusL
     readonly property real spacingXXS: theme?.spacingXXS ?? 2
     readonly property real spacingXS: theme?.spacingXS ?? 4
