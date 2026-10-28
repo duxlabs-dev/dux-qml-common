@@ -32,6 +32,15 @@ Row {
     property bool usePopupTransparency: !Style.isFloatingWindow(root)
     property real maximumWidth: -1
     property bool fillWidth: false
+    property int _segmentRevision: 0
+    // Width before maximumWidth applies, so a caller can derive the cap from it without a layout loop
+    readonly property real naturalWidth: {
+        _segmentRevision;
+        let total = 0;
+        for (let i = 0; i < repeater.count; i++)
+            total += repeater.itemAt(i)?.naturalWidth ?? 0;
+        return total + spacing * Math.max(0, repeater.count - 1);
+    }
     readonly property real _segmentCap: {
         const count = model?.length ?? 0;
         if (maximumWidth <= 0 || count === 0)
@@ -129,6 +138,8 @@ Row {
 
     Repeater {
         id: repeater
+        onItemAdded: root._segmentRevision++
+        onItemRemoved: root._segmentRevision++
         model: ScriptModel {
             values: root.model
         }
@@ -165,11 +176,11 @@ Row {
 
             readonly property real contentNaturalWidth: (checkIcon.visible ? checkIcon.width + contentRow.spacing : 0) + (optionIcon.visible ? optionIcon.width + (buttonText.visible ? contentRow.spacing : 0) : 0) + (buttonText.visible ? buttonText.implicitWidth : 0)
 
+            readonly property real naturalWidth: Math.max(contentNaturalWidth + root.buttonPadding * 2, root.minButtonWidth)
             readonly property real baseWidth: {
                 if (root.fillWidth)
                     return Math.max(0, (root.width - root.spacing * (repeater.count - 1)) / Math.max(1, repeater.count));
-                const natural = Math.max(contentNaturalWidth + root.buttonPadding * 2, root.minButtonWidth);
-                return root._segmentCap > 0 ? Math.min(natural, Math.max(root._segmentCap, root.minButtonWidth)) : natural;
+                return root._segmentCap > 0 ? Math.min(naturalWidth, Math.max(root._segmentCap, root.minButtonWidth)) : naturalWidth;
             }
 
             width: baseWidth
