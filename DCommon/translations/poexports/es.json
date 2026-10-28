@@ -27,7 +27,7 @@
     "Ascending": ""
   },
   "B": {
-    "B": ""
+    "B": "B"
   },
   "Back": {
     "Back": "Atrás"
@@ -72,7 +72,7 @@
     "Create": "Crear"
   },
   "Created": {
-    "Created": ""
+    "Created": "Creado"
   },
   "Decrease": {
     "Decrease": ""
@@ -117,7 +117,7 @@
     "Folder": "Carpeta"
   },
   "Folder name": {
-    "Folder name": ""
+    "Folder name": "N"
   },
   "Forward": {
     "Forward": ""
@@ -126,10 +126,10 @@
     "Fun": ""
   },
   "GB": {
-    "GB": ""
+    "GB": "GB"
   },
   "Grid view": {
-    "Grid view": ""
+    "Grid view": "Vista de cuadrícula"
   },
   "Hibernate": {
     "Hibernate": "Hibernar"
@@ -159,7 +159,7 @@
     "Increase": ""
   },
   "List view": {
-    "List view": ""
+    "List view": "Vista de lista"
   },
   "Location": {
     "Location": "Ubicación"
@@ -168,7 +168,7 @@
     "Log Out": "Cerrar sesión"
   },
   "MB": {
-    "MB": ""
+    "MB": "MB"
   },
   "Maximize": {
     "Maximize": "Maximizar"
@@ -195,7 +195,7 @@
     "Navigation": ""
   },
   "New folder": {
-    "New folder": ""
+    "New folder": "Nueva carpeta"
   },
   "No locations found": {
     "No locations found": ""
@@ -213,13 +213,13 @@
     "Overwrite": ""
   },
   "Owner": {
-    "Owner": ""
+    "Owner": "Dueño"
   },
   "PM": {
     "PM": ""
   },
   "Permissions": {
-    "Permissions": ""
+    "Permissions": "Permisos"
   },
   "Power Off": {
     "Power Off": "Apagar"
@@ -243,7 +243,7 @@
     "Restore": ""
   },
   "Review changes": {
-    "Review changes": ""
+    "Review changes": "Revisar cambios"
   },
   "Saturation %1%, brightness %2%": {
     "Saturation %1%, brightness %2%": ""
