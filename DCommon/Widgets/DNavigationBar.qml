@@ -40,11 +40,25 @@ T.Control {
         viewport.contentX = Math.max(0, Math.min(item.x, Math.max(viewport.contentX, item.x + item.width - viewport.width)));
     }
 
+    function isAction(index) {
+        return destinations.itemAt(index)?.modelData?.action === true;
+    }
+
+    // Selection follows the arrow keys, so action destinations are click-only or arrowing past one would fire it.
+    function activateSelectable(start, step) {
+        for (let i = 1; i <= count; i++) {
+            const index = ((start + step * i) % count + count) % count;
+            if (!isAction(index)) {
+                activated(index);
+                return;
+            }
+        }
+    }
+
     function moveSelection(step) {
         if (count === 0)
             return;
-        const start = currentIndex < 0 ? (step > 0 ? -1 : 0) : currentIndex;
-        activated((start + step + count) % count);
+        activateSelectable(currentIndex < 0 ? (step > 0 ? -1 : 0) : currentIndex, step);
     }
 
     onCurrentIndexChanged: revealTimer.restart()
@@ -84,12 +98,10 @@ T.Control {
             root.moveSelection(event.key === Qt.Key_Down ? 1 : -1);
             break;
         case Qt.Key_Home:
-            if (root.count > 0)
-                root.activated(0);
+            root.activateSelectable(-1, 1);
             break;
         case Qt.Key_End:
-            if (root.count > 0)
-                root.activated(root.count - 1);
+            root.activateSelectable(root.count, -1);
             break;
         case Qt.Key_Return:
         case Qt.Key_Enter:
@@ -150,7 +162,7 @@ T.Control {
                     width: root.vertical ? root.width : root.evenlySpaced ? Math.max(Style.navigationItemMinWidth, (root.width - root.spacing * (root.count - 1)) / Math.max(1, root.count)) : Style.navigationItemMinWidth
                     height: root.vertical && root.evenlySpaced ? Math.max(root.destinationHeight, (root.height - root.spacing * (root.count - 1)) / Math.max(1, root.count)) : root.destinationHeight
                     focusPolicy: Qt.NoFocus
-                    Accessible.role: Accessible.PageTab
+                    Accessible.role: modelData?.action === true ? Accessible.Button : Accessible.PageTab
                     Accessible.name: modelData?.text ?? ""
                     Accessible.selected: selected
                     onClicked: root.activated(index)
