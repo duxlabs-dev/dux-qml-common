@@ -72,8 +72,8 @@ Singleton {
     readonly property color cardSurface: theme?.cardSurface ?? surfaceContainer
     readonly property color chipSurface: theme?.chipSurface ?? surfaceContainerHigh
     readonly property color chipSurfaceNested: theme?.chipSurfaceNested ?? surfaceContainerHighest
-    readonly property color tooltipSurface: theme?.tooltipSurface ?? surfaceContainerHighest
-    readonly property color tooltipText: theme?.tooltipText ?? Contrast.readableOn(tooltipSurface, [surfaceText, contrastLight, contrastDark])
+    readonly property color tooltipSurface: theme?.tooltipSurface ?? inverseSurface
+    readonly property color tooltipText: theme?.tooltipText ?? Contrast.readableOn(tooltipSurface, [inverseOnSurface, surfaceText, contrastLight, contrastDark])
     readonly property color outlineVariant: theme?.outlineVariant ?? "#49454f"
     readonly property color secondaryContainer: theme?.secondaryContainer ?? "#4a4458"
     readonly property color tertiaryContainer: theme?.tertiaryContainer ?? "#633b48"
