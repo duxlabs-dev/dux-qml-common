@@ -174,13 +174,26 @@ Row {
             readonly property real rightRadius: visualLast ? root.outerRadius : joinRadius
             readonly property color contentColor: !root.enabled ? Style.onSurface_38 : (selected ? root.selectedContentColor : root.unselectedContentColor)
 
-            readonly property real contentNaturalWidth: (checkIcon.visible ? checkIcon.width + contentRow.spacing : 0) + (optionIcon.visible ? optionIcon.width + (buttonText.visible ? contentRow.spacing : 0) : 0) + (buttonText.visible ? buttonText.implicitWidth : 0)
+            readonly property bool showsCheck: root.checkEnabled && !root.iconOnly && selected
+            readonly property bool hasOptionIcon: typeof modelData === "object" && !!modelData.icon
+            readonly property bool showsLabel: !hasOptionIcon || (root.labelOnlySelected ? selected : !root.iconOnly)
+            // The content items' visible is the effective one, false while the group sits in a hidden parent, so widths derive from the conditions
+            readonly property real iconsNaturalWidth: (showsCheck ? checkIcon.width + contentRow.spacing : 0) + (hasOptionIcon ? optionIcon.width + (showsLabel ? contentRow.spacing : 0) : 0)
+            readonly property real contentNaturalWidth: iconsNaturalWidth + (showsLabel ? buttonText.implicitWidth : 0)
+            // Reading Text.implicitWidth lays the label out on the spot and notifies mid-binding, so the exported width measures it instead
+            readonly property real naturalWidth: Math.max(iconsNaturalWidth + (showsLabel ? Math.ceil(labelMetrics.advanceWidth) : 0) + root.buttonPadding * 2, root.minButtonWidth)
 
-            readonly property real naturalWidth: Math.max(contentNaturalWidth + root.buttonPadding * 2, root.minButtonWidth)
             readonly property real baseWidth: {
                 if (root.fillWidth)
                     return Math.max(0, (root.width - root.spacing * (repeater.count - 1)) / Math.max(1, repeater.count));
-                return root._segmentCap > 0 ? Math.min(naturalWidth, Math.max(root._segmentCap, root.minButtonWidth)) : naturalWidth;
+                const natural = Math.max(contentNaturalWidth + root.buttonPadding * 2, root.minButtonWidth);
+                return root._segmentCap > 0 ? Math.min(natural, Math.max(root._segmentCap, root.minButtonWidth)) : natural;
+            }
+
+            TextMetrics {
+                id: labelMetrics
+                font: buttonText.font
+                text: buttonText.text
             }
 
             width: baseWidth
@@ -266,7 +279,7 @@ Row {
                         name: "check"
                         size: root.checkIconSize
                         color: segment.contentColor
-                        visible: root.checkEnabled && !root.iconOnly && segment.selected
+                        visible: segment.showsCheck
                         opacity: segment.selected ? 1 : 0
                         scale: segment.selected ? 1 : Style.iconEnterScale
                         anchors.verticalCenter: parent.verticalCenter
@@ -294,25 +307,19 @@ Row {
                         size: Style.iconSize
                         color: segment.contentColor
                         filled: segment.selected
-                        visible: name !== ""
+                        visible: segment.hasOptionIcon
                         anchors.verticalCenter: parent.verticalCenter
                     }
 
                     StyledText {
                         id: buttonText
-                        visible: {
-                            if (!optionIcon.visible)
-                                return true;
-                            if (root.labelOnlySelected)
-                                return segment.selected;
-                            return !root.iconOnly;
-                        }
+                        visible: segment.showsLabel
 
                         readonly property real capAvailable: {
                             if (root._segmentCap <= 0)
                                 return -1;
                             const cap = Math.max(root._segmentCap, root.minButtonWidth);
-                            return Math.max(0, cap - root.buttonPadding * 2 - (checkIcon.visible ? checkIcon.width + contentRow.spacing : 0) - (optionIcon.visible ? optionIcon.width + contentRow.spacing : 0));
+                            return Math.max(0, cap - root.buttonPadding * 2 - (segment.showsCheck ? checkIcon.width + contentRow.spacing : 0) - (segment.hasOptionIcon ? optionIcon.width + contentRow.spacing : 0));
                         }
 
                         text: typeof modelData === "string" ? modelData : modelData.text || ""
