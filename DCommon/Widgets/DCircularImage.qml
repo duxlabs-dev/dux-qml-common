@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Window
+import Quickshell.Io
 import Quickshell.Widgets
 import qs.DCommon.Common
 import qs.DCommon.Widgets
@@ -14,16 +15,29 @@ Rectangle {
     property real ringWidth: 0
     property color ringColor: Style.surfaceVariant
     property bool hasImage: imageSource !== ""
-    // AnimatedImage decodes local files on the GUI thread whatever `asynchronous` says, so only animatable extensions get probed. AccountsService stores icon copies without an extension, so bare names probe too.
-    readonly property bool shouldProbe: {
-        if (imageSource === "" || imageSource.startsWith("image://"))
-            return false;
+    readonly property string sourceExtension: {
         const name = imageSource.split("?")[0].split("/").pop();
         const dot = name.lastIndexOf(".");
-        if (dot <= 0)
-            return true;
-        return /^(gif|webp|apng)$/i.test(name.slice(dot + 1));
+        return dot <= 0 ? "" : name.slice(dot + 1).toLowerCase();
     }
+    // AnimatedImage decodes local files on the GUI thread whatever `asynchronous` says (an svg avatar rasterizes at 4000x4000), so extensionless local files (AccountsService icons) get sniffed by magic bytes first.
+    readonly property string sniffPath: {
+        if (imageSource === "" || sourceExtension !== "")
+            return "";
+        if (imageSource.startsWith("/"))
+            return imageSource;
+        if (!imageSource.startsWith("file://"))
+            return "";
+        const path = imageSource.slice(7).split("?")[0];
+        try {
+            return decodeURIComponent(path);
+        } catch (e) {
+            return path;
+        }
+    }
+    property string sniffedSource: ""
+    property bool sniffedAnimatable: false
+    readonly property bool shouldProbe: /^(gif|webp|apng)$/.test(sourceExtension) || (sniffedAnimatable && sniffedSource === imageSource)
     property string settledSource: ""
     property string animatedSource: ""
     readonly property bool probeSettled: settledSource !== "" && settledSource === imageSource
@@ -40,6 +54,40 @@ Rectangle {
     property int imageStatus: activeImage.status
 
     signal imageSaved(string filePath)
+
+    function settleSniff(animatable) {
+        sniffedAnimatable = animatable;
+        sniffedSource = imageSource;
+    }
+
+    function animatableBytes(buffer) {
+        const b = new Uint8Array(buffer);
+        const tag = (offset, text) => {
+            for (let i = 0; i < text.length; i++) {
+                if (b[offset + i] !== text.charCodeAt(i))
+                    return false;
+            }
+            return true;
+        };
+        if (b.length < 16)
+            return false;
+        if (tag(0, "GIF8"))
+            return true;
+        if (tag(0, "RIFF") && tag(8, "WEBP"))
+            return true;
+        if (!tag(1, "PNG"))
+            return false;
+        let offset = 8;
+        while (offset + 8 <= b.length) {
+            const length = ((b[offset] << 24) | (b[offset + 1] << 16) | (b[offset + 2] << 8) | b[offset + 3]) >>> 0;
+            if (tag(offset + 4, "acTL"))
+                return true;
+            if (tag(offset + 4, "IDAT") || tag(offset + 4, "IEND"))
+                return false;
+            offset += 12 + length;
+        }
+        return false;
+    }
 
     function settleProbe() {
         if (probe.status === Image.Error) {
@@ -88,6 +136,16 @@ Rectangle {
     color: Style.primaryHover
     border.color: "transparent"
     border.width: 0
+
+    Loader {
+        active: root.sniffPath !== "" && root.sniffedSource !== root.imageSource
+        sourceComponent: FileView {
+            path: root.sniffPath
+            printErrors: false
+            onLoaded: Qt.callLater(root.settleSniff, root.animatableBytes(data()))
+            onLoadFailed: Qt.callLater(root.settleSniff, false)
+        }
+    }
 
     // ClippingRectangle's edge is not antialiased; an opaque ring straddling it hides the stair-step.
     Rectangle {
