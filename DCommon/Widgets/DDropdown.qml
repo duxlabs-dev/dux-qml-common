@@ -114,12 +114,36 @@ FocusScope {
     readonly property real menuItemRadius: Math.max(0, Style.windowRadius - menuPadding)
     readonly property int menuSpacing: Style.spacingXXS
 
+    property bool clampMenuWidth: false
+
     readonly property int menuWidth: {
         if (root.popupWidth > 0)
             return root.popupWidth;
-        if (!root.showLabel)
-            return root.dropdownWidth;
-        return Math.max(1, dropdown.width + root.popupWidthOffset);
+        const fieldWidth = root.showLabel ? Math.max(1, dropdown.width + root.popupWidthOffset) : root.dropdownWidth;
+        if (root.clampMenuWidth || !(root.menuOpen || root.menuVisible))
+            return fieldWidth;
+        const windowWidth = root.QsWindow.window?.width ?? fieldWidth;
+        return Math.min(Math.max(fieldWidth, widestOptionWidth()), Math.max(fieldWidth, windowWidth));
+    }
+
+    FontMetrics {
+        id: optionMetrics
+        font.family: Style.fontFor("ui")
+        font.pixelSize: Style.fontSizeMedium
+        font.weight: Style.fontWeightMedium
+    }
+
+    function widestOptionWidth() {
+        let textWidth = 0;
+        for (const key of root.optionKeys)
+            textWidth = Math.max(textWidth, optionMetrics.advanceWidth(root.labelOf(key)));
+        let leading = 0;
+        if (Object.keys(root.optionColorMap ?? {}).length > 0)
+            leading += Style.iconSizeSmall + Style.spacingS;
+        if (Object.keys(root.optionIconMap).length > 0 || Object.keys(root.optionImageMap).length > 0)
+            leading += Style.iconSizeMedium + Style.spacingS;
+        // The option text reserves its row's left margin twice, hence three spacingM
+        return Math.ceil(textWidth + leading + Style.spacingM * 3 + root.menuPadding * 2);
     }
 
     readonly property int menuHeight: {
@@ -192,7 +216,12 @@ FocusScope {
         const menuW = root.menuWidth;
         const menuH = root.menuHeight;
         const gap = Style.spacingXS;
-        let x = root.alignPopupRight ? pos.x + anchorItem.width - menuW : pos.x;
+        let alignRight = root.alignPopupRight;
+        if (!alignRight && pos.x + menuW > qsWin.width)
+            alignRight = true;
+        if (alignRight && pos.x + anchorItem.width - menuW < 0)
+            alignRight = false;
+        let x = alignRight ? pos.x + anchorItem.width - menuW : pos.x;
         let goUp = root.openUpwards;
         if (!goUp && pos.y + anchorItem.height + menuH + gap > qsWin.height)
             goUp = true;
