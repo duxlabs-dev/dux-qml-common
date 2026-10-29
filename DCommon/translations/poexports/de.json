@@ -63,7 +63,7 @@
     "Communication": "Kommunikation"
   },
   "Confirm": {
-    "Confirm": "Bestätigung"
+    "Confirm": "Bestätigen"
   },
   "Copy path": {
     "Copy path": "Pfad kopieren"
@@ -141,13 +141,13 @@
     "Hide password": "Passwort verbergen"
   },
   "Hold longer to confirm": {
-    "Hold longer to confirm": "Halte länger zum bestätigen"
+    "Hold longer to confirm": "Zum Bestätigen länger halten"
   },
   "Hold to confirm (%1 ms)": {
     "Hold to confirm (%1 ms)": "Gedrückt halten zum Bestätigen (%1 ms)"
   },
   "Hold to confirm (%1s)": {
-    "Hold to confirm (%1s)": "Halten zum bestätigen (%1s)"
+    "Hold to confirm (%1s)": "Zum Bestätigen halten (%1s)"
   },
   "Home": {
     "Home": "Home"
@@ -255,7 +255,7 @@
     "Search for a location...": "Nach einem Ort suchen..."
   },
   "Search...": {
-    "Search...": "Suche..."
+    "Search...": "Suche ..."
   },
   "Searching...": {
     "Searching...": "Suche..."
