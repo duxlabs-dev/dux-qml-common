@@ -20,6 +20,9 @@ Flickable {
     readonly property real revealInsetTop: fadeEdges ? fadeTopInset + fadeLength : 0
     readonly property real revealInsetBottom: fadeEdges ? fadeBottomInset + fadeLength : 0
 
+    layer.enabled: edgeFade.item?.masks ?? false
+    layer.effect: edgeFade.item?.effect ?? null
+
     function revealRange(top, bottom) {
         contentY = Reveal.contentYFor(flickable, top, bottom, revealInsetTop, revealInsetBottom);
     }
@@ -226,6 +229,7 @@ Flickable {
     }
 
     Loader {
+        id: edgeFade
         parent: flickable
         anchors.fill: parent
         anchors.topMargin: flickable.fadeTopInset
@@ -237,6 +241,8 @@ Flickable {
         sourceComponent: DEdgeFade {
             target: flickable
             length: flickable.fadeLength
+            topInset: flickable.fadeTopInset
+            bottomInset: flickable.fadeBottomInset
         }
     }
 

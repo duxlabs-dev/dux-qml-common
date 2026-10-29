@@ -89,7 +89,7 @@ FocusScope {
         Rectangle {
             anchors.fill: parent
             visible: !root.embedded && (root.opened || opacity > 0)
-            color: Style.scrimColor
+            color: Style.backdropColor
             opacity: root.opened ? Style.scrimAlpha : 0
 
             MouseArea {

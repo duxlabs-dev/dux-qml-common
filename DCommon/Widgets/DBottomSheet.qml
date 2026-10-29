@@ -16,6 +16,7 @@ FocusScope {
     property real contentSpacing: Style.spacingS
     property real scrimRadius: 0
     property vector4d scrimRadii: Qt.vector4d(scrimRadius, scrimRadius, scrimRadius, scrimRadius)
+    property bool scrimVisible: true
     property color surfaceColor: Style.cardSurface
     property Item initialFocusItem: null
     property Item returnFocusItem: null
@@ -189,7 +190,8 @@ FocusScope {
             topRightRadius: root.scrimRadii.y
             bottomRightRadius: root.scrimRadii.z
             bottomLeftRadius: root.scrimRadii.w
-            color: Style.scrimColor
+            visible: root.scrimVisible
+            color: Style.backdropColor
             opacity: root.opened ? Style.scrimAlpha : 0
 
             Behavior on opacity {

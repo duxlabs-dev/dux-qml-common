@@ -20,6 +20,9 @@ ListView {
     readonly property real revealInsetTop: fadeEdges ? fadeTopInset + fadeLength : 0
     readonly property real revealInsetBottom: fadeEdges ? fadeBottomInset + fadeLength : 0
 
+    layer.enabled: edgeFade.item?.masks ?? false
+    layer.effect: edgeFade.item?.effect ?? null
+
     function revealRange(top, bottom) {
         contentY = Reveal.contentYFor(listView, top, bottom, revealInsetTop, revealInsetBottom);
     }
@@ -392,6 +395,7 @@ ListView {
     }
 
     Loader {
+        id: edgeFade
         parent: listView
         anchors.fill: parent
         anchors.topMargin: listView.fadeTopInset
@@ -403,6 +407,8 @@ ListView {
         sourceComponent: DEdgeFade {
             target: listView
             length: listView.fadeLength
+            topInset: listView.fadeTopInset
+            bottomInset: listView.fadeBottomInset
         }
     }
 

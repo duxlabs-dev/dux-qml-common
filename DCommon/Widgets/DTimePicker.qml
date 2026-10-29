@@ -154,7 +154,7 @@ FocusScope {
 
     Rectangle {
         anchors.fill: parent
-        color: Style.withAlpha(Style.shadowStrong, Style.scrimAlpha)
+        color: Style.withAlpha(Style.backdropColor, Style.scrimAlpha)
 
         MouseArea {
             anchors.fill: parent

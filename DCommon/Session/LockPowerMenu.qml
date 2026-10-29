@@ -435,7 +435,7 @@ Rectangle {
     }
 
     anchors.fill: parent
-    color: expressive ? Style.withAlpha(Style.scrimColor, Style.scrimAlpha) : Qt.rgba(0, 0, 0, 0.5)
+    color: expressive ? Style.withAlpha(Style.backdropColor, Style.scrimAlpha) : Qt.rgba(0, 0, 0, 0.5)
     visible: expressive ? opacity > 0 : isVisible
     opacity: isVisible ? 1 : 0
     enabled: isVisible
