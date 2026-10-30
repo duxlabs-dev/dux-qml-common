@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import Quickshell.Widgets
 import qs.DCommon.Common
 
 Item {
@@ -54,8 +53,48 @@ Item {
         return Paths.resolveIconPath(iconValue);
     }
     readonly property int iconRequestSize: Style.iconRasterSize(iconSize)
+    readonly property string poolKey: iconPath ? `${iconPath}|${iconRequestSize}|${Screen.name}` : ""
+    readonly property int iconStatus: _icon?.status ?? Image.Null
+    property Item _icon: null
+    property Item _outgoing: null
+    property bool _ready: false
 
     visible: iconValue !== undefined && iconValue !== ""
+
+    onPoolKeyChanged: _swapIcon()
+    onIconStatusChanged: {
+        if (iconStatus !== Image.Ready || !_outgoing)
+            return;
+        IconImagePool.release(_outgoing);
+        _outgoing = null;
+    }
+
+    Component.onCompleted: {
+        _ready = true;
+        _swapIcon();
+    }
+
+    Component.onDestruction: {
+        if (_outgoing)
+            IconImagePool.release(_outgoing);
+        if (_icon)
+            IconImagePool.release(_icon);
+    }
+
+    function _swapIcon() {
+        if (!_ready || (_icon?.poolKey ?? "") === poolKey)
+            return;
+        if (_outgoing) {
+            IconImagePool.release(_outgoing);
+            _outgoing = null;
+        }
+        const next = poolKey ? IconImagePool.acquire(iconSlot, poolKey, iconPath, iconRequestSize, Screen.devicePixelRatio) : null;
+        if (_icon && next && next.status !== Image.Ready)
+            _outgoing = _icon;
+        else if (_icon)
+            IconImagePool.release(_icon);
+        _icon = next;
+    }
 
     // Load only the face in use; a hidden empty Text slows every move of its parents.
     Loader {
@@ -106,30 +145,10 @@ Item {
         visible: root.isImage && status === Image.Ready
     }
 
-    Loader {
-        id: iconImgLoader
+    Item {
+        id: iconSlot
         anchors.fill: parent
         anchors.margins: root.iconMargins
-        active: !root.hasSpecialPrefix && root.iconPath !== ""
-        sourceComponent: IconImage {
-            property string paintedFor: ""
-
-            readonly property bool holdsCurrentIcon: paintedFor !== "" && paintedFor === root.iconValue
-            readonly property bool showsFrame: status === Image.Ready || (holdsCurrentIcon && status === Image.Loading)
-
-            anchors.fill: parent
-            source: root.iconPath
-            backer.sourceSize: Qt.size(root.iconRequestSize, root.iconRequestSize)
-            backer.retainWhileLoading: true
-            mipmap: true
-            asynchronous: true
-            visible: showsFrame
-            onStatusChanged: {
-                if (status !== Image.Ready)
-                    return;
-                paintedFor = root.iconValue;
-            }
-        }
     }
 
     Rectangle {
@@ -140,7 +159,7 @@ Item {
         anchors.rightMargin: root.fallbackRightMargin
         anchors.topMargin: root.fallbackTopMargin
         anchors.bottomMargin: root.fallbackBottomMargin
-        visible: !root.hasSpecialPrefix && !(iconImgLoader.item?.showsFrame ?? false)
+        visible: !root.hasSpecialPrefix && (root.poolKey === "" || root.iconStatus === Image.Error)
         color: root.fallbackBackgroundColor
         radius: root.fallbackRadius
         border.width: 0
