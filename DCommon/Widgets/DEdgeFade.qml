@@ -10,8 +10,6 @@ Item {
 
     required property Flickable target
     property real length: Style.spacingXL
-    property real topInset: 0
-    property real bottomInset: 0
 
     readonly property var surfaceHost: resolveSurfaceHost()
     readonly property color color: {
@@ -27,20 +25,6 @@ Item {
     readonly property color clear: Style.withAlpha(color, 0)
     readonly property real topStrength: Math.min(1, Math.max(0, (target.contentY - target.originY) / length))
     readonly property real bottomStrength: Math.min(1, Math.max(0, (target.originY + target.contentHeight - target.height - target.contentY) / length))
-    // On a translucent surface a painted strip reads as a band, so a clipped view fades its own alpha.
-    readonly property bool masks: color.a < 1 && target.clip
-    readonly property Component effect: Component {
-        ShaderEffect {
-            property var source
-            property real heightPx: height
-            property real topInset: root.topInset
-            property real bottomInset: root.bottomInset
-            property real fadeLength: root.length
-            property real topStrength: root.topStrength
-            property real bottomStrength: root.bottomStrength
-            fragmentShader: Qt.resolvedUrl("../Shaders/qsb/edge_fade.frag.qsb")
-        }
-    }
 
     function resolveSurfaceHost() {
         for (let current = target.parent; current; current = current.parent) {
@@ -61,7 +45,7 @@ Item {
         anchors.right: parent.right
         height: root.length
         opacity: root.topStrength
-        visible: !root.masks && opacity > 0
+        visible: opacity > 0
         gradient: Gradient {
             GradientStop {
                 position: 0
@@ -80,7 +64,7 @@ Item {
         anchors.right: parent.right
         height: root.length
         opacity: root.bottomStrength
-        visible: !root.masks && opacity > 0
+        visible: opacity > 0
         gradient: Gradient {
             GradientStop {
                 position: 0

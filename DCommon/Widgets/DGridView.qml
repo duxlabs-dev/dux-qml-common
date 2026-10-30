@@ -23,9 +23,6 @@ GridView {
     readonly property real revealInsetTop: fadeEdges ? fadeTopInset + fadeLength : 0
     readonly property real revealInsetBottom: fadeEdges ? fadeBottomInset + fadeLength : 0
 
-    layer.enabled: edgeFade.item?.masks ?? false
-    layer.effect: edgeFade.item?.effect ?? null
-
     function revealRange(top, bottom) {
         contentY = Reveal.contentYFor(gridView, top, bottom, revealInsetTop, revealInsetBottom);
     }
@@ -232,7 +229,6 @@ GridView {
     }
 
     Loader {
-        id: edgeFade
         parent: gridView
         anchors.fill: parent
         anchors.topMargin: gridView.fadeTopInset
@@ -244,8 +240,6 @@ GridView {
         sourceComponent: DEdgeFade {
             target: gridView
             length: gridView.fadeLength
-            topInset: gridView.fadeTopInset
-            bottomInset: gridView.fadeBottomInset
         }
     }
 
