@@ -351,6 +351,22 @@ FocusScope {
             border.width: root.paneBorderWidth
             border.color: root.paneBorderColor
 
+            Item {
+                id: paneBackground
+
+                anchors.fill: parent
+                anchors.rightMargin: drawer.width
+
+                TapHandler {
+                    acceptedButtons: Qt.RightButton
+                    onTapped: point => {
+                        root.focusRequested();
+                        const pos = paneBackground.mapToItem(root, point.position.x, point.position.y);
+                        root.backgroundMenuRequested(pos.x, pos.y);
+                    }
+                }
+            }
+
             FileDropArea {
                 anchors.fill: parent
                 enabled: root.dropEnabled && root.directory.path !== ""
