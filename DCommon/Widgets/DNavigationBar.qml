@@ -18,6 +18,8 @@ T.Control {
     readonly property real destinationHeight: Math.max(Style.navigationHeight, ...items.children.map(item => item.implicitHeight))
     property Item nextFocusTarget: null
     property Item previousFocusTarget: null
+    property bool tabHighlights: false
+    property int highlightedIndex: -1
 
     signal activated(int index)
     signal editRequested(int index)
@@ -30,7 +32,7 @@ T.Control {
 
     function revealCurrent() {
         items.forceLayout();
-        const item = destinations.itemAt(currentIndex);
+        const item = destinations.itemAt(highlightedIndex >= 0 ? highlightedIndex : currentIndex);
         if (!item)
             return;
         if (vertical) {
@@ -61,7 +63,22 @@ T.Control {
         activateSelectable(currentIndex < 0 ? (step > 0 ? -1 : 0) : currentIndex, step);
     }
 
-    onCurrentIndexChanged: revealTimer.restart()
+    function moveHighlight(step) {
+        if (count === 0)
+            return;
+        const from = highlightedIndex >= 0 ? highlightedIndex : currentIndex;
+        highlightedIndex = from < 0 ? (step > 0 ? 0 : count - 1) : ((from + step) % count + count) % count;
+    }
+
+    onCurrentIndexChanged: {
+        highlightedIndex = -1;
+        revealTimer.restart();
+    }
+    onHighlightedIndexChanged: revealTimer.restart()
+    onActiveFocusChanged: {
+        if (!activeFocus)
+            highlightedIndex = -1;
+    }
     onWidthChanged: revealTimer.restart()
     onHeightChanged: revealTimer.restart()
     onOrientationChanged: {
@@ -79,7 +96,20 @@ T.Control {
     Keys.onPressed: event => {
         if (event.modifiers & (Qt.ControlModifier | Qt.AltModifier | Qt.MetaModifier))
             return;
+        const highlighted = root.highlightedIndex;
+        if (event.key !== Qt.Key_Tab && event.key !== Qt.Key_Backtab)
+            root.highlightedIndex = -1;
         switch (event.key) {
+        case Qt.Key_Tab:
+        case Qt.Key_Backtab:
+            if (!root.tabHighlights)
+                return;
+            root.moveHighlight(event.key === Qt.Key_Backtab || (event.modifiers & Qt.ShiftModifier) ? -1 : 1);
+            break;
+        case Qt.Key_Escape:
+            if (highlighted < 0)
+                return;
+            break;
         case Qt.Key_F2:
             if (!root.editable || root.currentIndex < 0)
                 return;
@@ -106,8 +136,8 @@ T.Control {
         case Qt.Key_Return:
         case Qt.Key_Enter:
         case Qt.Key_Space:
-            if (!event.isAutoRepeat && root.currentIndex >= 0)
-                root.activated(root.currentIndex);
+            if (!event.isAutoRepeat && (highlighted >= 0 || root.currentIndex >= 0))
+                root.activated(highlighted >= 0 ? highlighted : root.currentIndex);
             break;
         default:
             return;
@@ -115,8 +145,8 @@ T.Control {
         event.accepted = true;
     }
 
-    KeyNavigation.tab: nextFocusTarget
-    KeyNavigation.backtab: previousFocusTarget
+    KeyNavigation.tab: tabHighlights ? null : nextFocusTarget
+    KeyNavigation.backtab: tabHighlights ? null : previousFocusTarget
 
     DFlickable {
         id: viewport
@@ -187,6 +217,7 @@ T.Control {
                         StateLayer {
                             control: destination
                             disabled: editButton.visible
+                            hovered: destination.hovered || root.highlightedIndex === destination.index
                             stateColor: Style.onSelectedContainer
                         }
                     }

@@ -13,6 +13,7 @@ StyledButton {
     property int iconSize: root.buttonHeight <= Style.buttonHeightS ? Style.iconSizeMedium : Style.iconSize
     property color backgroundColor: Style.buttonBg
     property color textColor: Style.buttonText
+    property color focusRingColor: Style.focusRingColor
     property int buttonHeight: Style.buttonHeightS
     readonly property real labelSize: buttonHeight >= Style.buttonHeightM ? Style.fontSizeLarge : Style.fontSizeMedium
     horizontalPadding: {
@@ -44,6 +45,7 @@ StyledButton {
 
     FocusRing {
         visible: root.visualFocus
+        border.color: root.focusRingColor
         radius: Math.max(0, parent.radius + Style.focusRingOffset)
     }
 

@@ -18,6 +18,7 @@ Row {
     property color selectedContentColor: Style.buttonText
     property color unselectedColor: Style.foregroundColor(Style.secondaryContainer, !root.usePopupTransparency)
     property color unselectedContentColor: Style.onSecondaryContainer
+    property color focusRingColor: Style.focusRingColor
     property bool iconOnly: false
     property bool labelOnlySelected: false
     property string size: "medium"
@@ -262,6 +263,7 @@ Row {
             FocusRing {
                 radius: Math.min(Style.fullRadius(width, height), root.outerRadius + Style.focusRingOffset)
                 visible: segment.visualFocus
+                border.color: root.focusRingColor
             }
 
             Item {

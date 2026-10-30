@@ -10,6 +10,7 @@ StyledButton {
     property bool iconFilled: false
     property color backgroundColor: "transparent"
     property color stateColor: iconColor
+    property color focusRingColor: Style.focusRingColor
     property bool circular: true
     property int buttonSize: Style.buttonHeightXS
     property var tooltipText: null
@@ -43,6 +44,7 @@ StyledButton {
 
     FocusRing {
         visible: root.visualFocus
+        border.color: root.focusRingColor
         anchors.margins: Style.focusRingWidth / 2
         radius: Math.max(0, parent.radius - Style.focusRingWidth / 2)
     }

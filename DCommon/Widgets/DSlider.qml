@@ -61,6 +61,7 @@ Controls.Control {
     property color trackColor: Style.secondaryContainer
     property Gradient trackGradient: null
     property color trackTextColor: Style.onSecondaryContainer
+    property color focusRingColor: Style.focusRingColor
     property bool usePopupTransparency: !Style.isFloatingWindow(slider)
     readonly property real trackAlpha: Math.max(Style.sliderTrackMinAlpha, usePopupTransparency ? Style.foregroundAlpha : Style.floatingWindowForegroundAlpha)
 
@@ -427,6 +428,7 @@ Controls.Control {
 
                 FocusRing {
                     visible: slider.visualFocus
+                    border.color: slider.focusRingColor
                 }
             }
 
@@ -507,6 +509,7 @@ Controls.Control {
                 FocusRing {
                     visible: insetAction.visualFocus
                     radius: Style.fullRadius(width, height)
+                    border.color: slider.focusRingColor
                 }
 
                 DTooltipHost {
