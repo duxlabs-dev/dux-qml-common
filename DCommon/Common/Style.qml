@@ -340,6 +340,24 @@ Singleton {
     readonly property real popupEnterScale: theme?.popupEnterScale ?? 0.92
     readonly property real pendingOpacity: theme?.pendingOpacity ?? 0.6
     readonly property real spinnerStrokeWidth: theme?.spinnerStrokeWidth ?? 2
+    readonly property color circularWavyProgressColor: theme?.circularWavyProgressColor ?? primary
+    readonly property color circularWavyProgressTrackColor: theme?.circularWavyProgressTrackColor ?? secondaryContainer
+    readonly property real circularWavyProgressSize: theme?.circularWavyProgressSize ?? 48
+    readonly property real circularWavyProgressStrokeWidth: theme?.circularWavyProgressStrokeWidth ?? 4
+    readonly property real circularWavyProgressTrackStrokeWidth: theme?.circularWavyProgressTrackStrokeWidth ?? 4
+    readonly property real circularWavyProgressGapSize: theme?.circularWavyProgressGapSize ?? 4
+    readonly property real circularWavyProgressWavelength: theme?.circularWavyProgressWavelength ?? 15
+    readonly property real circularWavyProgressWaveAmplitude: theme?.circularWavyProgressWaveAmplitude ?? 1.6
+    readonly property real circularWavyProgressStartAngle: theme?.circularWavyProgressStartAngle ?? -90
+    readonly property real circularWavyProgressAmplitudeRampStart: theme?.circularWavyProgressAmplitudeRampStart ?? 0.1
+    readonly property real circularWavyProgressAmplitudeRampEnd: theme?.circularWavyProgressAmplitudeRampEnd ?? 0.95
+    readonly property int circularWavyProgressAmplitudeDuration: theme?.circularWavyProgressAmplitudeDuration ?? 500
+    readonly property real circularWavyProgressIndeterminateMinProgress: theme?.circularWavyProgressIndeterminateMinProgress ?? 0.1
+    readonly property real circularWavyProgressIndeterminateMaxProgress: theme?.circularWavyProgressIndeterminateMaxProgress ?? 0.87
+    readonly property int circularWavyProgressIndeterminateCycleDuration: theme?.circularWavyProgressIndeterminateCycleDuration ?? 6000
+    readonly property real circularWavyProgressGlobalRotationTarget: theme?.circularWavyProgressGlobalRotationTarget ?? 1080
+    readonly property int circularWavyProgressRotationStepDuration: theme?.circularWavyProgressRotationStepDuration ?? 300
+    readonly property int circularWavyProgressRotationStepDelay: theme?.circularWavyProgressRotationStepDelay ?? 1500
     readonly property real tabMinWidth: theme?.tabMinWidth ?? 64
     readonly property real tabIndicatorHeight: theme?.tabIndicatorHeight ?? 3
     readonly property real navigationHeight: theme?.navigationHeight ?? 64
