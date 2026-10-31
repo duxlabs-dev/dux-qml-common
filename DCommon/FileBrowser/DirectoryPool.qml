@@ -14,7 +14,7 @@ QtObject {
     property string sortKey: "name"
     property bool sortDesc: false
     property bool dirsFirst: true
-    property bool hiddenLast: false
+    property bool hiddenLast: true
     property string nameFilter: ""
     property bool thumbnailsEnabled: true
     property real thumbnailSizeLimit: -1

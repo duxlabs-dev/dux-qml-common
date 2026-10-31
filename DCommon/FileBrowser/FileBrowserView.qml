@@ -43,7 +43,7 @@ FocusScope {
     property string typeAheadMode: "jump"
     property bool countFolders: true
     property bool dirsFirst: true
-    property bool hiddenLast: false
+    property bool hiddenLast: true
     property bool thumbnailsEnabled: true
     property real thumbnailSizeLimit: -1
     property bool networkThumbnails: true

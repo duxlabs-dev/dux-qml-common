@@ -119,6 +119,7 @@ FocusScope {
             "limit": FileBrowserMetrics.completionLimit,
             "includeHidden": hidden,
             "dirsFirst": true,
+            "hiddenLast": true,
             "sortKey": "name"
         }, result => {
             if (request !== bar.completionRequest)
