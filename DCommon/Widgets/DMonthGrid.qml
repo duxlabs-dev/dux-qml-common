@@ -180,53 +180,59 @@ Item {
             border.width: isToday && !isSelected ? Style.outlineWidthFocused : 0
             border.color: Style.primary
 
-            StyledText {
-                anchors.top: parent.top
-                anchors.topMargin: Style.spacingXS
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: cell.dayDate.getDate()
-                font.pixelSize: Style.fontSizeMedium
-                color: {
-                    if (cell.isSelected)
-                        return Style.onPrimary;
-                    if (cell.isToday)
-                        return Style.primary;
-                    if (!cell.inMonth)
-                        return Style.onSurface_38;
-                    if (cell.weekend)
-                        return root.weekendColor;
-                    return Style.surfaceText;
-                }
-            }
-
-            Row {
-                anchors.bottom: parent.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.bottomMargin: Style.spacingXS
+            Column {
+                anchors.centerIn: parent
                 spacing: Style.spacingXXS
-                visible: cell.dotColors.length > 0
+                scale: Math.min(1, Math.max(0, cell.width - Style.spacingXXS * 2) / implicitWidth, Math.max(0, cell.height - Style.spacingXXS * 2) / implicitHeight)
 
-                Repeater {
-                    model: cell.dotColors.slice(0, root.maxDots)
-
-                    Rectangle {
-                        required property var modelData
-
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: Style.spacingXS
-                        height: Style.spacingXS
-                        radius: Style.fullRadius(width, height)
-                        color: modelData
+                StyledText {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: cell.dayDate.getDate()
+                    font.pixelSize: Style.fontSizeMedium
+                    color: {
+                        if (cell.isSelected)
+                            return Style.onPrimary;
+                        if (cell.isToday)
+                            return Style.primary;
+                        if (!cell.inMonth)
+                            return Style.onSurface_38;
+                        if (cell.weekend)
+                            return root.weekendColor;
+                        return Style.surfaceText;
                     }
                 }
 
-                StyledText {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: "+" + cell.extraCount
-                    font.pixelSize: Style.fontSizeSmall
-                    font.weight: Style.fontWeightMedium
-                    color: cell.isSelected ? Style.onPrimary : Style.primary
-                    visible: cell.extraCount > 0
+                Row {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    // Column skips zero-width items; reserve the row even on days without events.
+                    width: Math.max(Style.spacingXS, implicitWidth)
+                    height: Math.max(Style.spacingXS, overflowCount.implicitHeight)
+                    spacing: Style.spacingXXS
+
+                    Repeater {
+                        model: cell.dotColors.slice(0, root.maxDots)
+
+                        Rectangle {
+                            required property var modelData
+
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: Style.spacingS
+                            height: Style.spacingXS
+                            radius: Style.fullRadius(width, height)
+                            color: modelData
+                        }
+                    }
+
+                    StyledText {
+                        id: overflowCount
+
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "+" + cell.extraCount
+                        font.pixelSize: Style.fontSizeSmall
+                        font.weight: Style.fontWeightMedium
+                        color: cell.isSelected ? Style.onPrimary : Style.primary
+                        visible: cell.extraCount > 0
+                    }
                 }
             }
 
