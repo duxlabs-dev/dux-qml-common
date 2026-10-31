@@ -683,7 +683,7 @@ Rectangle {
 
                                         StyledText {
                                             text: gridButtonRect.actionData.key
-                                            font.pixelSize: Style.fontSizeSmall - 1
+                                            font.pixelSize: Style.fontSizeXSmall
                                             color: Style.surfaceTextSecondary
                                             font.weight: Style.fontWeightMedium
                                             anchors.centerIn: parent

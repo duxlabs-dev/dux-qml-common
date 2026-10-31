@@ -7,10 +7,12 @@ ScrollBar {
 
     property Flickable targetFlickable: null
     property bool allowed: true
+    property bool _scrollBarActive: false
 
     readonly property bool scrollable: !!targetFlickable && targetFlickable.contentWidth > targetFlickable.width
-    readonly property bool targetMoving: !!targetFlickable && (targetFlickable.moving || targetFlickable.flicking)
-    readonly property bool shouldShow: pressed || hovered || active || targetMoving || hideTimer.running
+    readonly property bool targetMoving: !!targetFlickable && (targetFlickable.moving || targetFlickable.flicking || targetFlickable.isMomentumActive === true)
+    readonly property bool shouldShow: pressed || hovered || active || targetMoving || hideTimer.running || _scrollBarActive
+    property alias hideTimer: hideScrollBarTimer
 
     orientation: Qt.Horizontal
     policy: Style.scrollbarsEnabled && allowed && scrollable ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
@@ -49,7 +51,7 @@ ScrollBar {
     background: Item {}
 
     Timer {
-        id: hideTimer
+        id: hideScrollBarTimer
 
         interval: Style.scrollbarHideDelay
     }

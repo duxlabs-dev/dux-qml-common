@@ -15,9 +15,12 @@ function isTouchpad(wheel) {
 }
 
 function verticalKind(wheel) {
+    return axisKind(wheel, wheel.angleDelta.y);
+}
+
+function axisKind(wheel, angle) {
     if (isTouchpad(wheel))
         return Kind.touchpad;
-    const angle = wheel.angleDelta.y;
     if (angle === 0)
         return Kind.none;
     return angle % 120 === 0 ? Kind.wheel : Kind.highResWheel;

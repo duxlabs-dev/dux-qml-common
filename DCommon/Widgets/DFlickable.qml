@@ -11,7 +11,10 @@ Flickable {
     id: flickable
 
     property alias verticalScrollBar: vbar
+    property alias horizontalScrollBar: hbar
     property bool showScrollBar: true
+    // Scrolls along x. The wheel then only answers horizontal input (touchpad x, wheel x, shift+wheel), so a vertical list inside keeps its own wheel.
+    property bool horizontal: false
     property bool fadeEdges: true
     property real fadeLength: Style.spacingXL
     property real fadeTopInset: 0
@@ -30,13 +33,30 @@ Flickable {
     readonly property bool windowVisible: flickable.Window.window?.visible ?? false
     property real friction: Scroll.friction
     property bool _scrollBarActive: false
+    readonly property var _bar: horizontal ? hbar : vbar
+
+    function _axisPos() {
+        return horizontal ? contentX : contentY;
+    }
+
+    function _axisMax() {
+        return Math.max(0, horizontal ? contentWidth - width : contentHeight - height);
+    }
+
+    function _scrollTo(pos) {
+        const clamped = Math.max(0, Math.min(_axisMax(), pos));
+        if (horizontal)
+            contentX = clamped;
+        else
+            contentY = clamped;
+    }
 
     flickDeceleration: Scroll.flickDeceleration
     maximumFlickVelocity: Scroll.maximumFlickVelocity
     boundsBehavior: Flickable.StopAtBounds
     boundsMovement: Flickable.FollowBoundsBehavior
     pressDelay: 0
-    flickableDirection: Flickable.VerticalFlick
+    flickableDirection: horizontal ? Flickable.HorizontalFlick : Flickable.VerticalFlick
 
     WheelHandler {
         id: wheelHandler
@@ -61,15 +81,20 @@ Flickable {
         onWheel: event => handleWheel(event)
 
         function handleWheel(event) {
-            vbar._scrollBarActive = true;
-            vbar.hideTimer.restart();
+            if (flickable.horizontal && !WheelInput.isHorizontal(event)) {
+                event.accepted = false;
+                return;
+            }
+            flickable._bar._scrollBarActive = true;
+            flickable._bar.hideTimer.restart();
 
             const currentTime = Date.now();
             const timeDelta = currentTime - lastWheelTime;
             lastWheelTime = currentTime;
 
-            const kind = WheelInput.verticalKind(event);
-            const deltaY = event.angleDelta.y;
+            const deltaY = flickable.horizontal ? event.angleDelta.x || event.angleDelta.y : event.angleDelta.y;
+            const pixelDelta = flickable.horizontal ? event.pixelDelta.x || event.pixelDelta.y : event.pixelDelta.y;
+            const kind = WheelInput.axisKind(event, deltaY);
 
             if (kind === WheelInput.Kind.wheel) {
                 sessionUsedMouseWheel = true;
@@ -81,14 +106,12 @@ Flickable {
 
                 const lines = Math.round(Math.abs(deltaY) / 120);
                 const scrollAmount = (deltaY > 0 ? -lines : lines) * flickable.mouseWheelSpeed;
-                let newY = flickable.contentY + scrollAmount;
-                newY = Math.max(0, Math.min(flickable.contentHeight - flickable.height, newY));
 
                 if (flickable.flicking) {
                     flickable.cancelFlick();
                 }
 
-                flickable.contentY = newY;
+                flickable._scrollTo(flickable._axisPos() + scrollAmount);
             } else if (kind === WheelInput.Kind.highResWheel) {
                 sessionUsedMouseWheel = true;
                 momentumAnim.running = false;
@@ -97,21 +120,19 @@ Flickable {
                 momentum = 0;
                 flickable.momentumVelocity = 0;
 
-                let delta = deltaY / 8 * touchpadSpeed;
-                let newY = flickable.contentY - delta;
-                newY = Math.max(0, Math.min(flickable.contentHeight - flickable.height, newY));
+                const delta = deltaY / 8 * touchpadSpeed;
 
                 if (flickable.flicking) {
                     flickable.cancelFlick();
                 }
 
-                flickable.contentY = newY;
+                flickable._scrollTo(flickable._axisPos() - delta);
             } else if (kind === WheelInput.Kind.touchpad) {
                 sessionUsedMouseWheel = false;
                 momentumAnim.running = false;
                 flickable.isMomentumActive = false;
 
-                let delta = event.pixelDelta.y * touchpadSpeed;
+                let delta = pixelDelta * touchpadSpeed;
 
                 velocitySamples.push({
                     "delta": delta,
@@ -134,14 +155,11 @@ Flickable {
                     momentum = 0;
                 }
 
-                let newY = flickable.contentY - delta;
-                newY = Math.max(0, Math.min(flickable.contentHeight - flickable.height, newY));
-
                 if (flickable.flicking) {
                     flickable.cancelFlick();
                 }
 
-                flickable.contentY = newY;
+                flickable._scrollTo(flickable._axisPos() - delta);
             }
 
             event.accepted = true;
@@ -163,10 +181,10 @@ Flickable {
     }
 
     onMovementStarted: {
-        vbar._scrollBarActive = true;
-        vbar.hideTimer.stop();
+        _bar._scrollBarActive = true;
+        _bar.hideTimer.stop();
     }
-    onMovementEnded: vbar.hideTimer.restart()
+    onMovementEnded: _bar.hideTimer.restart()
 
     function forwardWheel(event) {
         if (!wheelEnabled)
@@ -203,18 +221,18 @@ Flickable {
 
         onTriggered: {
             const dt = frameTime;
-            const newY = flickable.contentY - flickable.momentumVelocity * dt;
-            const maxY = Math.max(0, flickable.contentHeight - flickable.height);
+            const next = flickable._axisPos() - flickable.momentumVelocity * dt;
+            const max = flickable._axisMax();
 
-            if (newY < 0 || newY > maxY) {
-                flickable.contentY = newY < 0 ? 0 : maxY;
+            if (next < 0 || next > max) {
+                flickable._scrollTo(next);
                 running = false;
                 flickable.isMomentumActive = false;
                 flickable.momentumVelocity = 0;
                 return;
             }
 
-            flickable.contentY = newY;
+            flickable._scrollTo(next);
             flickable.momentumVelocity *= Math.pow(flickable.friction, dt / 0.016);
 
             if (Math.abs(flickable.momentumVelocity) < Scroll.momentumStopThreshold) {
@@ -233,7 +251,7 @@ Flickable {
         anchors.leftMargin: flickable.fadeSideInset
         anchors.rightMargin: flickable.fadeSideInset
         z: 1
-        active: flickable.fadeEdges && flickable.contentHeight > flickable.height + 1
+        active: flickable.fadeEdges && !flickable.horizontal && flickable.contentHeight > flickable.height + 1
         sourceComponent: DEdgeFade {
             target: flickable
             length: flickable.fadeLength
@@ -244,6 +262,12 @@ Flickable {
         id: vbar
         z: 2
         targetFlickable: flickable
-        allowed: flickable.showScrollBar
+        allowed: flickable.showScrollBar && !flickable.horizontal
+    }
+
+    ScrollBar.horizontal: DHorizontalScrollbar {
+        id: hbar
+        targetFlickable: flickable
+        allowed: flickable.showScrollBar && flickable.horizontal
     }
 }
