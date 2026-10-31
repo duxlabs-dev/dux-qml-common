@@ -90,7 +90,7 @@ void main() {
             float startCap = (1.0 - smoothstep(-aaL, aaL, capD)) * step(px.x, trackStart);
             float endD = length(px - vec2(trackEnd, mid)) - halfW;
             float endCap = (1.0 - smoothstep(-aaL, aaL, endD)) * step(trackEnd, px.x);
-            m = max(m, max(startCap, endCap));
+            m = max(m, max(startCap, endCap) * step(trackStart, trackEnd));
         }
         col = blendOver(col, ubuf.trackColor.rgb, ubuf.trackColor.a * m);
     }
