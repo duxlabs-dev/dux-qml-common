@@ -288,6 +288,24 @@ Singleton {
     readonly property real popupEnterScale: 0.92
     readonly property real pendingOpacity: 0.6
     readonly property real spinnerStrokeWidth: 2
+    readonly property color circularWavyProgressColor: primary
+    readonly property color circularWavyProgressTrackColor: secondaryContainer
+    readonly property real circularWavyProgressSize: 48
+    readonly property real circularWavyProgressStrokeWidth: 4
+    readonly property real circularWavyProgressTrackStrokeWidth: 4
+    readonly property real circularWavyProgressGapSize: 4
+    readonly property real circularWavyProgressWavelength: 15
+    readonly property real circularWavyProgressWaveAmplitude: 1.6
+    readonly property real circularWavyProgressStartAngle: -90
+    readonly property real circularWavyProgressAmplitudeRampStart: 0.1
+    readonly property real circularWavyProgressAmplitudeRampEnd: 0.95
+    readonly property int circularWavyProgressAmplitudeDuration: 500
+    readonly property real circularWavyProgressIndeterminateMinProgress: 0.1
+    readonly property real circularWavyProgressIndeterminateMaxProgress: 0.87
+    readonly property int circularWavyProgressIndeterminateCycleDuration: 6000
+    readonly property real circularWavyProgressGlobalRotationTarget: 1080
+    readonly property int circularWavyProgressRotationStepDuration: 300
+    readonly property int circularWavyProgressRotationStepDelay: 1500
     readonly property real tabMinWidth: 64
     readonly property real tabIndicatorHeight: 3
     readonly property real navigationHeight: 64

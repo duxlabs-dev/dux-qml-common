@@ -19,6 +19,11 @@ layout(std140, binding = 0) uniform buf {
     vec4 trackColor;
     vec4 playheadColor;
     vec4 actualColor;
+    float showHandle;
+    float handleWidthPx;
+    float handleHeightPx;
+    vec4 handleColor;
+    float handleGapPx;
 } ubuf;
 
 const float TAU = 6.28318530718;
@@ -48,12 +53,18 @@ void main() {
     float actualX = clamp(ubuf.actualValue, 0.0, 1.0) * w;
     bool seeking = ubuf.showActual > 0.5;
 
+    // The round handle replaces the playhead pill and keeps the track clear of it.
+    bool roundHandle = ubuf.showHandle > 0.5;
+    float handleHalfW = ubuf.handleWidthPx * 0.5;
+    float handleHalfH = ubuf.handleHeightPx * 0.5;
+
     float loX = min(playX, actualX);
     float hiX = max(playX, actualX);
     float fillEnd = seeking ? loX : playX;   // filled progress ends here
     float actStart = seeking ? loX : playX;  // seek-preview segment
     float actEnd = seeking ? hiX : playX;
-    float trackStart = seeking ? hiX : playX; // unplayed remainder
+    float trackStart = seeking ? hiX : (roundHandle ? playX + handleHalfW + ubuf.handleGapPx : playX); // unplayed remainder
+    float trackEnd = roundHandle ? w - halfW : w;
 
     // Perpendicular distance to the animated sine stroke.
     float ang = k * px.x + ubuf.phase;
@@ -72,7 +83,15 @@ void main() {
 
     // 1. Track (unplayed remainder), to the right of the progress head.
     {
-        float m = lineStroke * step(trackStart, px.x);
+        float m = lineStroke * step(trackStart, px.x) * step(px.x, trackEnd);
+        if (roundHandle) {
+            // Rounded ends, each leaving the line along its own direction.
+            float capD = length(px - vec2(trackStart, mid)) - halfW;
+            float startCap = (1.0 - smoothstep(-aaL, aaL, capD)) * step(px.x, trackStart);
+            float endD = length(px - vec2(trackEnd, mid)) - halfW;
+            float endCap = (1.0 - smoothstep(-aaL, aaL, endD)) * step(trackEnd, px.x);
+            m = max(m, max(startCap, endCap));
+        }
         col = blendOver(col, ubuf.trackColor.rgb, ubuf.trackColor.a * m);
     }
 
@@ -84,11 +103,16 @@ void main() {
 
     // 3. Filled progress wave.
     {
-        float m = waveStroke * step(halfW, px.x) * step(px.x, fillEnd);
-        // Rounded start cap.
-        float capS = length(px - vec2(halfW, mid + ubuf.ampPx * sin(k * halfW + ubuf.phase))) - halfW;
-        float capM = 1.0 - smoothstep(-aaW, aaW, capS);
-        m = max(m, capM * step(halfW - 1.0, px.x));
+        // The wave starts at the cap, so the stroke is cut by the cap's plane and the cap itself
+        // is the half disc that leaves the wave along its normal.
+        float capPhase = k * halfW + ubuf.phase;
+        vec2 capCenter = vec2(halfW, mid + ubuf.ampPx * sin(capPhase));
+        vec2 tangent = normalize(vec2(1.0, ubuf.ampPx * k * cos(capPhase)));
+        float side = dot(px - capCenter, tangent);
+        float m = waveStroke * step(0.0, side) * step(px.x, fillEnd);
+        float capD = length(px - capCenter) - halfW;
+        float capM = (1.0 - smoothstep(-aaW, aaW, capD)) * step(side, 0.0);
+        m = max(m, capM);
         col = blendOver(col, ubuf.fillColor.rgb, ubuf.fillColor.a * m);
     }
 
@@ -101,8 +125,18 @@ void main() {
         col = blendOver(col, ubuf.actualColor.rgb, ubuf.actualColor.a * m);
     }
 
-    // 5. Playhead pill (on top).
-    {
+    // 5. Playhead pill, or the round handle that stretches into a pill while seeking.
+    if (roundHandle) {
+        // A capsule, so the ends stay round whatever the handle's proportions are.
+        float r = min(handleHalfW, handleHalfH);
+        float halfLen = max(0.0, handleHalfH - r);
+        vec2 p = px - vec2(playX, mid);
+        p.y -= clamp(p.y, -halfLen, halfLen);
+        float d = length(p) - r;
+        float aa = AA;
+        float m = 1.0 - smoothstep(-aa, aa, d);
+        col = blendOver(col, ubuf.handleColor.rgb, ubuf.handleColor.a * m);
+    } else {
         float phW = 3.5;
         float phH = max(ubuf.lineWidthPx + 12.0, 16.0);
         float d = sdRoundBar(px - vec2(playX, mid), vec2(phW * 0.5, phH * 0.5), phW * 0.5);

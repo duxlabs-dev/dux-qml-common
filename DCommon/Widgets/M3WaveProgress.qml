@@ -17,6 +17,12 @@ Item {
     property color fillColor: Style.primary
     property color playheadColor: Style.primary
     property color actualProgressColor: Style.onSurface_38
+    // A round handle that takes the place of the playhead pill.
+    property bool showHandle: false
+    property real handleWidth: 0
+    property real handleHeight: 0
+    property color handleColor: "transparent"
+    property real handleGap: 0
 
     Behavior on currentAmp {
         enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
@@ -43,6 +49,11 @@ Item {
         readonly property color trackColor: root.trackColor
         readonly property color playheadColor: root.playheadColor
         readonly property color actualColor: root.actualProgressColor
+        readonly property real showHandle: root.showHandle ? 1.0 : 0.0
+        readonly property real handleWidthPx: root.handleWidth
+        readonly property real handleHeightPx: root.handleHeight
+        readonly property color handleColor: root.handleColor
+        readonly property real handleGapPx: root.handleGap
 
         fragmentShader: Qt.resolvedUrl("../Shaders/qsb/wave_progress.frag.qsb")
     }
