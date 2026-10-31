@@ -14,6 +14,7 @@ QtObject {
     property string sortKey: "name"
     property bool sortDesc: false
     property bool dirsFirst: true
+    property bool hiddenLast: false
     property string nameFilter: ""
     property bool thumbnailsEnabled: true
     property real thumbnailSizeLimit: -1
@@ -34,6 +35,7 @@ QtObject {
             sortKey: pool.sortKey
             sortDesc: pool.sortDesc
             dirsFirst: pool.dirsFirst
+            hiddenLast: pool.hiddenLast
             nameFilter: path === pool.activePath ? pool.nameFilter : ""
             thumbnailsEnabled: pool.thumbnailsEnabled
             thumbnailSizeLimit: pool.thumbnailSizeLimit

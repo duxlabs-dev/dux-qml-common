@@ -184,6 +184,8 @@ Singleton {
     function compare(a, b, options) {
         if ((options.dirsFirst ?? true) && a.isDir !== b.isDir)
             return a.isDir ? -1 : 1;
+        if (options.hiddenLast && a.hidden !== b.hidden)
+            return a.hidden ? 1 : -1;
         let order = 0;
         switch (options.sortKey) {
         case "size":

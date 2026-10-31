@@ -43,6 +43,7 @@ FocusScope {
     property string typeAheadMode: "jump"
     property bool countFolders: true
     property bool dirsFirst: true
+    property bool hiddenLast: false
     property bool thumbnailsEnabled: true
     property real thumbnailSizeLimit: -1
     property bool networkThumbnails: true
@@ -222,6 +223,8 @@ FocusScope {
     onSortKeyChanged: optionsSettle.restart()
     onSortDescendingChanged: optionsSettle.restart()
     onFiltersChanged: optionsSettle.restart()
+    onDirsFirstChanged: optionsSettle.restart()
+    onHiddenLastChanged: optionsSettle.restart()
 
     Timer {
         id: optionsSettle
@@ -240,6 +243,7 @@ FocusScope {
         sortKey: root.sortKey
         sortDesc: root.sortDescending
         dirsFirst: root.dirsFirst
+        hiddenLast: root.hiddenLast
         nameFilter: root.nameFilter
         thumbnailsEnabled: root.thumbnailsEnabled
         thumbnailSizeLimit: root.thumbnailSizeLimit

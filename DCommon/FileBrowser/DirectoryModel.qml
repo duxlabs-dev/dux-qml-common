@@ -14,6 +14,7 @@ QtObject {
     property string sortKey: "name"
     property bool sortDesc: false
     property bool dirsFirst: true
+    property bool hiddenLast: false
     property int pageSize: 500
     property string thumbnailSize: "normal"
     property string nameFilter: ""
@@ -237,6 +238,7 @@ QtObject {
             "sortKey": sortKey,
             "sortDesc": sortDesc,
             "dirsFirst": dirsFirst,
+            "hiddenLast": hiddenLast,
             "limit": pageSize,
             "cursor": cursorValue || ""
         };
@@ -264,7 +266,7 @@ QtObject {
     function _sameOptions(a, b) {
         if (!a || !b)
             return false;
-        if (a.includeHidden !== b.includeHidden || a.sortKey !== b.sortKey || a.sortDesc !== b.sortDesc || a.dirsFirst !== b.dirsFirst || a.limit !== b.limit)
+        if (a.includeHidden !== b.includeHidden || a.sortKey !== b.sortKey || a.sortDesc !== b.sortDesc || a.dirsFirst !== b.dirsFirst || a.hiddenLast !== b.hiddenLast || a.limit !== b.limit)
             return false;
         return a.filters.length === b.filters.length && a.filters.every((pattern, i) => pattern === b.filters[i]);
     }
