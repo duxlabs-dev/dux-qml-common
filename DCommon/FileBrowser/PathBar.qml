@@ -418,7 +418,7 @@ FocusScope {
                         required property int index
                         required property var modelData
 
-                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.verticalCenter: pills.verticalCenter
                         spacing: FileBrowserMetrics.pathBarSpacing
 
                         StyledText {

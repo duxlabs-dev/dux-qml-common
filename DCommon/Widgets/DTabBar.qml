@@ -83,7 +83,7 @@ T.Control {
 
                 width: tabBar.equalWidthTabs ? Math.max(0, tabBar.width - tabBar.spacing * Math.max(0, tabRepeater.count - 1)) / Math.max(1, tabRepeater.count) : Math.max(contentCol.implicitWidth + Style.spacingXL, Style.tabMinWidth)
                 height: Math.max(tabBar.tabHeight - Style.tabIndicatorHeight, contentCol.implicitHeight + Style.spacingXS * 2)
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.verticalCenter: tabRow.verticalCenter
 
                 Column {
                     id: contentCol
