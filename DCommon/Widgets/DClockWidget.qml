@@ -11,6 +11,7 @@ Item {
     property var locale: Qt.locale()
     property bool use24HourClock: true
     property bool padHours12Hour: false
+    property bool showAmPm: true
     property string dateFormat: ""
     property string fallbackFontFamily: ""
 
@@ -249,7 +250,7 @@ Item {
         Item {
             id: digitalRoot
 
-            readonly property bool hasAmPm: !root.use24HourClock
+            readonly property bool hasAmPm: !root.use24HourClock && root.showAmPm
             readonly property real verticalScale: root.showDate && hasAmPm ? 0.55 : (root.showDate || hasAmPm ? 0.65 : 0.8)
             readonly property real baseSize: Math.min(height * verticalScale, width * 0.22)
             readonly property real digitWidth: baseSize * 0.62
@@ -336,7 +337,7 @@ Item {
         Item {
             id: stackedRoot
 
-            readonly property bool hasAmPm: !root.use24HourClock
+            readonly property bool hasAmPm: !root.use24HourClock && root.showAmPm
             readonly property real extraContent: (root.showDigitalSeconds ? 0.12 : 0) + (root.showDate ? 0.08 : 0) + (hasAmPm ? 0.08 : 0)
             readonly property real baseSize: height * (0.42 - extraContent * 0.5)
             readonly property real digitWidth: baseSize * 0.58

@@ -112,6 +112,9 @@ var SPEC = {
     padHours12Hour: {
         def: false
     },
+    showAmPm: {
+        def: true
+    },
     useFahrenheit: {
         def: false
     },
