@@ -32,6 +32,7 @@ Singleton {
             "gridZoom": saved.gridZoom ?? saved.iconSizeIndex ?? FileBrowserMetrics.defaultGridZoom,
             "listZoom": saved.listZoom ?? FileBrowserMetrics.defaultListZoom,
             "showSidebar": saved.showSidebar ?? true,
+            "showPreview": saved.showPreview ?? true,
             "showHidden": saved.showHidden,
             "lastPath": FilePaths.normalize(saved.lastPath ?? "")
         };

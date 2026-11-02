@@ -7,6 +7,7 @@ import qs.DCommon.Widgets
 Item {
     id: header
 
+    property var listColumns: []
     property var columnIds: []
     property var widths: ({})
     property string sortKey: "name"
@@ -113,11 +114,12 @@ Item {
         spacing: FileBrowserMetrics.columnGap
 
         Repeater {
-            model: header.columnIds
+            model: header.listColumns
 
             HeaderCell {
                 required property string modelData
 
+                visible: header.columnIds.includes(modelData)
                 width: header.columnWidth(modelData)
                 columnId: modelData
                 sortsBy: header.columnSortKeys[modelData] ?? FileColumns.sortKeyFor(modelData)

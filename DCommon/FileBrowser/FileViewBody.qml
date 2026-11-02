@@ -4,6 +4,7 @@ import QtQuick
 import qs.DCommon.Common
 import qs.DCommon.Widgets
 import "TypeAhead.js" as TypeAhead
+import "ListColumns.js" as ListColumns
 
 FocusScope {
     id: body
@@ -57,19 +58,10 @@ FocusScope {
     readonly property real columnZoomFactor: FileBrowserMetrics.columnZoomFactor(columnZoom)
     readonly property var iconSizes: FileBrowserMetrics.iconSizesFor(viewMode)
     readonly property real iconSize: iconSizes[Math.max(0, Math.min(iconSizes.length - 1, zoom))]
-    readonly property string fittingKey: {
-        let available = width - iconSize - FileBrowserMetrics.listRowPadding * 2 - FileBrowserMetrics.listRowGap - FileBrowserMetrics.nameColumnMinWidth;
-        const kept = [];
-        for (const id of listColumns) {
-            const needed = columnWidthFor(id) + FileBrowserMetrics.columnGap;
-            if (needed > available)
-                break;
-            available -= needed;
-            kept.push(id);
-        }
-        return kept.join(",");
-    }
+    readonly property var fitting: ListColumns.fit(listColumns, width - iconSize - FileBrowserMetrics.listRowPadding * 2 - FileBrowserMetrics.listRowGap - FileBrowserMetrics.nameColumnMinWidth, columnWidths, defaultColumnWidth, FileBrowserMetrics.columnGap)
+    readonly property string fittingKey: fitting.ids.join(",")
     readonly property var fittingColumns: fittingKey === "" ? [] : fittingKey.split(",")
+    readonly property var fittingWidths: fitting.widths
     readonly property bool listing: directory.loading && directory.count === 0
     readonly property bool empty: !directory.loading && directory.error === "" && directory.count === 0
     readonly property var dragScrollTarget: dragScrollTargetFor(FileDragHover.area)
@@ -275,8 +267,12 @@ FocusScope {
         itemMenuRequested(index, point.x, point.y, modifiers);
     }
 
-    function columnWidthFor(id) {
-        return columnWidths[id] ?? FileColumns.specFor(id)?.width ?? FileBrowserMetrics.columnMinWidth;
+    function defaultColumnWidth(id) {
+        return FileColumns.specFor(id)?.width ?? FileBrowserMetrics.columnMinWidth;
+    }
+
+    function clampColumnWidth(id, width) {
+        return ListColumns.clampResize(width, fittingWidths[id] ?? defaultColumnWidth(id), fitting.slack, FileBrowserMetrics.columnMinWidth);
     }
 
     function zoomBy(step) {
@@ -729,7 +725,7 @@ FocusScope {
             cutSet: body.cutSet
             childCounts: body.childCounts
             columnIds: body.fittingColumns
-            storedWidths: body.columnWidths
+            storedWidths: body.fittingWidths
             singleClickActivates: body.singleClickActivates
             nameHighlight: body.nameHighlight
             multiSelect: body.multiSelect
@@ -801,8 +797,9 @@ FocusScope {
     component ColumnHeader: FileColumnHeader {
         id: columns
 
+        listColumns: body.listColumns
         columnIds: body.fittingColumns
-        widths: body.columnWidths
+        widths: body.fittingWidths
         sortKey: body.sortKey
         sortDescending: body.sortDescending
         columnSortKeys: body.columnSortKeys
@@ -813,7 +810,7 @@ FocusScope {
             const point = columns.mapToItem(body, pointX, pointY);
             body.columnsMenuRequested(point.x, point.y);
         }
-        onColumnResized: (id, width) => body.columnResizeRequested(id, width)
+        onColumnResized: (id, width) => body.columnResizeRequested(id, body.clampColumnWidth(id, width))
     }
 
     Component {
