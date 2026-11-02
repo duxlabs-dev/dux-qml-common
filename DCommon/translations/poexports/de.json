@@ -45,13 +45,13 @@
     "Cancel": "Abbrechen"
   },
   "Choose icon": {
-    "Choose icon": "Symbol wählen"
+    "Choose icon": "Icon wählen"
   },
   "Clear": {
     "Clear": "Löschen"
   },
   "Clear the selection": {
-    "Clear the selection": "Auswahl aufheben"
+    "Clear the selection": "Die Auswahl aufheben"
   },
   "Close": {
     "Close": "Schließen"
@@ -69,7 +69,7 @@
     "Copy path": "Pfad kopieren"
   },
   "Create": {
-    "Create": "Erzeuge"
+    "Create": "Erstellen"
   },
   "Created": {
     "Created": "Erstellt"
@@ -93,7 +93,7 @@
     "Enter": "Eingabe"
   },
   "Enter filename...": {
-    "Enter filename...": "Dateinamen eingeben..."
+    "Enter filename...": "Dateiname eingeben ..."
   },
   "File": {
     "File": "Datei"
@@ -108,7 +108,7 @@
     "Files - %1": "Dateien - %1"
   },
   "Files are unavailable because the file service is not running": {
-    "Files are unavailable because the file service is not running": "Dateien sind nicht verfügbar, da der Dateidienst nicht läuft"
+    "Files are unavailable because the file service is not running": "Dateien sind nicht verfügbar, da der Dateidienst nicht ausgeführt wird"
   },
   "First %1 of %2": {
     "First %1 of %2": "Erste %1 von %2"
@@ -234,7 +234,7 @@
     "Reboot": "Neustart"
   },
   "Refresh": {
-    "Refresh": "Aktualisieren"
+    "Refresh": "Auffrischen"
   },
   "Rename": {
     "Rename": "Umbenennen"
@@ -243,7 +243,7 @@
     "Restore": "Wiederherstellen"
   },
   "Review changes": {
-    "Review changes": "Änderungen überprüfen"
+    "Review changes": "Änderungen nochmals durhsehen"
   },
   "Saturation %1%, brightness %2%": {
     "Saturation %1%, brightness %2%": "Sättigung %1%, Helligkeit %2%"
@@ -252,25 +252,25 @@
     "Save": "Speichern"
   },
   "Search for a location...": {
-    "Search for a location...": "Nach einem Ort suchen..."
+    "Search for a location...": "Nach einem Ort suchen ..."
   },
   "Search...": {
     "Search...": "Suche ..."
   },
   "Searching...": {
-    "Searching...": "Suche..."
+    "Searching...": "Suche ..."
   },
   "Select File": {
     "Select File": "Datei auswählen"
   },
   "Select time": {
-    "Select time": "Zeit wählen"
+    "Select time": "Zeit auswählen"
   },
   "Shift": {
     "Shift": "Umschalt"
   },
   "Show hidden files": {
-    "Show hidden files": "Versteckte Dateien anzeigen"
+    "Show hidden files": "Ausgeblendete Dateien zeigen"
   },
   "Show password": {
     "Show password": "Passwort anzeigen"
@@ -339,7 +339,7 @@
     "You do not have permission to do this": "Sie haben keine Berechtigung, dies zu tun"
   },
   "You do not have permission to view this folder": {
-    "You do not have permission to view this folder": "Sie haben keine Berechtigung, diesen Ordner anzuzeigen"
+    "You do not have permission to view this folder": "Sie haben keine Berechtigung, diesen Ordner anzusehen"
   },
   "kB": {
     "kB": "kB"

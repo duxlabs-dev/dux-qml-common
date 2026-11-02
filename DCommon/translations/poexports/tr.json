@@ -60,7 +60,7 @@
     "Color": "Renk"
   },
   "Communication": {
-    "Communication": ""
+    "Communication": "İletişim"
   },
   "Confirm": {
     "Confirm": "Onayla"
@@ -75,7 +75,7 @@
     "Created": ""
   },
   "Decrease": {
-    "Decrease": ""
+    "Decrease": "Azalt"
   },
   "Descending": {
     "Descending": ""
@@ -99,13 +99,13 @@
     "File": "Dosya"
   },
   "File Already Exists": {
-    "File Already Exists": ""
+    "File Already Exists": "Dosya Zaten Mevcut"
   },
   "File System": {
     "File System": ""
   },
   "Files - %1": {
-    "Files - %1": ""
+    "Files - %1": "Dosyalar - %1"
   },
   "Files are unavailable because the file service is not running": {
     "Files are unavailable because the file service is not running": ""
@@ -150,7 +150,7 @@
     "Hold to confirm (%1s)": "Onaylamak için basılı tutun (%1s)"
   },
   "Home": {
-    "Home": ""
+    "Home": "Ev"
   },
   "Hour": {
     "Hour": ""
@@ -186,7 +186,7 @@
     "Modified": "Değiştirilmiş"
   },
   "Move to Trash": {
-    "Move to Trash": ""
+    "Move to Trash": "Çöp Kovasına Taşı"
   },
   "Name": {
     "Name": "İsim"
@@ -225,7 +225,7 @@
     "Power Off": "Kapat"
   },
   "Power Options": {
-    "Power Options": ""
+    "Power Options": "Güç Ayarları"
   },
   "Quick Access": {
     "Quick Access": ""
@@ -261,7 +261,7 @@
     "Searching...": ""
   },
   "Select File": {
-    "Select File": ""
+    "Select File": "Dosya Seç"
   },
   "Select time": {
     "Select time": ""
@@ -273,7 +273,7 @@
     "Show hidden files": ""
   },
   "Show password": {
-    "Show password": ""
+    "Show password": "Şifreyi göster"
   },
   "Size": {
     "Size": "Boyut"
