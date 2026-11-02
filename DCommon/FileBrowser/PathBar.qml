@@ -347,85 +347,107 @@ FocusScope {
         onChosen: row => bar.openRow(row)
     }
 
-    DFlickable {
-        id: strip
-
-        readonly property bool mirrored: LayoutMirroring.enabled
-        readonly property real overflow: Math.max(0, contentWidth - width)
-
-        function scrollToCurrent() {
-            contentX = mirrored ? 0 : overflow;
-        }
+    Rectangle {
+        id: frame
 
         anchors.fill: parent
         visible: !bar.editing && !bar.connecting
-        wheelEnabled: false
-        clip: true
-        flickableDirection: Flickable.HorizontalFlick
-        contentWidth: Math.max(width, pills.width)
-        contentHeight: height
+        radius: FileBrowserMetrics.pathPillRadius
+        color: Style.foregroundColor(bar.chipColor, Style.isFloatingWindow(bar))
 
-        onContentWidthChanged: scrollToCurrent()
-        onWidthChanged: scrollToCurrent()
+        Rectangle {
+            anchors.fill: parent
+            radius: frame.radius
+            color: Style.surfaceText
+            opacity: stripArea.containsMouse ? Style.stateLayerHover : 0
+        }
 
-        WheelHandler {
-            acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
-            onWheel: event => {
-                const delta = event.angleDelta.y !== 0 ? event.angleDelta.y : event.angleDelta.x;
-                strip.contentX = Math.max(0, Math.min(strip.contentWidth - strip.width, strip.contentX - delta));
+        DFlickable {
+            id: strip
+
+            readonly property bool mirrored: LayoutMirroring.enabled
+            readonly property real inset: Style.spacingXXS
+            readonly property real overflow: Math.max(0, contentWidth - width)
+
+            function scrollToCurrent() {
+                contentX = mirrored ? 0 : overflow;
             }
-        }
 
-        MouseArea {
-            width: Math.max(strip.width, pills.width)
-            height: strip.height
-            cursorShape: Qt.PointingHandCursor
-            onClicked: bar.startEditing()
-        }
+            anchors.fill: parent
+            wheelEnabled: false
+            clip: true
+            flickableDirection: Flickable.HorizontalFlick
+            contentWidth: Math.max(width, pills.width + inset * 2)
+            contentHeight: height
 
-        Row {
-            id: pills
+            onContentWidthChanged: scrollToCurrent()
+            onWidthChanged: scrollToCurrent()
 
-            x: strip.mirrored ? strip.contentWidth - width : 0
-            height: strip.height
-            spacing: FileBrowserMetrics.pathBarSpacing
+            WheelHandler {
+                acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+                onWheel: event => {
+                    const delta = event.angleDelta.y !== 0 ? event.angleDelta.y : event.angleDelta.x;
+                    strip.contentX = Math.max(0, Math.min(strip.contentWidth - strip.width, strip.contentX - delta));
+                }
+            }
 
-            Repeater {
-                model: bar.segments
+            MouseArea {
+                id: stripArea
 
-                Row {
-                    id: segment
+                width: strip.contentWidth
+                height: strip.height
+                hoverEnabled: true
+                cursorShape: Qt.IBeamCursor
+                onClicked: bar.startEditing()
+            }
 
-                    required property int index
-                    required property var modelData
+            Row {
+                id: pills
 
-                    anchors.verticalCenter: parent.verticalCenter
-                    spacing: FileBrowserMetrics.pathBarSpacing
+                x: strip.mirrored ? strip.contentWidth - width - strip.inset : strip.inset
+                y: strip.inset
+                height: strip.height - strip.inset * 2
+                spacing: FileBrowserMetrics.pathBarSpacing
 
-                    StyledText {
+                Repeater {
+                    model: bar.segments
+
+                    Row {
+                        id: segment
+
+                        required property int index
+                        required property var modelData
+
                         anchors.verticalCenter: parent.verticalCenter
-                        visible: segment.index > 0
-                        text: "/"
-                        color: Style.outline
-                        font.pixelSize: Style.fontSizeMedium
-                    }
+                        spacing: FileBrowserMetrics.pathBarSpacing
 
-                    PathPill {
-                        id: pill
+                        StyledText {
+                            anchors.verticalCenter: parent.verticalCenter
+                            visible: segment.index > 0
+                            text: "/"
+                            color: Style.outline
+                            font.pixelSize: Style.fontSizeMedium
+                        }
 
-                        label: segment.modelData.iconName === "home" ? I18n.tr("Home", "file browser quick access location") : segment.modelData.label
-                        iconName: segment.modelData.iconName
-                        path: segment.modelData.path
-                        chipColor: bar.chipColor
-                        current: segment.index === bar.segments.length - 1
-                        dropEnabled: bar.dropEnabled
-                        onClicked: bar.pillClicked(segment.modelData.path)
-                        onMiddleClicked: bar.tabRequested(segment.modelData.path)
-                        onDropped: drop => bar.itemsDropped(segment.modelData.path, drop)
-                        onSpringLoaded: bar.navigated(segment.modelData.path)
-                        onMenuRequested: (pointX, pointY) => {
-                            const point = pill.mapToItem(bar, pointX, pointY);
-                            bar.menuRequested(segment.modelData.path, point.x, point.y);
+                        PathPill {
+                            id: pill
+
+                            height: pills.height
+                            radius: Math.max(0, FileBrowserMetrics.pathPillRadius - strip.inset)
+                            label: segment.modelData.iconName === "home" ? I18n.tr("Home", "file browser quick access location") : segment.modelData.label
+                            iconName: segment.modelData.iconName
+                            path: segment.modelData.path
+                            chipColor: "transparent"
+                            current: segment.index === bar.segments.length - 1
+                            dropEnabled: bar.dropEnabled
+                            onClicked: bar.pillClicked(segment.modelData.path)
+                            onMiddleClicked: bar.tabRequested(segment.modelData.path)
+                            onDropped: drop => bar.itemsDropped(segment.modelData.path, drop)
+                            onSpringLoaded: bar.navigated(segment.modelData.path)
+                            onMenuRequested: (pointX, pointY) => {
+                                const point = pill.mapToItem(bar, pointX, pointY);
+                                bar.menuRequested(segment.modelData.path, point.x, point.y);
+                            }
                         }
                     }
                 }
