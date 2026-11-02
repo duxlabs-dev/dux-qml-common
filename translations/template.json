@@ -7,9 +7,30 @@
     "comment": ""
   },
   {
+    "term": "%1 of %2",
+    "translation": "",
+    "context": "position of the previewed item among the selected items",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "%1 selected",
     "translation": "",
-    "context": "count of selected items | preview column header for a multiple selection",
+    "context": "count of selected items",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "%1 × %2",
+    "translation": "",
+    "context": "image width and height in pixels",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "%1, %2",
+    "translation": "",
+    "context": "relative file time, %1 is the weekday name and %2 the time of day",
     "reference": "",
     "comment": ""
   },
@@ -182,6 +203,13 @@
     "comment": ""
   },
   {
+    "term": "Deleted",
+    "translation": "",
+    "context": "trash list column header, when an item was moved to the trash",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Descending",
     "translation": "",
     "context": "file browser sort order option",
@@ -192,6 +220,13 @@
     "term": "Development",
     "translation": "",
     "context": "",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Dimensions",
+    "translation": "",
+    "context": "preview row label for the width and height of an image",
     "reference": "",
     "comment": ""
   },
@@ -329,6 +364,13 @@
     "comment": ""
   },
   {
+    "term": "Hide preview",
+    "translation": "",
+    "context": "tooltip on the button closing the preview drawer",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Hold longer to confirm",
     "translation": "",
     "context": "",
@@ -367,6 +409,20 @@
     "term": "Increase",
     "translation": "",
     "context": "Accessible name for a button that increases a numeric value",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Jump to a folder you visited",
+    "translation": "",
+    "context": "location bar placeholder in folder jump mode",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Last used",
+    "translation": "",
+    "context": "recent files list column header, when a file was last opened",
     "reference": "",
     "comment": ""
   },
@@ -469,6 +525,13 @@
     "comment": ""
   },
   {
+    "term": "Nothing is at this location",
+    "translation": "",
+    "context": "location bar error when the typed location does not exist",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Numbers",
     "translation": "",
     "context": "",
@@ -486,6 +549,13 @@
     "term": "Open",
     "translation": "",
     "context": "file browser open button",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Original location",
+    "translation": "",
+    "context": "trash list column header, where an item was deleted from",
     "reference": "",
     "comment": ""
   },
@@ -756,9 +826,30 @@
     "comment": ""
   },
   {
+    "term": "This kind of location is not supported",
+    "translation": "",
+    "context": "location bar error for an unknown address scheme",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Today, %1",
+    "translation": "",
+    "context": "relative file time, %1 is the time of day",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Type",
     "translation": "",
     "context": "file browser sort criterion option",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Type a path, ~ or an address such as sftp://host",
+    "translation": "",
+    "context": "location bar error when the text is not a location",
     "reference": "",
     "comment": ""
   },
@@ -777,9 +868,23 @@
     "comment": ""
   },
   {
+    "term": "Use ~ for your own home folder or type the full path",
+    "translation": "",
+    "context": "location bar error when another user's home was typed as ~name",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Workspace",
     "translation": "",
     "context": "",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Yesterday, %1",
+    "translation": "",
+    "context": "relative file time, %1 is the time of day",
     "reference": "",
     "comment": ""
   },

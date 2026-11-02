@@ -8,6 +8,7 @@ import qs.DCommon.Common
 Singleton {
     readonly property var legacyKeys: ["sortBy", "sortAscending", "iconSizeIndex"]
     readonly property bool showExtensions: Style.settings?.showExtensions ?? true
+    readonly property string dateFormat: Style.settings?.dateFormat ?? "locale"
 
     function sortKeyFor(value) {
         switch (value) {

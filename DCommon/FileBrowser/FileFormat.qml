@@ -28,7 +28,40 @@ Singleton {
     function modified(mtimeMs) {
         if (!mtimeMs)
             return "";
-        return new Date(mtimeMs).toLocaleString(Qt.locale(), Locale.ShortFormat);
+        return timestamp(new Date(mtimeMs), FileBrowserSettings.dateFormat, new Date());
+    }
+
+    function timestamp(date, format, now) {
+        switch (format) {
+        case "relative":
+            return relativeTimestamp(date, now);
+        case "iso":
+            return Qt.formatDateTime(date, "yyyy-MM-dd HH:mm");
+        case "isoSeconds":
+            return Qt.formatDateTime(date, "yyyy-MM-dd HH:mm:ss");
+        default:
+            return date.toLocaleString(Qt.locale(), Locale.ShortFormat);
+        }
+    }
+
+    function daysBefore(date, now) {
+        const dayStart = d => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+        return Math.round((dayStart(now) - dayStart(date)) / 86400000);
+    }
+
+    function relativeTimestamp(date, now) {
+        const time = date.toLocaleTimeString(Qt.locale(), Locale.ShortFormat);
+        const days = daysBefore(date, now);
+        switch (true) {
+        case days === 0:
+            return I18n.tr("Today, %1", "relative file time, %1 is the time of day").arg(time);
+        case days === 1:
+            return I18n.tr("Yesterday, %1", "relative file time, %1 is the time of day").arg(time);
+        case days > 1 && days < 7:
+            return I18n.tr("%1, %2", "relative file time, %1 is the weekday name and %2 the time of day").arg(date.toLocaleDateString(Qt.locale(), "dddd")).arg(time);
+        default:
+            return date.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
+        }
     }
 
     function typeLabel(entry) {
