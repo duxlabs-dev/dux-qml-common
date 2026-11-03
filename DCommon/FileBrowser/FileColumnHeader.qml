@@ -165,6 +165,7 @@ Item {
 
     TapHandler {
         acceptedButtons: Qt.RightButton
+        gesturePolicy: TapHandler.ReleaseWithinBounds
         onTapped: point => header.columnsMenuRequested(point.position.x, point.position.y)
     }
 }
