@@ -12,6 +12,8 @@ Item {
     // disable for thumbnail grids
     property bool animate: true
     property bool asynchronous: true
+    // Remote images are fetched on every load by default; on, a scaled jpeg copy is kept in the image cache keyed by URL.
+    property bool cacheRemote: false
     property bool _fromCache: false
     property string _originalSource: ""
     property string _cacheTarget: ""
@@ -45,7 +47,13 @@ Item {
     }
 
     readonly property string imageHash: normalizedPath ? djb2Hash(normalizedPath) : ""
-    readonly property string cacheFileName: imageHash && !isRemoteUrl && !isAnimated ? `${imageHash}@${maxCacheSize}x${maxCacheSize}.png` : ""
+    readonly property string cacheFileName: {
+        if (!imageHash || isAnimated)
+            return "";
+        if (isRemoteUrl)
+            return cacheRemote ? `${imageHash}@${maxCacheSize}x${maxCacheSize}.jpg` : "";
+        return `${imageHash}@${maxCacheSize}x${maxCacheSize}.png`;
+    }
     readonly property string cachePath: cacheFileName ? `${Paths.stringify(Paths.imagecache)}/${cacheFileName}` : ""
     readonly property string encodedImagePath: {
         if (!normalizedPath)
@@ -73,6 +81,21 @@ Item {
         fillMode: root.fillMode
         smooth: true
 
+        function cacheGrab() {
+            if (root._fromCache || !root._cacheTarget || status !== Image.Ready)
+                return;
+            if (!visible || width <= 0 || height <= 0 || !Window.window?.visible)
+                return;
+            const grabPath = root._cacheTarget;
+            const scale = root.maxCacheSize / Math.max(width, height);
+            grabToImage(res => {
+                if (grabPath !== root._cacheTarget)
+                    return;
+                if (res.saveToFile(grabPath))
+                    ImageCacheIndex.add(grabPath.substring(grabPath.lastIndexOf("/") + 1));
+            }, Qt.size(Math.round(width * scale), Math.round(height * scale)));
+        }
+
         // cache files are already bounded, and a sourceSize box would cover-scale them into a larger texture
         function loadOriginal() {
             root._fromCache = false;
@@ -96,16 +119,8 @@ Item {
                         loadOriginal();
                     return;
                 }
-                if (!visible || width <= 0 || height <= 0 || !Window.window?.visible)
-                    return;
-                const grabPath = root._cacheTarget;
-                const scale = root.maxCacheSize / Math.max(width, height);
-                grabToImage(res => {
-                    if (grabPath !== root._cacheTarget)
-                        return;
-                    if (res.saveToFile(grabPath))
-                        ImageCacheIndex.add(grabPath.substring(grabPath.lastIndexOf("/") + 1));
-                }, Qt.size(Math.round(width * scale), Math.round(height * scale)));
+                // A host that shows the image only once it is Ready still reads as hidden here; its binding settles before the next tick.
+                Qt.callLater(cacheGrab);
                 return;
             }
         }
@@ -125,20 +140,21 @@ Item {
         }
         if (animate && hasAnimatedExtension(path))
             return;
-        if (path.startsWith("http://") || path.startsWith("https://")) {
+        const remote = path.startsWith("http://") || path.startsWith("https://");
+        if (remote && !cacheRemote) {
             staticImg.sourceSize = Qt.size(maxCacheSize, maxCacheSize);
             staticImg.source = path;
             return;
         }
-        const stripped = path.startsWith("file://") ? path.substring(7) : path;
-        const encoded = "file://" + stripped.split('/').map(s => encodeURIComponent(s)).join('/');
+        const stripped = remote ? path : path.startsWith("file://") ? path.substring(7) : path;
+        const encoded = remote ? path : "file://" + stripped.split('/').map(s => encodeURIComponent(s)).join('/');
         const hash = djb2Hash(stripped);
         if (!hash) {
             staticImg.sourceSize = Qt.size(maxCacheSize, maxCacheSize);
             staticImg.source = encoded;
             return;
         }
-        const cacheName = `${hash}@${maxCacheSize}x${maxCacheSize}.png`;
+        const cacheName = `${hash}@${maxCacheSize}x${maxCacheSize}.${remote ? "jpg" : "png"}`;
         _originalSource = encoded;
         _cacheTarget = `${Paths.stringify(Paths.imagecache)}/${cacheName}`;
         if (ImageCacheIndex.ready && !ImageCacheIndex.has(cacheName)) {
