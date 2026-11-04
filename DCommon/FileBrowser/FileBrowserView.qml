@@ -13,6 +13,7 @@ FocusScope {
     property var backend: Host.files
     property bool showSidebar: true
     property bool showNavigation: true
+    property bool showPathBar: true
     property bool showHidden: false
     property var filters: []
     property string sortKey: "name"
@@ -382,6 +383,8 @@ FocusScope {
             PathBar {
                 id: pathBar
 
+                visible: root.showPathBar
+                height: visible ? implicitHeight : 0
                 readonly property bool trailingShown: pathBarTrailingLoader.visible && pathBarTrailingLoader.width > 0
 
                 anchors.top: parent.top
