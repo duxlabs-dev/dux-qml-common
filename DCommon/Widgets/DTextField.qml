@@ -97,6 +97,7 @@ StyledRect {
 
     signal textEdited
     signal editingFinished
+    signal cleared
     signal accepted
     signal focusStateChanged(bool hasFocus)
 
@@ -593,12 +594,16 @@ StyledRect {
             visible: active && root.text.length > 0
             sourceComponent: DActionButton {
                 focusPolicy: Qt.TabFocus
+                objectName: "clearButton"
                 Accessible.name: I18n.tr("Clear")
                 buttonSize: root.accessorySize
                 iconName: "close"
                 iconSize: root.outlined ? Style.iconSize : Style.iconSizeSmall
                 iconColor: root.outlined && root.isError ? (fieldHover.hovered && !root.inputFocused ? Style.onErrorContainer : Style.error) : Style.onSurfaceVariant
-                onClicked: textInput.text = ""
+                onClicked: {
+                    root.cleared();
+                    root.clear();
+                }
             }
         }
 

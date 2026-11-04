@@ -11,11 +11,12 @@ StyledButton {
     property string iconName: ""
     property string path: ""
     property bool current: false
+    property bool flat: false
     property bool dropEnabled: false
     property color chipColor: Style.chipSurface
 
     readonly property bool dropTarget: dropZone.containsDrag
-    readonly property color contentColor: dropTarget ? Style.onPrimaryContainer : current ? Style.onSelectedContainer : Style.surfaceText
+    readonly property color contentColor: dropTarget ? Style.onPrimaryContainer : flat ? (current ? Style.surfaceText : Style.surfaceTextSecondary) : current ? Style.onSelectedContainer : Style.surfaceText
 
     signal middleClicked
     signal menuRequested(real pointX, real pointY)
@@ -26,7 +27,7 @@ StyledButton {
     implicitWidth: row.implicitWidth + FileBrowserMetrics.pathPillPadding * 2
     implicitHeight: FileBrowserMetrics.pathPillHeight
     radius: FileBrowserMetrics.pathPillRadius
-    color: dropTarget ? Style.primaryContainer : current ? Style.selectedContainer : chipColor
+    color: dropTarget ? Style.primaryContainer : flat ? "transparent" : current ? Style.selectedContainer : chipColor
     Accessible.name: label
 
     StateLayer {
@@ -80,7 +81,7 @@ StyledButton {
             visible: pill.iconName !== ""
             name: pill.iconName
             size: FileBrowserMetrics.pathIconSize
-            color: pill.current || pill.dropTarget ? pill.contentColor : Style.primary
+            color: pill.flat || pill.current || pill.dropTarget ? pill.contentColor : Style.primary
         }
 
         StyledText {
