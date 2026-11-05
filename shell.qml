@@ -187,8 +187,23 @@ ShellRoot {
 
                             DButton {
                                 text: "Tonal"
-                                backgroundColor: Theme.secondaryContainer
-                                textColor: Theme.onSecondaryContainer
+                                variant: "tonal"
+                            }
+
+                            DButton {
+                                text: "Outlined"
+                                variant: "outlined"
+                            }
+
+                            DButton {
+                                text: "Text"
+                                variant: "text"
+                            }
+
+                            DButton {
+                                text: "Danger"
+                                variant: "tonal"
+                                danger: true
                             }
 
                             DButton {

@@ -525,8 +525,7 @@ FocusScope {
 
             DButton {
                 text: I18n.tr("Cancel", "file browser overwrite dialog cancel button")
-                backgroundColor: "transparent"
-                textColor: Style.primary
+                variant: "text"
                 onClicked: root.rejected()
             }
 
@@ -667,8 +666,7 @@ FocusScope {
         actions: [
             DButton {
                 text: I18n.tr("Cancel", "file browser overwrite dialog cancel button")
-                backgroundColor: "transparent"
-                textColor: Style.primary
+                variant: "text"
                 onClicked: newFolderDialog.rejected()
             },
             DButton {
@@ -704,14 +702,13 @@ FocusScope {
         actions: [
             DButton {
                 text: I18n.tr("Cancel", "file browser overwrite dialog cancel button")
-                backgroundColor: "transparent"
-                textColor: Style.primary
+                variant: "text"
                 onClicked: overwriteDialog.rejected()
             },
             DButton {
                 text: I18n.tr("Overwrite", "file browser overwrite dialog confirm button")
-                backgroundColor: Style.errorContainer
-                textColor: Style.onErrorContainer
+                variant: "tonal"
+                danger: true
                 onClicked: overwriteDialog.accepted()
             }
         ]
