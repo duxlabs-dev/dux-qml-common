@@ -86,6 +86,7 @@ Singleton {
     property color onSurfaceVariant
     property color onPrimaryContainer
     property color onSecondaryContainer
+    property color onError
     property color onErrorContainer
     property color onTertiaryContainer
     property color onSelectedContainer
@@ -99,6 +100,11 @@ Singleton {
             target: root
             property: "onSurfaceVariant_40"
             value: root.theme?.onSurfaceVariant_40 ?? "#66CAC4D0"
+        },
+        Binding {
+            target: root
+            property: "onError"
+            value: root.theme?.onError ?? Contrast.readableOn(root.error, [root.contrastLight, root.contrastDark])
         },
         Binding {
             target: root

@@ -57,6 +57,7 @@ Singleton {
     property color onSurfaceVariant
     property color onPrimaryContainer
     property color onSecondaryContainer
+    property color onError
     property color onErrorContainer
     property color onTertiaryContainer
     property color onSelectedContainer
@@ -67,6 +68,11 @@ Singleton {
             target: root
             property: "onSurfaceVariant_40"
             value: root.withAlpha(root.onSurfaceVariant, 0.4)
+        },
+        Binding {
+            target: root
+            property: "onError"
+            value: "#601410"
         },
         Binding {
             target: root

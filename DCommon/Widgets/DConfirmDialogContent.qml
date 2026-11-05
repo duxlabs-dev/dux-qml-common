@@ -8,7 +8,7 @@ Column {
     property string confirmMessage: ""
     property string confirmButtonText: I18n.tr("Confirm")
     property string cancelButtonText: I18n.tr("Cancel")
-    property color confirmButtonColor: Style.primary
+    property bool danger: false
     property string reviewUrl: ""
     property int selectedButton: 0
     property bool keyboardNavigation: false
@@ -91,8 +91,7 @@ Column {
         iconName: "open_in_new"
         maximumWidth: root.width
         wrapText: true
-        backgroundColor: Style.secondaryContainer
-        textColor: Style.onSecondaryContainer
+        variant: "tonal"
         onClicked: Qt.openUrlExternally(root.reviewUrl)
     }
 
@@ -108,8 +107,7 @@ Column {
             maximumWidth: width
             wrapText: true
             text: root.cancelButtonText
-            backgroundColor: Style.secondaryContainer
-            textColor: Style.onSecondaryContainer
+            variant: "tonal"
             onActiveFocusChanged: {
                 if (activeFocus)
                     root.selectedButton = 0;
@@ -125,8 +123,8 @@ Column {
             maximumWidth: width
             wrapText: true
             text: root.confirmButtonText
-            backgroundColor: root.confirmButtonColor === Style.error ? Style.errorContainer : root.confirmButtonColor
-            textColor: root.confirmButtonColor === Style.error ? Style.onErrorContainer : Style.onPrimary
+            variant: root.danger ? "tonal" : "filled"
+            danger: root.danger
             onActiveFocusChanged: {
                 if (activeFocus)
                     root.selectedButton = 1;

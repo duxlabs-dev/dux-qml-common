@@ -550,8 +550,7 @@ FocusScope {
 
                 DButton {
                     text: I18n.tr("Cancel")
-                    backgroundColor: "transparent"
-                    textColor: Style.primary
+                    variant: "text"
                     onClicked: {
                         root.rejected();
                         root.close();
@@ -563,8 +562,7 @@ FocusScope {
 
                     text: I18n.tr("OK")
                     KeyNavigation.tab: hourDigit
-                    backgroundColor: "transparent"
-                    textColor: Style.primary
+                    variant: "text"
                     onClicked: {
                         root.accepted(root._hour, root._minute);
                         root.close();

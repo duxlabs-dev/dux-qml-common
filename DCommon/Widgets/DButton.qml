@@ -11,8 +11,29 @@ StyledButton {
     property bool wrapText: false
     property string iconName: ""
     property int iconSize: root.buttonHeight <= Style.buttonHeightS ? Style.iconSizeMedium : Style.iconSize
-    property color backgroundColor: Style.buttonBg
-    property color textColor: Style.buttonText
+    property string variant: "filled"
+    property bool danger: false
+    readonly property bool hasContainer: variant === "filled" || variant === "tonal"
+    property color backgroundColor: {
+        switch (variant) {
+        case "tonal":
+            return danger ? Style.errorContainer : Style.secondaryContainer;
+        case "outlined":
+        case "text":
+            return "transparent";
+        }
+        return danger ? Style.error : Style.buttonBg;
+    }
+    property color textColor: {
+        switch (variant) {
+        case "tonal":
+            return danger ? Style.onErrorContainer : Style.onSecondaryContainer;
+        case "outlined":
+        case "text":
+            return danger ? Style.error : Style.primary;
+        }
+        return danger ? Style.onError : Style.buttonText;
+    }
     property color focusRingColor: Style.focusRingColor
     property int buttonHeight: Style.buttonHeightS
     readonly property real labelSize: buttonHeight >= Style.buttonHeightM ? Style.fontSizeLarge : Style.fontSizeMedium
@@ -38,7 +59,9 @@ StyledButton {
     readonly property real pressedRadius: Style.buttonRadius(width, height, buttonHeight, true, shape === "round")
     property real pressProgress: pressed ? 1 : 0
     radius: restRadius + (pressedRadius - restRadius) * pressProgress
-    color: enabled ? backgroundColor : Style.onSurface_10
+    color: enabled || !hasContainer ? backgroundColor : Style.onSurface_10
+    border.width: variant === "outlined" ? Style.outlineWidth : 0
+    border.color: enabled ? Style.outlineVariant : Style.onSurface_12
     scale: (enableScaleAnimation && pressed) ? Style.pressScale : 1.0
     Accessible.role: Accessible.Button
     Accessible.name: text || tooltipText || iconName
