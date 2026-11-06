@@ -35,7 +35,8 @@ StyledButton {
     z: 1
 
     implicitHeight: Style.listItemHeight
-    focusPolicy: activeFocus || isSelected ? Qt.StrongFocus : Qt.ClickFocus
+    // a list view moves between its rows with the arrows; rows laid out by hand are only reachable with Tab
+    focusPolicy: activeFocus || isSelected || listView === null ? Qt.StrongFocus : Qt.ClickFocus
     Accessible.role: Accessible.ListItem
     Accessible.selected: isSelected
     color: externalHighlight ? "transparent" : isSelected || visualFocus ? Style.selectedContainer : root.surfaceColor
