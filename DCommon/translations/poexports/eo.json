@@ -2,8 +2,17 @@
   "%1 items": {
     "%1 items": "%1 elementoj"
   },
+  "%1 of %2": {
+    "%1 of %2": ""
+  },
   "%1 selected": {
     "%1 selected": "%1 elektitaj"
+  },
+  "%1 × %2": {
+    "%1 × %2": ""
+  },
+  "%1, %2": {
+    "%1, %2": ""
   },
   "1 item": {
     "1 item": "1 elemento"
@@ -77,11 +86,17 @@
   "Decrease": {
     "Decrease": "Malpliigi"
   },
+  "Deleted": {
+    "Deleted": ""
+  },
   "Descending": {
     "Descending": "Malkreskanta"
   },
   "Development": {
     "Development": "Evoluigo"
+  },
+  "Dimensions": {
+    "Dimensions": ""
   },
   "Drag to reorder": {
     "Drag to reorder": "Trenu por reordigi"
@@ -140,6 +155,9 @@
   "Hide password": {
     "Hide password": "Kaŝi pasvorton"
   },
+  "Hide preview": {
+    "Hide preview": ""
+  },
   "Hold longer to confirm": {
     "Hold longer to confirm": "Tenu pli longe por konfirmi"
   },
@@ -157,6 +175,12 @@
   },
   "Increase": {
     "Increase": "Pliigi"
+  },
+  "Jump to a folder you visited": {
+    "Jump to a folder you visited": ""
+  },
+  "Last used": {
+    "Last used": ""
   },
   "List view": {
     "List view": "Lista vido"
@@ -200,6 +224,9 @@
   "No locations found": {
     "No locations found": "Neniuj lokoj trovitaj"
   },
+  "Nothing is at this location": {
+    "Nothing is at this location": ""
+  },
   "Numbers": {
     "Numbers": "Numeroj"
   },
@@ -208,6 +235,9 @@
   },
   "Open": {
     "Open": "Malfermi"
+  },
+  "Original location": {
+    "Original location": ""
   },
   "Overwrite": {
     "Overwrite": "Anstataŭigi"
@@ -323,8 +353,17 @@
   "This item no longer exists": {
     "This item no longer exists": "Ĉi tiu elemento ne plu ekzistas"
   },
+  "This kind of location is not supported": {
+    "This kind of location is not supported": ""
+  },
+  "Today, %1": {
+    "Today, %1": ""
+  },
   "Type": {
     "Type": "Tipo"
+  },
+  "Type a path, ~ or an address such as sftp://host": {
+    "Type a path, ~ or an address such as sftp://host": ""
   },
   "Unknown": {
     "Unknown": "Nekonata"
@@ -332,8 +371,14 @@
   "Use this folder": {
     "Use this folder": "Uzi ĉi tiun dosierujon"
   },
+  "Use ~ for your own home folder or type the full path": {
+    "Use ~ for your own home folder or type the full path": ""
+  },
   "Workspace": {
     "Workspace": "Laborspaco"
+  },
+  "Yesterday, %1": {
+    "Yesterday, %1": ""
   },
   "You do not have permission to do this": {
     "You do not have permission to do this": "Vi ne havas permeson fari tion"
