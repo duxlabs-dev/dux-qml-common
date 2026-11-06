@@ -2,8 +2,17 @@
   "%1 items": {
     "%1 items": "%1 elem"
   },
+  "%1 of %2": {
+    "%1 of %2": ""
+  },
   "%1 selected": {
     "%1 selected": "%1 kiválasztva"
+  },
+  "%1 × %2": {
+    "%1 × %2": ""
+  },
+  "%1, %2": {
+    "%1, %2": ""
   },
   "1 item": {
     "1 item": "1 elem"
@@ -77,11 +86,17 @@
   "Decrease": {
     "Decrease": "Csökkentés"
   },
+  "Deleted": {
+    "Deleted": ""
+  },
   "Descending": {
     "Descending": "Csökkenő"
   },
   "Development": {
     "Development": "Fejlesztés"
+  },
+  "Dimensions": {
+    "Dimensions": ""
   },
   "Drag to reorder": {
     "Drag to reorder": "Húzd az átrendezéshez"
@@ -140,6 +155,9 @@
   "Hide password": {
     "Hide password": "Jelszó elrejtése"
   },
+  "Hide preview": {
+    "Hide preview": ""
+  },
   "Hold longer to confirm": {
     "Hold longer to confirm": "Tartsd lenyomva a megerősítéshez"
   },
@@ -157,6 +175,12 @@
   },
   "Increase": {
     "Increase": "Növelés"
+  },
+  "Jump to a folder you visited": {
+    "Jump to a folder you visited": ""
+  },
+  "Last used": {
+    "Last used": ""
   },
   "List view": {
     "List view": "Listanézet"
@@ -200,6 +224,9 @@
   "No locations found": {
     "No locations found": "Nem találhatók helyek"
   },
+  "Nothing is at this location": {
+    "Nothing is at this location": ""
+  },
   "Numbers": {
     "Numbers": "Számok"
   },
@@ -208,6 +235,9 @@
   },
   "Open": {
     "Open": "Megnyitás"
+  },
+  "Original location": {
+    "Original location": ""
   },
   "Overwrite": {
     "Overwrite": "Felülírás"
@@ -323,8 +353,17 @@
   "This item no longer exists": {
     "This item no longer exists": "Ez az elem már nem létezik"
   },
+  "This kind of location is not supported": {
+    "This kind of location is not supported": ""
+  },
+  "Today, %1": {
+    "Today, %1": ""
+  },
   "Type": {
     "Type": "Típus"
+  },
+  "Type a path, ~ or an address such as sftp://host": {
+    "Type a path, ~ or an address such as sftp://host": ""
   },
   "Unknown": {
     "Unknown": "Ismeretlen"
@@ -332,8 +371,14 @@
   "Use this folder": {
     "Use this folder": "Mappa használata"
   },
+  "Use ~ for your own home folder or type the full path": {
+    "Use ~ for your own home folder or type the full path": ""
+  },
   "Workspace": {
     "Workspace": "Munkaterület"
+  },
+  "Yesterday, %1": {
+    "Yesterday, %1": ""
   },
   "You do not have permission to do this": {
     "You do not have permission to do this": "Nincs jogosultságod a művelet végrehajtásához"

@@ -2,8 +2,17 @@
   "%1 items": {
     "%1 items": ""
   },
+  "%1 of %2": {
+    "%1 of %2": ""
+  },
   "%1 selected": {
     "%1 selected": ""
+  },
+  "%1 × %2": {
+    "%1 × %2": ""
+  },
+  "%1, %2": {
+    "%1, %2": ""
   },
   "1 item": {
     "1 item": ""
@@ -77,11 +86,17 @@
   "Decrease": {
     "Decrease": ""
   },
+  "Deleted": {
+    "Deleted": ""
+  },
   "Descending": {
     "Descending": ""
   },
   "Development": {
     "Development": "توسعه"
+  },
+  "Dimensions": {
+    "Dimensions": ""
   },
   "Drag to reorder": {
     "Drag to reorder": ""
@@ -140,6 +155,9 @@
   "Hide password": {
     "Hide password": ""
   },
+  "Hide preview": {
+    "Hide preview": ""
+  },
   "Hold longer to confirm": {
     "Hold longer to confirm": "برای تأیید بیشتر نگه‌دارید"
   },
@@ -157,6 +175,12 @@
   },
   "Increase": {
     "Increase": ""
+  },
+  "Jump to a folder you visited": {
+    "Jump to a folder you visited": ""
+  },
+  "Last used": {
+    "Last used": ""
   },
   "List view": {
     "List view": ""
@@ -200,6 +224,9 @@
   "No locations found": {
     "No locations found": ""
   },
+  "Nothing is at this location": {
+    "Nothing is at this location": ""
+  },
   "Numbers": {
     "Numbers": "اعداد"
   },
@@ -208,6 +235,9 @@
   },
   "Open": {
     "Open": "باز‌ کردن"
+  },
+  "Original location": {
+    "Original location": ""
   },
   "Overwrite": {
     "Overwrite": ""
@@ -323,8 +353,17 @@
   "This item no longer exists": {
     "This item no longer exists": ""
   },
+  "This kind of location is not supported": {
+    "This kind of location is not supported": ""
+  },
+  "Today, %1": {
+    "Today, %1": ""
+  },
   "Type": {
     "Type": "نوع"
+  },
+  "Type a path, ~ or an address such as sftp://host": {
+    "Type a path, ~ or an address such as sftp://host": ""
   },
   "Unknown": {
     "Unknown": "ناشناخته"
@@ -332,8 +371,14 @@
   "Use this folder": {
     "Use this folder": ""
   },
+  "Use ~ for your own home folder or type the full path": {
+    "Use ~ for your own home folder or type the full path": ""
+  },
   "Workspace": {
     "Workspace": "محیط‌کار"
+  },
+  "Yesterday, %1": {
+    "Yesterday, %1": ""
   },
   "You do not have permission to do this": {
     "You do not have permission to do this": ""

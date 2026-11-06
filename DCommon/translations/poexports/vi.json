@@ -1,21 +1,30 @@
 {
   "%1 items": {
-    "%1 items": ""
+    "%1 items": "%1 mục"
+  },
+  "%1 of %2": {
+    "%1 of %2": ""
   },
   "%1 selected": {
-    "%1 selected": ""
+    "%1 selected": "Đã chọn %1"
+  },
+  "%1 × %2": {
+    "%1 × %2": ""
+  },
+  "%1, %2": {
+    "%1, %2": ""
   },
   "1 item": {
-    "1 item": ""
+    "1 item": "1 mục"
   },
   "1 selected": {
-    "1 selected": ""
+    "1 selected": "Đã chọn 1"
   },
   "A file with this name already exists. Do you want to overwrite it?": {
     "A file with this name already exists. Do you want to overwrite it?": "Đã có tệp trùng tên rồi. Bạn có muốn ghi đè không?"
   },
   "A name cannot be empty or contain a slash": {
-    "A name cannot be empty or contain a slash": ""
+    "A name cannot be empty or contain a slash": "Tên không được để trống hoặc chứa dấu gạch chéo"
   },
   "AM": {
     "AM": "LÀ"
@@ -27,19 +36,19 @@
     "Ascending": "Tăng dần"
   },
   "B": {
-    "B": ""
+    "B": "B"
   },
   "Back": {
     "Back": "Quay lại"
   },
   "Backspace": {
-    "Backspace": ""
+    "Backspace": "Backspace"
   },
   "Binary file": {
-    "Binary file": ""
+    "Binary file": "Tệp nhị phân"
   },
   "Broken link": {
-    "Broken link": ""
+    "Broken link": "Liên kết hỏng"
   },
   "Cancel": {
     "Cancel": "Hủy"
@@ -51,7 +60,7 @@
     "Clear": "Xóa"
   },
   "Clear the selection": {
-    "Clear the selection": ""
+    "Clear the selection": "Bỏ chọn"
   },
   "Close": {
     "Close": "Đóng"
@@ -72,16 +81,22 @@
     "Create": "Tạo"
   },
   "Created": {
-    "Created": ""
+    "Created": "Ngày tạo"
   },
   "Decrease": {
     "Decrease": "Giảm bớt"
+  },
+  "Deleted": {
+    "Deleted": ""
   },
   "Descending": {
     "Descending": "Giảm dần"
   },
   "Development": {
     "Development": "Phát triển"
+  },
+  "Dimensions": {
+    "Dimensions": ""
   },
   "Drag to reorder": {
     "Drag to reorder": "Kéo để sắp xếp lại"
@@ -90,7 +105,7 @@
     "Edit": "Chỉnh sửa"
   },
   "Enter": {
-    "Enter": ""
+    "Enter": "Enter"
   },
   "Enter filename...": {
     "Enter filename...": "Nhập tên tệp..."
@@ -102,43 +117,46 @@
     "File Already Exists": "Tệp đã tồn tại"
   },
   "File System": {
-    "File System": ""
+    "File System": "Hệ thống tệp"
   },
   "Files - %1": {
     "Files - %1": "Tệp - %1"
   },
   "Files are unavailable because the file service is not running": {
-    "Files are unavailable because the file service is not running": ""
+    "Files are unavailable because the file service is not running": "Không thể dùng tệp vì dịch vụ tệp chưa chạy"
   },
   "First %1 of %2": {
-    "First %1 of %2": ""
+    "First %1 of %2": "%1 đầu tiên trong tổng số %2"
   },
   "Folder": {
     "Folder": "Thư mục"
   },
   "Folder name": {
-    "Folder name": ""
+    "Folder name": "Tên thư mục"
   },
   "Forward": {
-    "Forward": ""
+    "Forward": "Tiến tới"
   },
   "Fun": {
     "Fun": "Giải trí"
   },
   "GB": {
-    "GB": ""
+    "GB": "GB"
   },
   "Grid view": {
-    "Grid view": ""
+    "Grid view": "Dạng lưới"
   },
   "Hibernate": {
     "Hibernate": "Ngủ đông"
   },
   "Hide keyboard": {
-    "Hide keyboard": ""
+    "Hide keyboard": "Ẩn bàn phím"
   },
   "Hide password": {
     "Hide password": "Ẩn mật khẩu"
+  },
+  "Hide preview": {
+    "Hide preview": ""
   },
   "Hold longer to confirm": {
     "Hold longer to confirm": "Giữ lâu hơn để xác nhận"
@@ -153,13 +171,19 @@
     "Home": "Nhà / Thư mục cá nhân"
   },
   "Hour": {
-    "Hour": ""
+    "Hour": "Giờ"
   },
   "Increase": {
     "Increase": "Tăng"
   },
+  "Jump to a folder you visited": {
+    "Jump to a folder you visited": ""
+  },
+  "Last used": {
+    "Last used": ""
+  },
   "List view": {
-    "List view": ""
+    "List view": "Dạng danh sách"
   },
   "Location": {
     "Location": "Vị trí"
@@ -168,7 +192,7 @@
     "Log Out": "Đăng xuất"
   },
   "MB": {
-    "MB": ""
+    "MB": "MB"
   },
   "Maximize": {
     "Maximize": "Phóng to tối đa"
@@ -180,7 +204,7 @@
     "Minimize": "Giảm thiểu"
   },
   "Minute": {
-    "Minute": ""
+    "Minute": "Phút"
   },
   "Modified": {
     "Modified": "Đã sửa đổi"
@@ -195,10 +219,13 @@
     "Navigation": "Điều hướng"
   },
   "New folder": {
-    "New folder": ""
+    "New folder": "Thư mục mới"
   },
   "No locations found": {
-    "No locations found": ""
+    "No locations found": "Không tìm thấy vị trí nào"
+  },
+  "Nothing is at this location": {
+    "Nothing is at this location": ""
   },
   "Numbers": {
     "Numbers": "Số"
@@ -209,17 +236,20 @@
   "Open": {
     "Open": "Mở"
   },
+  "Original location": {
+    "Original location": ""
+  },
   "Overwrite": {
     "Overwrite": "Ghi đè"
   },
   "Owner": {
-    "Owner": ""
+    "Owner": "Chủ sở hữu"
   },
   "PM": {
     "PM": "Thủ tướng"
   },
   "Permissions": {
-    "Permissions": ""
+    "Permissions": "Quyền"
   },
   "Power Off": {
     "Power Off": "Tắt nguồn"
@@ -243,10 +273,10 @@
     "Restore": "Khôi phục"
   },
   "Review changes": {
-    "Review changes": ""
+    "Review changes": "Xem lại thay đổi"
   },
   "Saturation %1%, brightness %2%": {
-    "Saturation %1%, brightness %2%": ""
+    "Saturation %1%, brightness %2%": "Độ bão hòa %1%, độ sáng %2%"
   },
   "Save": {
     "Save": "Lưu"
@@ -258,19 +288,19 @@
     "Search...": "Tìm kiếm..."
   },
   "Searching...": {
-    "Searching...": ""
+    "Searching...": "Đang tìm kiếm..."
   },
   "Select File": {
     "Select File": "Chọn Tệp"
   },
   "Select time": {
-    "Select time": ""
+    "Select time": "Chọn thời gian"
   },
   "Shift": {
-    "Shift": ""
+    "Shift": "Shift"
   },
   "Show hidden files": {
-    "Show hidden files": ""
+    "Show hidden files": "Hiện tệp ẩn"
   },
   "Show password": {
     "Show password": "Hiển thị mật khẩu"
@@ -282,7 +312,7 @@
     "Sort By": "Sắp xếp theo"
   },
   "Space": {
-    "Space": ""
+    "Space": "Space"
   },
   "Status": {
     "Status": "Trạng thái"
@@ -297,34 +327,43 @@
     "System": "Hệ thống"
   },
   "TB": {
-    "TB": ""
+    "TB": "TB"
   },
   "This folder could not be opened": {
-    "This folder could not be opened": ""
+    "This folder could not be opened": "Không thể mở thư mục này"
   },
   "This folder is empty": {
-    "This folder is empty": ""
+    "This folder is empty": "Thư mục này trống"
   },
   "This folder no longer exists": {
-    "This folder no longer exists": ""
+    "This folder no longer exists": "Thư mục này không còn tồn tại"
   },
   "This item already exists": {
-    "This item already exists": ""
+    "This item already exists": "Mục này đã tồn tại"
   },
   "This item cannot be moved here directly": {
-    "This item cannot be moved here directly": ""
+    "This item cannot be moved here directly": "Không thể di chuyển trực tiếp mục này đến đây"
   },
   "This item could not be handled": {
-    "This item could not be handled": ""
+    "This item could not be handled": "Không thể xử lý mục này"
   },
   "This item is in use": {
-    "This item is in use": ""
+    "This item is in use": "Mục này đang được sử dụng"
   },
   "This item no longer exists": {
-    "This item no longer exists": ""
+    "This item no longer exists": "Mục này không còn tồn tại"
+  },
+  "This kind of location is not supported": {
+    "This kind of location is not supported": ""
+  },
+  "Today, %1": {
+    "Today, %1": ""
   },
   "Type": {
     "Type": "Loại"
+  },
+  "Type a path, ~ or an address such as sftp://host": {
+    "Type a path, ~ or an address such as sftp://host": ""
   },
   "Unknown": {
     "Unknown": "Không xác định"
@@ -332,16 +371,22 @@
   "Use this folder": {
     "Use this folder": "Sử dụng thư mục này"
   },
+  "Use ~ for your own home folder or type the full path": {
+    "Use ~ for your own home folder or type the full path": ""
+  },
   "Workspace": {
     "Workspace": "Không gian làm việc"
   },
+  "Yesterday, %1": {
+    "Yesterday, %1": ""
+  },
   "You do not have permission to do this": {
-    "You do not have permission to do this": ""
+    "You do not have permission to do this": "Bạn không có quyền thực hiện thao tác này"
   },
   "You do not have permission to view this folder": {
-    "You do not have permission to view this folder": ""
+    "You do not have permission to view this folder": "Bạn không có quyền xem thư mục này"
   },
   "kB": {
-    "kB": ""
+    "kB": "kB"
   }
 }
