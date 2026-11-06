@@ -693,11 +693,6 @@ FocusScope {
         event.accepted = true;
     }
 
-    WheelHandler {
-        acceptedModifiers: Qt.ControlModifier
-        onWheel: event => body.zoomBy(event.angleDelta.y > 0 ? 1 : -1)
-    }
-
     component ViewBackground: FileViewBackground {
         selection: body.selection
         dropPath: body.directory.path
@@ -885,5 +880,27 @@ FocusScope {
         count: body.selection.count
         bytes: body.selectedBytes()
         onCleared: body.selection.clear()
+    }
+
+    // Stacked above the views, which take every wheel event that reaches them
+    Item {
+        anchors.fill: parent
+
+        WheelHandler {
+            acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+            acceptedModifiers: Qt.ControlModifier
+            // One level per 15 degree notch: high-res wheels and touchpads send fractions of one
+            onRotationChanged: {
+                const steps = Math.trunc(rotation / 15);
+                if (steps === 0)
+                    return;
+                rotation -= steps * 15;
+                body.zoomBy(steps);
+            }
+            onActiveChanged: {
+                if (!active)
+                    rotation = 0;
+            }
+        }
     }
 }
