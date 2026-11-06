@@ -26,6 +26,27 @@ function moveFocus(items, backwards) {
     return focusItem(targets[next], backwards);
 }
 
+// the items Tab can land on under item, in tree order
+function tabStops(item, stops) {
+    const out = stops ?? [];
+    if (!item || !item.visible || !item.enabled)
+        return out;
+    if (item.activeFocusOnTab)
+        out.push(item);
+    for (const child of Array.from(item.children || []))
+        tabStops(child, out);
+    return out;
+}
+
+// whether focus on item is fine for an open overlay dialog: it's inside it, or inside one opened after it
+function keepsFocus(dialog, item) {
+    for (let a = item; a; a = a.parent) {
+        if (a === dialog || a.overlayOpenedAt > dialog.overlayOpenedAt)
+            return true;
+    }
+    return false;
+}
+
 function handleHorizontalKey(event, items, rtl) {
     if (event.modifiers & (Qt.ControlModifier | Qt.AltModifier | Qt.MetaModifier))
         return false;
