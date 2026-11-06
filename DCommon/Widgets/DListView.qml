@@ -26,7 +26,7 @@ ListView {
 
     function resetScroll() {
         savedY = originY;
-        positionViewAtBeginning();
+        contentY = originY;
     }
 
     function revealIndex(index) {
