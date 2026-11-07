@@ -42,5 +42,15 @@ T.CheckBox {
         id: surface
         color: "transparent"
         radius: Style.cornerRadiusM
+
+        // Qt reads a move after a right or middle press as a left press that clicks on release; this takes the mouse on
+        // that move. It sits on the background so a MouseArea inside the button keeps its right clicks.
+        DragHandler {
+            target: null
+            dragThreshold: 0
+            acceptedButtons: Qt.AllButtons & ~Qt.LeftButton
+            acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+            grabPermissions: root.pressed ? PointerHandler.CanTakeOverFromItems : PointerHandler.TakeOverForbidden
+        }
     }
 }
