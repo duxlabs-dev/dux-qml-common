@@ -16,8 +16,6 @@ QtObject {
     property real mass: 1
     property real positionEpsilon: 0.01
     property real velocityEpsilon: 0.01
-    property real maximumFrameTime: 1 / 30
-    property real integrationStep: 1 / 240
 
     property real value: 0
     property real target: value
@@ -59,21 +57,12 @@ QtObject {
         if (!enabled || !_running || effectiveReducedMotion)
             return;
 
-        const frameTime = Math.min(Math.max(rawFrameTime, 0), maximumFrameTime);
-        if (frameTime <= 0)
+        if (rawFrameTime <= 0)
             return;
-
-        const inverseMass = 1 / Math.max(0.001, mass);
-        const stableStep = 1 / Math.max(1, damping * inverseMass, Math.sqrt(stiffness * inverseMass));
-        const steps = Math.max(1, Math.ceil(frameTime / Math.min(integrationStep, stableStep)));
-        const step = frameTime / steps;
-        let nextValue = value;
-        let nextVelocity = velocity;
-
-        for (let i = 0; i < steps; i++) {
-            nextVelocity += (stiffness * (target - nextValue) - damping * nextVelocity) * inverseMass * step;
-            nextValue += nextVelocity * step;
-        }
+        const matrix = SpringSolver.coefficients(stiffness, damping, mass, rawFrameTime);
+        const displacement = value - target;
+        const nextValue = target + matrix[0] * displacement + matrix[1] * velocity;
+        const nextVelocity = matrix[2] * displacement + matrix[3] * velocity;
 
         if (Math.abs(target - nextValue) <= positionEpsilon && Math.abs(nextVelocity) <= velocityEpsilon) {
             velocity = 0;
