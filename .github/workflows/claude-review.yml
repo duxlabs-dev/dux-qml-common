@@ -80,6 +80,8 @@ jobs:
         with:
           ref: refs/pull/${{ needs.gate.outputs.pr }}/head
           fetch-depth: 0
+          persist-credentials: false
+          allow-unsafe-pr-checkout: true
 
       - name: Resolve base branch
         id: pr
