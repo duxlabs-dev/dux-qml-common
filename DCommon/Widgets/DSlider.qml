@@ -440,16 +440,7 @@ Controls.Control {
                 color: slider.enabled ? (slider.insetIconPosition === "start" ? slider.trackTextColor : slider.fillTextColor) : Style.onSurface_38
                 anchors.verticalCenter: parent.verticalCenter
                 x: sliderTrack.insetIconLeftAligned ? sliderHandle.x + sliderHandle.width + Style.spacingS : sliderHandle.x - width - Style.spacingS
-                opacity: sliderTrack.insetIconBehindHandle ? 1 : 0
-                visible: sliderTrack.insetIconVisible
-
-                Behavior on opacity {
-                    enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
-                    DAnim {
-                        duration: Style.shorterDuration
-                        easing.bezierCurve: Style.expressiveCurves.standard
-                    }
-                }
+                visible: sliderTrack.insetIconVisible && sliderTrack.insetIconBehindHandle
             }
 
             DIcon {
@@ -459,16 +450,7 @@ Controls.Control {
                 color: slider.enabled ? (slider.insetIconPosition === "start" ? slider.fillTextColor : slider.trackTextColor) : Style.onSurface_38
                 anchors.verticalCenter: parent.verticalCenter
                 x: sliderTrack.insetIconLeftAligned ? Style.spacingXS : sliderTrack.width - width - Style.spacingXS
-                opacity: sliderTrack.insetIconBehindHandle ? 0 : 1
-                visible: sliderTrack.insetIconVisible
-
-                Behavior on opacity {
-                    enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
-                    DAnim {
-                        duration: Style.shorterDuration
-                        easing.bezierCurve: Style.expressiveCurves.standard
-                    }
-                }
+                visible: sliderTrack.insetIconVisible && !sliderTrack.insetIconBehindHandle
             }
 
             StyledButton {
