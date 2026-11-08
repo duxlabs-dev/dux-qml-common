@@ -39,7 +39,7 @@ FocusScope {
 
     implicitWidth: maximumWidth
     implicitHeight: bodyTop + scrollBody.implicitHeight + actionFlow.implicitHeight + padding + (actionFlow.implicitHeight > 0 ? actionSpacing : 0)
-    focus: true
+    focus: embedded || opened
     Accessible.role: Accessible.Dialog
     Accessible.name: title
     Accessible.description: supportingText
