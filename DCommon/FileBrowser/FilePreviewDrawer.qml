@@ -19,6 +19,10 @@ Item {
     property string focusPath: ""
     property int focusIndex: -1
     property var stripThumbs: ({})
+    property var folderEntry: null
+    property string folderPath: ""
+    property bool folderStale: true
+    property int folderRequest: 0
 
     readonly property real gap: FileBrowserMetrics.contentSpacing
     readonly property real targetWidth: FilePreview.drawerWidth(available, grip.pressed ? dragWidth : preferredWidth, FileBrowserMetrics.previewDrawerMinWidth, FileBrowserMetrics.previewViewMinWidth, FileBrowserMetrics.previewDrawerRatio)
@@ -50,6 +54,8 @@ Item {
         case 0:
             strip = [];
             focusPath = "";
+            if (folderStale || folderPath !== body.directory.path)
+                statFolder();
             break;
         case 1:
             strip = [];
@@ -64,9 +70,31 @@ Item {
         stripSettle.restart();
     }
 
+    function statFolder() {
+        const target = body.directory.path;
+        const backend = body.directory.backend;
+        const request = ++folderRequest;
+        if (folderPath !== target)
+            folderEntry = null;
+        folderPath = target;
+        folderStale = false;
+        if (target === "" || typeof backend?.stat !== "function")
+            return;
+        backend.stat(target, result => {
+            if (!drawer || request !== drawer.folderRequest)
+                return;
+            drawer.folderEntry = result.entry ?? null;
+            drawer.showFocus();
+        });
+    }
+
+    function currentFolder() {
+        return folderPath === body.directory.path ? folderEntry : null;
+    }
+
     function showFocus() {
         focusIndex = strip.findIndex(item => item.path === focusPath);
-        const entry = focusPath === "" ? null : body.entryAt(body.directory.indexOfPath(focusPath));
+        const entry = body.selection.count === 0 ? currentFolder() : body.entryAt(body.directory.indexOfPath(focusPath));
         resolved = entry ? [entry] : [];
         if (focusIndex >= 0)
             stripView.positionViewAtIndex(focusIndex, ListView.Contain);
@@ -335,6 +363,27 @@ Item {
 
         function onDataChanged() {
             resolveLater.restart();
+        }
+    }
+
+    Connections {
+        target: content.item ? drawer.body.directory : null
+
+        function onPathReset() {
+            resolveLater.restart();
+        }
+
+        function onListed() {
+            drawer.folderStale = true;
+            resolveLater.restart();
+        }
+
+        function onEntriesAdded() {
+            drawer.folderStale = true;
+        }
+
+        function onEntriesRemoved() {
+            drawer.folderStale = true;
         }
     }
 
