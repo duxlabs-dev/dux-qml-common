@@ -59,7 +59,7 @@ QtObject {
 
         if (rawFrameTime <= 0)
             return;
-        const matrix = SpringSolver.coefficients(stiffness, damping, mass, rawFrameTime);
+        const matrix = SpringSolver.frameCoefficients(stiffness, damping, mass, rawFrameTime);
         const displacement = value - target;
         const nextValue = target + matrix[0] * displacement + matrix[1] * velocity;
         const nextVelocity = matrix[2] * displacement + matrix[3] * velocity;
