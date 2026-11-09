@@ -94,6 +94,7 @@ FileItemSurface {
                 color: row.supportingColor
                 font.pixelSize: Style.fontSizeSmall
                 elide: Text.ElideRight
+                wrapMode: Text.NoWrap
             }
         }
     }

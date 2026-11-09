@@ -86,6 +86,7 @@ FileItemSurface {
             font.pixelSize: Style.fontSizeSmall
             horizontalAlignment: Text.AlignHCenter
             elide: Text.ElideRight
+            wrapMode: Text.NoWrap
         }
 
         Loader {

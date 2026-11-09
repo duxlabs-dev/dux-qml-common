@@ -84,6 +84,7 @@ Item {
                     font.pixelSize: Style.fontSizeSmall
                     font.weight: Style.fontWeightMedium
                     elide: Text.ElideRight
+                    wrapMode: Text.NoWrap
                 }
 
                 DIcon {

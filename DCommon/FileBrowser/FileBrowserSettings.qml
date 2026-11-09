@@ -34,7 +34,9 @@ Singleton {
             "showSidebar": saved.showSidebar ?? true,
             "showPreview": saved.showPreview ?? true,
             "showHidden": saved.showHidden,
-            "lastPath": FilePaths.normalize(saved.lastPath ?? "")
+            "lastPath": FilePaths.normalize(saved.lastPath ?? ""),
+            "width": saved.width ?? 0,
+            "height": saved.height ?? 0
         };
     }
 
