@@ -388,8 +388,8 @@ function trySkip(input, caseSensitive, char, from) {
     return from + idx;
 }
 function isAscii(runes) {
-    for (const rune of runes) {
-        if (rune >= 128) {
+    for (let i = 0; i < runes.length; i++) {
+        if (runes[i] >= 128) {
             return false;
         }
     }
@@ -455,7 +455,8 @@ const fuzzyMatchV2 = (caseSensitive, normalize, forward, input, pattern, withPos
     let pchar = pattern[0], prevH0 = toShort(0), prevCharClass = 0, inGap = false;
     let Tsub = T.subarray(idx);
     let H0sub = H0.subarray(idx).subarray(0, Tsub.length), C0sub = C0.subarray(idx).subarray(0, Tsub.length), Bsub = B.subarray(idx).subarray(0, Tsub.length);
-    for (let [off, char] of Tsub.entries()) {
+    for (let off = 0; off < Tsub.length; off++) {
+        let char = Tsub[off];
         let charClass = null;
         if (char <= MAX_ASCII) {
             charClass = charClassOfAscii(char);
@@ -534,24 +535,26 @@ const fuzzyMatchV2 = (caseSensitive, normalize, forward, input, pattern, withPos
     [offset16, H] = alloc16(offset16, slab2, width * M);
     {
         const toCopy = H0.subarray(f0, lastIdx + 1);
-        for (const [i, v] of toCopy.entries()) {
-            H[i] = v;
+        for (let i = 0; i < toCopy.length; i++) {
+            H[i] = toCopy[i];
         }
     }
     let [, C] = alloc16(offset16, slab2, width * M);
     {
         const toCopy = C0.subarray(f0, lastIdx + 1);
-        for (const [i, v] of toCopy.entries()) {
-            C[i] = v;
+        for (let i = 0; i < toCopy.length; i++) {
+            C[i] = toCopy[i];
         }
     }
     const Fsub = F.subarray(1);
     const Psub = pattern.slice(1).slice(0, Fsub.length);
-    for (const [off, f] of Fsub.entries()) {
+    for (let off = 0; off < Fsub.length; off++) {
+        const f = Fsub[off];
         let inGap2 = false;
         const pchar2 = Psub[off], pidx2 = off + 1, row = pidx2 * width, Tsub2 = T.subarray(f, lastIdx + 1), Bsub2 = B.subarray(f).subarray(0, Tsub2.length), Csub = C.subarray(row + f - f0).subarray(0, Tsub2.length), Cdiag = C.subarray(row + f - f0 - 1 - width).subarray(0, Tsub2.length), Hsub = H.subarray(row + f - f0).subarray(0, Tsub2.length), Hdiag = H.subarray(row + f - f0 - 1 - width).subarray(0, Tsub2.length), Hleft = H.subarray(row + f - f0 - 1).subarray(0, Tsub2.length);
         Hleft[0] = 0;
-        for (const [off2, char] of Tsub2.entries()) {
+        for (let off2 = 0; off2 < Tsub2.length; off2++) {
+            const char = Tsub2[off2];
             const col = off2 + f;
             let s1 = 0, s2 = 0, consecutive = 0;
             if (inGap2) {
