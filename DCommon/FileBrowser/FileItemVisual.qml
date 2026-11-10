@@ -22,7 +22,7 @@ Item {
     property int iconSize: Style.iconSize
     property color tint: Style.surfaceText
 
-    readonly property real emblemSize: Math.max(FileBrowserMetrics.emblemMinSize, iconSize * FileBrowserMetrics.emblemRatio)
+    readonly property real emblemSize: Math.round(Math.max(FileBrowserMetrics.emblemMinSize, iconSize * FileBrowserMetrics.emblemRatio))
     readonly property var look: root.isDir && Host.appearance ? Host.appearance.lookup(root.path) : null
 
     implicitWidth: iconSize
@@ -53,6 +53,7 @@ Item {
 
             anchors.centerIn: parent
             size: parent.width - Style.spacingXS
+            smoothTransform: true
         }
     }
 
