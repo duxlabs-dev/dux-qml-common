@@ -33,18 +33,17 @@ Singleton {
         }
     }
 
-    function acquire(slot, key, source, size, dpr) {
+    function acquire(slot, key, source, size) {
         let item = _idle[key];
         if (item) {
             delete _idle[key];
             _idleKeys.splice(_idleKeys.indexOf(key), 1);
             _idleBytes -= item.poolBytes;
         } else {
-            const px = Math.round(size * dpr);
             item = imageComponent.createObject(shelf, {
                 poolKey: key,
                 poolSize: size,
-                poolBytes: px * px * 4,
+                poolBytes: size * size * 4,
                 source: source
             });
         }

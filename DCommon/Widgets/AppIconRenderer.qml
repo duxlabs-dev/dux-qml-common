@@ -52,7 +52,7 @@ Item {
             return "";
         return Paths.resolveIconPath(iconValue);
     }
-    readonly property int iconRequestSize: Style.iconRasterSize(iconSize)
+    readonly property int iconRequestSize: Style.iconRasterSize(iconSize * Screen.devicePixelRatio)
     readonly property string poolKey: iconPath ? `${iconPath}|${iconRequestSize}|${Screen.name}` : ""
     readonly property int iconStatus: _icon?.status ?? Image.Null
     property Item _icon: null
@@ -88,7 +88,7 @@ Item {
             IconImagePool.release(_outgoing);
             _outgoing = null;
         }
-        const next = poolKey ? IconImagePool.acquire(iconSlot, poolKey, iconPath, iconRequestSize, Screen.devicePixelRatio) : null;
+        const next = poolKey ? IconImagePool.acquire(iconSlot, poolKey, iconPath, iconRequestSize) : null;
         if (_icon && next && next.status !== Image.Ready)
             _outgoing = _icon;
         else if (_icon)

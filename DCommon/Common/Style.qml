@@ -236,8 +236,10 @@ Singleton {
     readonly property bool shapeMorph: theme?.shapeMorph ?? true
     readonly property bool pillControls: theme?.pillControls ?? true
 
+    // Steps of 4 keep a raster within a few pixels of the size it is drawn at, and bound how often
+    // a size animation reloads it.
     function iconRasterSize(size) {
-        return Math.max(32, Math.ceil(size / 16) * 16);
+        return Math.max(16, Math.ceil(size / 4) * 4);
     }
 
     function scaledRadius(radius, limit) {
