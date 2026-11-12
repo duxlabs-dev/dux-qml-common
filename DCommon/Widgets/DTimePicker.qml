@@ -19,6 +19,7 @@ FocusScope {
     property int _hour: 7
     property int _minute: 0
     property bool _minuteMode: false
+    property bool _minuteInnerRing: false
     property bool _dragging: false
 
     readonly property bool animationsEnabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
@@ -31,7 +32,12 @@ FocusScope {
     readonly property bool isPm: _hour >= 12
     readonly property int displayHour: is24Hour ? _hour : ((_hour % 12) === 0 ? 12 : _hour % 12)
     readonly property real handAngle: _minuteMode ? _minute * 6 : (_hour % 12) * 30
-    readonly property real handLength: (!_minuteMode && is24Hour && (_hour === 0 || _hour > 12)) ? innerRingRadius : outerRingRadius
+    readonly property real handLength: {
+        if (_minuteMode) {
+            return _minuteInnerRing ? innerRingRadius : outerRingRadius;
+        }
+        return (is24Hour && (_hour === 0 || _hour > 12)) ? innerRingRadius : outerRingRadius;
+    }
 
     function pad(v) {
         return (v < 10 ? "0" : "") + v;
@@ -41,6 +47,7 @@ FocusScope {
         _hour = Math.max(0, Math.min(23, hour));
         _minute = Math.max(0, Math.min(59, minute));
         _minuteMode = false;
+        _minuteInnerRing = (_minute % 5 !== 0);
         _opened = true;
         hourDigit.forceActiveFocus();
     }
@@ -77,8 +84,16 @@ FocusScope {
 
     function applyPoint(x, y) {
         const angle = angleFromPoint(x, y);
+        const dist = distanceFromCenter(x, y);
+        const threshold = (outerRingRadius + innerRingRadius) / 2;
         if (_minuteMode) {
-            _minute = Math.round(angle / 30) * 5 % 60;
+            const isInner = dist < threshold;
+            _minuteInnerRing = isInner;
+            if (isInner) {
+                _minute = Math.round(angle / 6) % 60;
+            } else {
+                _minute = Math.round(angle / 30) * 5 % 60;
+            }
             return;
         }
         const step = Math.round(angle / 30) % 12;
@@ -86,7 +101,7 @@ FocusScope {
             _hour = isPm ? (step === 0 ? 12 : step + 12) : (step === 0 ? 0 : step);
             return;
         }
-        const inner = distanceFromCenter(x, y) < (outerRingRadius + innerRingRadius) / 2;
+        const inner = dist < threshold;
         _hour = inner ? (step === 0 ? 0 : step + 12) : (step === 0 ? 12 : step);
     }
 
@@ -136,7 +151,8 @@ FocusScope {
 
     function nudge(direction) {
         if (_minuteMode) {
-            _minute = (_minute + direction * 5 + 60) % 60;
+            _minute = (_minute + direction + 60) % 60;
+            _minuteInnerRing = (_minute % 5 !== 0);
             return;
         }
         _hour = (_hour + direction + 24) % 24;
@@ -480,6 +496,18 @@ FocusScope {
                         color: Style.primary
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.verticalCenter: parent.bottom
+
+                        NumericText {
+                            anchors.centerIn: parent
+                            visible: root._minuteMode && root._minuteInnerRing
+                            text: root.pad(root._minute)
+                            reserveText: "00"
+                            isMonospace: false
+                            font.pixelSize: Style.fontSizeSmall
+                            font.weight: Style.fontWeightBold
+                            color: Style.onPrimary
+                            rotation: -hand.rotation
+                        }
                     }
                 }
 
