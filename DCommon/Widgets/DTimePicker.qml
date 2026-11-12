@@ -527,7 +527,7 @@ FocusScope {
                         readonly property bool innerRing: !root._minuteMode && root.is24Hour && index >= 12
                         readonly property int step: index % 12
                         readonly property int value: root._minuteMode ? step * 5 : (innerRing ? (step === 0 ? 0 : step + 12) : (step === 0 ? 12 : step))
-                        readonly property bool selected: root._minuteMode ? (root._minute === value) : (root.is24Hour ? root._hour === value : (root._hour % 12) === (value % 12))
+                        readonly property bool selected: root._minuteMode ? (!root._minuteInnerRing && root._minute === value) : (root.is24Hour ? root._hour === value : (root._hour % 12) === (value % 12))
                         readonly property real ringRadius: innerRing ? root.innerRingRadius : root.outerRingRadius
                         readonly property real angle: (step * 30 - 90) * Math.PI / 180
 
