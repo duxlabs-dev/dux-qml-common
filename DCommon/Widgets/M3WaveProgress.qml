@@ -11,6 +11,8 @@ Item {
     property real wavelength: 20
     property real amp: 1.6
     property real phase: 0.0
+    property real phaseSpeed: 1.8
+    property int tickInterval: 33
     property bool isPlaying: false
     property real currentAmp: isPlaying ? amp : 0
     property color trackColor: Style.withAlpha(Style.surfaceVariant, 0.40)
@@ -60,12 +62,12 @@ Item {
 
     signal frameTicked
 
-    FrameAnimation {
-        running: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None && root.visible && (root.isPlaying || root.currentAmp > 0) && (root.Window.window?.visible ?? false)
+    Timer {
+        interval: root.tickInterval
+        repeat: true
+        running: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None && root.visible && root.isPlaying && (root.Window.window?.visible ?? false)
         onTriggered: {
-            if (!root.isPlaying)
-                return;
-            root.phase = (root.phase + 0.03 * frameTime * 60) % 6.28318530718;
+            root.phase = (root.phase + root.phaseSpeed * interval / 1000) % (2 * Math.PI);
             root.frameTicked();
         }
     }
