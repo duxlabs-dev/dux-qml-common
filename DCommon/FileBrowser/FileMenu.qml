@@ -196,14 +196,6 @@ Popup {
             duration: Style.expressiveDurations.expressiveEffects
             easing.bezierCurve: Style.expressiveCurves.expressiveEffects
         }
-
-        DAnim {
-            property: "scale"
-            from: Style.popupEnterScale
-            to: 1
-            duration: Style.expressiveDurations.expressiveFastSpatial
-            easing.bezierCurve: Style.expressiveCurves.expressiveDefaultSpatial
-        }
     }
 
     exit: Transition {

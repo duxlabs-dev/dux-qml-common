@@ -46,6 +46,15 @@ DTextField {
     }
     Keys.onReturnPressed: event => event.accepted = true
     Keys.onEnterPressed: event => event.accepted = true
+    // Keys the field leaves unhandled, like an arrow at the end of the text, must not reach the file view
+    Keys.onPressed: event => event.accepted = true
+
+    Rectangle {
+        anchors.fill: parent
+        z: -1
+        radius: field.cornerRadius
+        color: Style.surfaceContainerHigh
+    }
 
     DTooltipHost {
         id: invalidHint

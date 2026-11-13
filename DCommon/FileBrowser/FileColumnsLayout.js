@@ -27,11 +27,8 @@ function revealTarget(contentX, depth, columnWidth, previewWidth, stripWidth) {
     const activeX = depth * columnWidth;
     const activeEnd = activeX + columnWidth;
     const stripEnd = Math.max(activeEnd + previewWidth, stripWidth);
-    let x = Math.min(contentX, stripEnd - stripWidth);
-    if (x > activeX)
-        x = activeX;
-    else if (x < activeEnd + previewWidth - stripWidth)
-        x = activeEnd + previewWidth - stripWidth;
+    const previewShown = activeEnd + previewWidth - stripWidth;
+    const x = Math.min(activeX, Math.max(previewShown, Math.min(contentX, stripEnd - stripWidth)));
     return {
         "contentX": Math.max(0, x),
         "stripEnd": stripEnd

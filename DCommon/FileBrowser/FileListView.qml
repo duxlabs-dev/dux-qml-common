@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Controls
 import qs.DCommon.Common
 import qs.DCommon.Widgets
 
@@ -15,6 +16,7 @@ DListView {
     property var childCounts: ({})
     property var columnIds: []
     property var storedWidths: ({})
+    property real rowWidth: width
     property bool dragEnabled: true
     property bool dropEnabled: true
     property bool multiSelect: true
@@ -58,6 +60,9 @@ DListView {
     }
 
     clip: true
+    contentWidth: rowWidth
+    sidewaysTarget: list
+    flickableDirection: rowWidth > width ? Flickable.HorizontalAndVerticalFlick : Flickable.VerticalFlick
     keyNavigationEnabled: false
     activeFocusOnTab: false
     spacing: Style.groupedListGap
@@ -68,5 +73,9 @@ DListView {
 
     delegate: FileRow {
         view: list
+    }
+
+    ScrollBar.horizontal: DHorizontalScrollbar {
+        targetFlickable: list
     }
 }

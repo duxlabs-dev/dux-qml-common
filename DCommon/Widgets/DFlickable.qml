@@ -180,6 +180,17 @@ Flickable {
         }
     }
 
+    // a vertical WheelHandler never gets pure sideways wheel events, and a non-interactive Flickable drops them too
+    WheelHandler {
+        enabled: flickable.wheelEnabled && flickable.horizontal && !flickable.interactive
+        orientation: Qt.Horizontal
+        acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+        onWheel: event => {
+            if (event.angleDelta.y === 0 && event.pixelDelta.y === 0)
+                wheelHandler.handleWheel(event);
+        }
+    }
+
     onMovementStarted: {
         _bar._scrollBarActive = true;
         _bar.hideTimer.stop();

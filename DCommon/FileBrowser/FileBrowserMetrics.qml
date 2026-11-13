@@ -38,6 +38,7 @@ Singleton {
     readonly property real gridTileRadius: Style.cornerRadiusL
     readonly property real gridGap: Style.spacingM
     readonly property real gridNameSpacing: Style.spacingXS
+    readonly property real renameWidth: Style.sidebarWidth
 
     readonly property real columnPaneWidth: Style.sidebarWidth
     readonly property real columnMinPaneWidth: Style.sidebarWidth * 0.7
@@ -98,6 +99,8 @@ Singleton {
     readonly property real selectionFooterHeight: Style.buttonHeightS
     readonly property real emblemMinSize: Style.iconSizeSmall
     readonly property real emblemRatio: 0.3
+    readonly property real emblemMaxRatio: 0.6
+    readonly property real emblemInsetRatio: 0.06
     readonly property real hiddenOpacity: Style.pendingOpacity
     readonly property real skeletonOpacity: Style.pendingOpacity
     readonly property real rubberBandMinimum: Style.spacingS
@@ -108,6 +111,9 @@ Singleton {
     readonly property real sidebarIconSize: Style.buttonHeightXS + densityStepS
     readonly property real sidebarRowHeight: Math.max(Style.buttonHeightXS, Style.buttonHeightS + densityStepM)
     readonly property real sidebarRowRadius: Style.cornerRadiusM
+    readonly property real sidebarRowInset: Style.spacingS
+    readonly property real sidebarRailWidth: sidebarIconSize + (sidebarRowInset + sidebarPadding) * 2
+    readonly property real sidebarIconOnlyBelow: sidebarRowHeight * 2
     readonly property real sidebarRowGap: Math.max(0, Style.groupedListGap + densityLevel * Style.spacingXXS)
     readonly property real sidebarGlyphSize: densityLevel < -1 ? Style.iconSizeSmall : Style.iconSizeMedium
     readonly property real usageWarnRatio: 0.9
@@ -115,7 +121,7 @@ Singleton {
     readonly property real paneMargin: Style.spacingM
     readonly property real paneMarginHorizontal: Style.spacingL
     readonly property real menuWidth: Style.spacingXL * 9
-    readonly property real menuDividerHeight: Style.spacingS * 2
+    readonly property real menuDividerHeight: Math.max(Style.spacingS, Style.spacingS * 2 + densityStepS)
     readonly property real detailLabelWidth: Style.spacingXL * 5
     readonly property real splitterWidth: Style.spacingM
     readonly property real splitterHandleHeight: Style.iconSizeLarge

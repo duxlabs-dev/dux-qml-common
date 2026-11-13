@@ -12,6 +12,7 @@ StyledButton {
     property string path: ""
     property bool current: false
     property bool flat: false
+    property bool quiet: false
     property bool dropEnabled: false
     property color chipColor: Style.chipSurface
 
@@ -32,6 +33,8 @@ StyledButton {
 
     StateLayer {
         control: pill
+        disabled: pill.quiet
+        cursorShape: pill.quiet ? Qt.IBeamCursor : Qt.PointingHandCursor
         stateColor: pill.contentColor
     }
 

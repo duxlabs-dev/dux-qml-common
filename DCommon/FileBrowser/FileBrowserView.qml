@@ -37,6 +37,7 @@ FocusScope {
     property string emptyText: I18n.tr("This folder is empty", "empty directory placeholder")
     property Component header: null
     property Component pathBarTrailing: null
+    property Item pathBarHost: null
     property var cutSet: ({})
     property string nameFilter: ""
     property bool singleClickActivates: false
@@ -52,6 +53,7 @@ FocusScope {
     property var unlistedPaths: []
     property color paneColor: "transparent"
     property color chipColor: Style.chipSurface
+    property color pathBarColor: chipColor
     property real paneRadius: FileBrowserMetrics.paneRadius
     property real paneMargin: FileBrowserMetrics.paneMargin
     property real paneMarginHorizontal: FileBrowserMetrics.paneMarginHorizontal
@@ -64,6 +66,7 @@ FocusScope {
     readonly property alias canGoForward: history.canGoForward
     readonly property alias canGoUp: history.canGoUp
     readonly property bool editingPath: pathBar.editing || pathBar.connecting
+    readonly property bool pathBarHosted: pathBarHost !== null
     readonly property bool renaming: viewBody.renamingPath !== ""
     property int sidebarBreakpoint: FileBrowserMetrics.sidebarBreakpoint
     readonly property bool sidebarShown: showSidebar && width >= sidebarBreakpoint
@@ -90,6 +93,7 @@ FocusScope {
     signal columnResizeRequested(string id, real width)
     signal columnPaneResizeRequested(real width)
     signal previewToggleRequested
+    signal previewKeyRequested(string action, int step)
     signal previewResized(real width)
     signal focusRequested
     signal tabRequested(string path)
@@ -362,6 +366,20 @@ FocusScope {
                 anchors.fill: parent
                 anchors.rightMargin: drawer.width
 
+                MouseArea {
+                    anchors.fill: parent
+                    onPressed: mouse => {
+                        const point = mapToItem(viewBody, mouse.x, mouse.y);
+                        viewBody.beginBand(point.x, point.y, mouse.modifiers);
+                    }
+                    onPositionChanged: mouse => {
+                        const point = mapToItem(viewBody, mouse.x, mouse.y);
+                        viewBody.dragBand(point.x, point.y);
+                    }
+                    onReleased: viewBody.endBand()
+                    onCanceled: viewBody.endBand()
+                }
+
                 TapHandler {
                     acceptedButtons: Qt.RightButton
                     onTapped: point => {
@@ -380,22 +398,31 @@ FocusScope {
                 onDropped: drop => root.itemsDropped(root.directory.path, drop)
             }
 
-            PathBar {
-                id: pathBar
+            Item {
+                id: pathSlot
 
-                visible: root.showPathBar
-                height: visible ? implicitHeight : 0
                 readonly property bool trailingShown: pathBarTrailingLoader.visible && pathBarTrailingLoader.width > 0
 
+                visible: root.showPathBar && !root.pathBarHosted
+                height: visible ? pathBar.implicitHeight : 0
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.right: trailingShown ? pathBarTrailingLoader.left : parent.right
-                anchors.topMargin: root.paneMargin
+                anchors.topMargin: visible ? root.paneMargin : 0
                 anchors.leftMargin: root.paneMarginHorizontal
                 anchors.rightMargin: trailingShown ? FileBrowserMetrics.contentSpacing : root.paneMarginHorizontal
+            }
+
+            PathBar {
+                id: pathBar
+
+                parent: root.pathBarHost ?? pathSlot
+                anchors.fill: parent
+                visible: root.showPathBar
                 path: root.path
                 homePath: root.homePath
-                chipColor: root.chipColor
+                chipColor: root.pathBarHosted ? root.pathBarColor : root.chipColor
+                pill: root.pathBarHosted
                 folderJump: root.folderJump
                 backend: root.backend
                 dropEnabled: root.dropEnabled
@@ -424,16 +451,16 @@ FocusScope {
 
                 anchors.right: parent.right
                 anchors.rightMargin: root.paneMarginHorizontal
-                anchors.verticalCenter: pathBar.verticalCenter
+                anchors.verticalCenter: pathSlot.verticalCenter
                 active: root.pathBarTrailing !== null
-                visible: !root.editingPath
+                visible: !root.editingPath && pathSlot.visible
                 sourceComponent: root.pathBarTrailing
             }
 
             FileViewBody {
                 id: viewBody
 
-                anchors.top: pathBar.bottom
+                anchors.top: pathSlot.bottom
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -507,7 +534,9 @@ FocusScope {
                         root.previewToggleRequested();
                         return;
                     }
-                    drawer.handleKey(action, step);
+                    root.previewKeyRequested(action, step);
+                    if (root.previewDrawer)
+                        drawer.handleKey(action, step);
                 }
                 onFocusRequested: {
                     root._pendingReveal = [];

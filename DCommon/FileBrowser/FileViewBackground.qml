@@ -26,7 +26,7 @@ Item {
     parent: view.contentItem
     z: -1
     y: view.originY
-    width: view.width
+    width: Math.max(view.contentWidth, view.width)
     height: Math.max(view.contentHeight, view.height)
 
     MouseArea {
@@ -61,11 +61,15 @@ Item {
             secondClick = false;
             if (mouse.button === Qt.RightButton)
                 return;
-            band.originX = mouse.x;
-            band.originY = mouse.y;
-            band.pointX = mouse.x;
-            band.pointY = mouse.y;
-            kept = background.view.multiSelect && (mouse.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) !== 0 ? background.selection.paths.slice() : [];
+            start(mouse.x, mouse.y, mouse.modifiers);
+        }
+
+        function start(pointX, pointY, modifiers) {
+            band.originX = pointX;
+            band.originY = pointY;
+            band.pointX = pointX;
+            band.pointY = pointY;
+            kept = background.view.multiSelect && (modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) !== 0 ? background.selection.paths.slice() : [];
             clearPending = kept.length === 0;
             if (pressedIndex < 0)
                 background.applyPendingClear();
@@ -73,7 +77,7 @@ Item {
                 return;
             background.selection.keyboardCursor = false;
             background.view.stopMomentum();
-            pointerPosition = mapToItem(background.view, mouse.x, mouse.y);
+            pointerPosition = mapToItem(background.view, pointX, pointY);
             banding = true;
         }
 
@@ -112,6 +116,29 @@ Item {
         }
     }
 
+    function bounded(point) {
+        const top = view.contentOrigin - y;
+        return Qt.point(Math.max(0, Math.min(width, point.x)), Math.max(top, Math.min(height, point.y)));
+    }
+
+    function beginBand(viewX, viewY, modifiers) {
+        const origin = bounded(mapFromItem(view, viewX, viewY));
+        area.pressedIndex = -1;
+        area.secondClick = false;
+        area.start(origin.x, origin.y, modifiers);
+    }
+
+    function dragBand(viewX, viewY) {
+        if (!area.banding)
+            return;
+        area.pointerPosition = Qt.point(viewX, viewY);
+        updateSelection();
+    }
+
+    function endBand() {
+        area.banding = false;
+    }
+
     function applyPendingClear() {
         if (!area.clearPending)
             return;
@@ -120,7 +147,7 @@ Item {
     }
 
     function updateSelection() {
-        const point = mapFromItem(view, area.pointerPosition.x, area.pointerPosition.y);
+        const point = bounded(mapFromItem(view, area.pointerPosition.x, area.pointerPosition.y));
         band.pointX = point.x;
         band.pointY = point.y;
         if (!band.past)

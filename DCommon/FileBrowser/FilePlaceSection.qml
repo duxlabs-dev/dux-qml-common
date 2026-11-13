@@ -13,12 +13,15 @@ Column {
 
     default property alias rows: body.data
 
+    readonly property bool iconOnly: width < FileBrowserMetrics.sidebarIconOnlyBelow
+
     spacing: FileBrowserMetrics.sidebarRowGap
 
     StyledText {
+        visible: !section.iconOnly
         text: section.title
-        color: Style.primary
-        font.pixelSize: Style.fontSizeMedium
+        color: Style.surfaceVariantText
+        font.pixelSize: Style.fontSizeSmall
         font.weight: Style.fontWeightMedium
         leftPadding: Style.spacingM
         bottomPadding: Style.spacingXXS
@@ -33,7 +36,7 @@ Column {
 
     StyledText {
         width: section.width
-        visible: section.showEmpty && section.emptyText !== ""
+        visible: section.showEmpty && section.emptyText !== "" && !section.iconOnly
         text: section.emptyText
         color: Style.surfaceVariantText
         font.pixelSize: Style.fontSizeSmall

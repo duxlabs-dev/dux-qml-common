@@ -16,9 +16,16 @@ Item {
     property bool readsAllowed: true
     property bool thumbnailsEnabled: true
     property color chipColor: Style.chipSurface
+    property color rowColor: Style.chipSurfaceNested
     property string caption: ""
     property bool closable: false
     readonly property color surfaceColor: chipColor
+    readonly property string summary: {
+        const notes = [caption, viewerItem?.note ?? ""].filter(part => part !== "");
+        if (notes.length > 0)
+            return notes.join(" · ");
+        return rows.filter(row => row.id === "type" || row.id === "size").map(row => row.value).join(" · ");
+    }
     property var viewerSources: ({
             "image": "FilePreviewImage.qml",
             "svg": "FilePreviewImage.qml",
@@ -246,53 +253,86 @@ Item {
             width: parent.width
             spacing: Style.spacingM
 
-            Column {
+            Item {
                 width: parent.width
-                spacing: Style.spacingXS
+                height: Math.max(badge.height, heading.implicitHeight)
 
-                StyledText {
-                    width: parent.width
-                    text: pane.entry ? FileFormat.shownName("", pane.entry.name, pane.entry.isDir ?? false) : ""
-                    color: Style.surfaceText
-                    font.pixelSize: Style.fontSizeLarge
-                    font.weight: Style.fontWeightMedium
-                    horizontalAlignment: Text.AlignHCenter
-                    wrapMode: Text.WrapAnywhere
-                    maximumLineCount: 3
-                    elide: Text.ElideRight
+                Rectangle {
+                    id: badge
+
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: FileBrowserMetrics.controlSize
+                    height: width
+                    radius: Style.fullRadius(width, height)
+                    color: pane.rowColor
+
+                    DIcon {
+                        anchors.centerIn: parent
+                        name: pane.entry?.isDir ? "folder" : "description"
+                        size: Style.iconSizeMedium
+                        filled: true
+                        color: Style.surfaceText
+                    }
                 }
 
-                StyledText {
-                    width: parent.width
-                    visible: text !== ""
-                    text: [pane.caption, pane.viewerItem?.note ?? ""].filter(part => part !== "").join(" · ")
-                    color: Style.surfaceVariantText
-                    font.pixelSize: Style.fontSizeSmall
-                    horizontalAlignment: Text.AlignHCenter
-                    elide: Text.ElideRight
+                Column {
+                    id: heading
+
+                    anchors.left: badge.right
+                    anchors.right: parent.right
+                    anchors.leftMargin: Style.spacingM
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: Style.spacingXXS
+
+                    StyledText {
+                        width: parent.width
+                        text: pane.entry ? FileFormat.shownName("", pane.entry.name, pane.entry.isDir ?? false) : ""
+                        color: Style.surfaceText
+                        font.pixelSize: Style.fontSizeMedium
+                        font.weight: Style.fontWeightMedium
+                        horizontalAlignment: Text.AlignLeft
+                        wrapMode: Text.WrapAnywhere
+                        maximumLineCount: 2
+                        elide: Text.ElideRight
+                    }
+
+                    StyledText {
+                        width: parent.width
+                        visible: text !== ""
+                        text: pane.summary
+                        color: Style.surfaceVariantText
+                        font.pixelSize: Style.fontSizeSmall
+                        horizontalAlignment: Text.AlignLeft
+                        elide: Text.ElideRight
+                    }
                 }
             }
 
             Column {
                 width: parent.width
-                spacing: Style.spacingXS
+                spacing: Style.spacingXXS
 
                 Repeater {
                     model: pane.rows
 
-                    Item {
+                    Rectangle {
                         id: detail
 
                         required property var modelData
 
                         width: parent.width
-                        height: Math.max(label.implicitHeight, content.implicitHeight)
+                        height: Math.max(label.implicitHeight, content.implicitHeight) + Style.spacingS * 2
+                        radius: Style.cornerRadiusS
+                        color: pane.rowColor
 
                         StyledText {
                             id: label
 
                             anchors.left: parent.left
-                            width: Math.min(FileBrowserMetrics.detailLabelWidth, parent.width / 2)
+                            anchors.leftMargin: Style.spacingM
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: Math.min(implicitWidth, parent.width / 2)
                             text: detail.modelData.label
                             color: Style.surfaceVariantText
                             font.pixelSize: Style.fontSizeSmall
@@ -304,12 +344,14 @@ Item {
                             id: content
 
                             anchors.left: label.right
-                            anchors.leftMargin: Style.spacingM
                             anchors.right: parent.right
+                            anchors.leftMargin: Style.spacingM
+                            anchors.rightMargin: Style.spacingM
+                            anchors.verticalCenter: parent.verticalCenter
                             text: detail.modelData.value
                             color: Style.surfaceText
                             font.pixelSize: Style.fontSizeSmall
-                            horizontalAlignment: Text.AlignLeft
+                            horizontalAlignment: Text.AlignRight
                             wrapMode: Text.WrapAnywhere
                         }
                     }

@@ -43,9 +43,9 @@ FileItemSurface {
             "usedMs": model.usedMs ?? 0
         })
 
-    hitTargets: [visual, nameLabel, chevron].concat(Array.from(columns.children))
+    hitTargets: [visual, nameLabel, chevron]
 
-    width: view?.width ?? 0
+    width: view?.rowWidth ?? view?.width ?? 0
     height: view?.rowHeight ?? FileBrowserMetrics.listRowHeight
     selected: view?.selection?.contains(path) ?? false
     cursor: view?.selection?.showsCursor(path) ?? false

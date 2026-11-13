@@ -4,7 +4,6 @@ import QtQuick
 import qs.DCommon.Common
 import qs.DCommon.Widgets
 import "TypeAhead.js" as TypeAhead
-import "ListColumns.js" as ListColumns
 
 FocusScope {
     id: body
@@ -58,10 +57,18 @@ FocusScope {
     readonly property real columnZoomFactor: FileBrowserMetrics.columnZoomFactor(columnZoom)
     readonly property var iconSizes: FileBrowserMetrics.iconSizesFor(viewMode)
     readonly property real iconSize: iconSizes[Math.max(0, Math.min(iconSizes.length - 1, zoom))]
-    readonly property var fitting: ListColumns.fit(listColumns, width - iconSize - FileBrowserMetrics.listRowPadding * 2 - FileBrowserMetrics.listRowGap - FileBrowserMetrics.nameColumnMinWidth, columnWidths, defaultColumnWidth, FileBrowserMetrics.columnGap)
-    readonly property string fittingKey: fitting.ids.join(",")
-    readonly property var fittingColumns: fittingKey === "" ? [] : fittingKey.split(",")
-    readonly property var fittingWidths: fitting.widths
+    readonly property real listNameReserve: iconSize + FileBrowserMetrics.listRowPadding * 2 + FileBrowserMetrics.listRowGap + FileBrowserMetrics.nameColumnMinWidth
+    readonly property var listWidths: {
+        const widths = {};
+        const room = width - listNameReserve - FileBrowserMetrics.columnGap;
+        for (const id of listColumns) {
+            const fallback = defaultColumnWidth(id);
+            widths[id] = Math.max(FileBrowserMetrics.columnMinWidth, Math.min(columnWidths[id] ?? fallback, Math.max(fallback, room)));
+        }
+        return widths;
+    }
+    readonly property real listNaturalWidth: listColumns.reduce((total, id) => total + listWidths[id] + FileBrowserMetrics.columnGap, listNameReserve)
+    readonly property real listRowWidth: Math.max(width, listNaturalWidth)
     readonly property bool listing: directory.loading && directory.count === 0
     readonly property bool empty: !directory.loading && directory.error === "" && directory.count === 0
     readonly property var dragScrollTarget: dragScrollTargetFor(FileDragHover.area)
@@ -271,10 +278,6 @@ FocusScope {
         return FileColumns.specFor(id)?.width ?? FileBrowserMetrics.columnMinWidth;
     }
 
-    function clampColumnWidth(id, width) {
-        return ListColumns.clampResize(width, fittingWidths[id] ?? defaultColumnWidth(id), fitting.slack, FileBrowserMetrics.columnMinWidth);
-    }
-
     function zoomBy(step) {
         const inColumns = viewMode === "columns";
         const current = inColumns ? columnZoom : zoom;
@@ -416,7 +419,7 @@ FocusScope {
     }
 
     function requestCounts(first, last) {
-        if (!countFolders || viewMode !== "list" || !fittingColumns.includes("size"))
+        if (!countFolders || viewMode !== "list" || !listColumns.includes("size"))
             return;
         const wanted = [];
         for (let i = Math.max(0, first); i <= Math.min(last, directory.count - 1); i++) {
@@ -693,6 +696,22 @@ FocusScope {
         event.accepted = true;
     }
 
+    function beginBand(pointX, pointY, modifiers) {
+        const point = view?.backdrop ? view.mapFromItem(body, pointX, pointY) : null;
+        if (point)
+            view.backdrop.beginBand(point.x, point.y, modifiers);
+    }
+
+    function dragBand(pointX, pointY) {
+        const point = view?.backdrop ? view.mapFromItem(body, pointX, pointY) : null;
+        if (point)
+            view.backdrop.dragBand(point.x, point.y);
+    }
+
+    function endBand() {
+        view?.backdrop?.endBand();
+    }
+
     component ViewBackground: FileViewBackground {
         selection: body.selection
         dropPath: body.directory.path
@@ -719,8 +738,9 @@ FocusScope {
             renamingPath: body.renamingPath
             cutSet: body.cutSet
             childCounts: body.childCounts
-            columnIds: body.fittingColumns
-            storedWidths: body.fittingWidths
+            columnIds: body.listColumns
+            storedWidths: body.listWidths
+            rowWidth: body.listRowWidth
             singleClickActivates: body.singleClickActivates
             nameHighlight: body.nameHighlight
             multiSelect: body.multiSelect
@@ -740,7 +760,11 @@ FocusScope {
             onContentYChanged: settle.restart()
             onCountChanged: settle.restart()
 
+            property Item backdrop: listBackdrop
+
             ViewBackground {
+                id: listBackdrop
+
                 view: listView
             }
         }
@@ -783,7 +807,11 @@ FocusScope {
             onContentYChanged: settle.restart()
             onCountChanged: settle.restart()
 
+            property Item backdrop: gridBackdrop
+
             ViewBackground {
+                id: gridBackdrop
+
                 view: gridView
             }
         }
@@ -793,8 +821,8 @@ FocusScope {
         id: columns
 
         listColumns: body.listColumns
-        columnIds: body.fittingColumns
-        widths: body.fittingWidths
+        columnIds: body.listColumns
+        widths: body.listWidths
         sortKey: body.sortKey
         sortDescending: body.sortDescending
         columnSortKeys: body.columnSortKeys
@@ -805,17 +833,18 @@ FocusScope {
             const point = columns.mapToItem(body, pointX, pointY);
             body.columnsMenuRequested(point.x, point.y);
         }
-        onColumnResized: (id, width) => body.columnResizeRequested(id, body.clampColumnWidth(id, width))
+        onColumnResized: (id, width) => body.columnResizeRequested(id, width)
     }
 
     Component {
         id: scrollingHeader
 
         Column {
-            width: parent?.width ?? 0
+            width: body.listRowWidth
 
             Loader {
-                width: parent.width
+                x: parent.ListView.view?.contentX ?? 0
+                width: body.width
                 sourceComponent: body.header
             }
 
@@ -825,14 +854,20 @@ FocusScope {
         }
     }
 
-    ColumnHeader {
+    Item {
         id: columnHeader
 
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
         visible: body.viewMode === "list" && !body.columnsScroll
-        height: visible ? implicitHeight : 0
+        height: visible ? FileBrowserMetrics.columnHeaderHeight : 0
+        clip: true
+
+        ColumnHeader {
+            x: -(body.view?.contentX ?? 0)
+            width: body.listRowWidth
+        }
     }
 
     Loader {
@@ -901,6 +936,12 @@ FocusScope {
                 if (!active)
                     rotation = 0;
             }
+        }
+
+        WheelHandler {
+            acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+            acceptedModifiers: Qt.ShiftModifier
+            onWheel: event => (body.view?.activeList ?? body.view)?.scrollSideways?.(event)
         }
     }
 }

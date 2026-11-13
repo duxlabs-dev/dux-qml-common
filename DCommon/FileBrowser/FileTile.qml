@@ -30,8 +30,11 @@ FileItemSurface {
     cursor: view?.selection?.showsCursor(path) ?? false
     cut: view?.cutSet?.[path] === true
     renaming: (view?.renamingPath ?? "") === path
+    z: renaming ? 1 : 0
 
     Column {
+        id: stack
+
         anchors.top: parent.top
         anchors.topMargin: FileBrowserMetrics.gridTileVerticalPadding
         anchors.horizontalCenter: parent.horizontalCenter
@@ -90,7 +93,11 @@ FileItemSurface {
         }
 
         Loader {
-            width: parent.width
+            readonly property real room: tile.view?.width ?? parent.width
+            readonly property real origin: tile.x + stack.x
+
+            width: Math.max(parent.width, Math.min(FileBrowserMetrics.renameWidth, room))
+            x: Math.max(-origin, Math.min(room - width - origin, (parent.width - width) / 2))
             active: tile.renaming
             sourceComponent: InlineRename {
                 width: parent.width

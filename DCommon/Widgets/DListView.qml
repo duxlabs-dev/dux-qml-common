@@ -37,6 +37,7 @@ ListView {
         contentY = Reveal.contentYFor(listView, item.y, item.y + item.height, revealInsetTop, revealInsetBottom);
     }
     property real mouseWheelSpeed: Scroll.mouseWheelSpeed
+    property Flickable sidewaysTarget: null
     property real savedY: 0
     property bool justChanged: false
     property bool isUserScrolling: false
@@ -211,6 +212,14 @@ ListView {
         wheelHandler.handleWheel(event);
     }
 
+    function scrollSideways(event) {
+        const room = sidewaysTarget ? sidewaysTarget.contentWidth - sidewaysTarget.width : 0;
+        if (room <= 0)
+            return false;
+        sidewaysTarget.contentX = Math.max(0, Math.min(room, sidewaysTarget.contentX - WheelInput.sidewaysDelta(event, mouseWheelSpeed)));
+        return true;
+    }
+
     function forwardWheelEnd() {
         wheelHandler.release();
     }
@@ -251,6 +260,10 @@ ListView {
         onWheel: event => handleWheel(event)
 
         function handleWheel(event) {
+            if (WheelInput.isHorizontal(event) && listView.scrollSideways(event)) {
+                event.accepted = true;
+                return;
+            }
             isUserScrolling = true;
             vbar._scrollBarActive = true;
             vbar.hideTimer.restart();

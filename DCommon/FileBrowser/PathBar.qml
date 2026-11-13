@@ -14,6 +14,7 @@ FocusScope {
     property bool editing: false
     property bool editable: true
     property bool flat: false
+    property bool pill: false
     signal editRequested
     property bool jumpMode: false
     property bool connecting: false
@@ -52,6 +53,7 @@ FocusScope {
     signal itemsDropped(string dest, var drop)
 
     readonly property var segments: bar.segmentsFor(path, homePath)
+    readonly property real frameRadius: pill ? Style.fullRadius(width, height) : FileBrowserMetrics.pathPillRadius
 
     function segmentsFor(path, home) {
         if (path === "")
@@ -359,14 +361,14 @@ FocusScope {
 
         anchors.fill: parent
         visible: !bar.editing && !bar.connecting
-        radius: FileBrowserMetrics.pathPillRadius
+        radius: bar.frameRadius
         color: Style.foregroundColor(bar.chipColor, Style.isFloatingWindow(bar))
 
         Rectangle {
             anchors.fill: parent
             radius: frame.radius
             color: Style.surfaceText
-            opacity: stripArea.containsMouse ? Style.stateLayerHover : 0
+            opacity: stripArea.containsMouse && !bar.pill ? Style.stateLayerHover : 0
         }
 
         DFlickable {
@@ -374,17 +376,18 @@ FocusScope {
 
             readonly property bool mirrored: LayoutMirroring.enabled
             readonly property real inset: Style.spacingXXS
+            readonly property real lead: bar.pill ? Style.spacingS : 0
             readonly property real overflow: Math.max(0, contentWidth - width)
 
             function scrollToCurrent() {
-                contentX = mirrored ? 0 : overflow;
+                contentX = mirrored ? 0 : Math.max(0, contentWidth - width);
             }
 
             anchors.fill: parent
             wheelEnabled: false
             clip: true
             flickableDirection: Flickable.HorizontalFlick
-            contentWidth: Math.max(width, pills.width + inset * 2)
+            contentWidth: Math.max(width, pills.width + (inset + lead) * 2)
             contentHeight: height
 
             onContentWidthChanged: scrollToCurrent()
@@ -411,7 +414,7 @@ FocusScope {
             Row {
                 id: pills
 
-                x: strip.mirrored ? strip.contentWidth - width - strip.inset : strip.inset
+                x: strip.mirrored ? strip.contentWidth - width - strip.inset - strip.lead : strip.inset + strip.lead
                 y: strip.inset
                 height: strip.height - strip.inset * 2
                 spacing: FileBrowserMetrics.pathBarSpacing
@@ -440,15 +443,16 @@ FocusScope {
                             id: pill
 
                             height: pills.height
-                            radius: Math.max(0, FileBrowserMetrics.pathPillRadius - strip.inset)
+                            radius: Math.max(0, bar.frameRadius - strip.inset)
                             label: segment.modelData.iconName === "home" ? I18n.tr("Home", "file browser quick access location") : segment.modelData.label
-                            iconName: segment.modelData.iconName
+                            iconName: bar.pill ? "" : segment.modelData.iconName
                             path: segment.modelData.path
-                            flat: bar.flat
+                            flat: bar.flat || bar.pill
                             chipColor: "transparent"
                             current: segment.index === bar.segments.length - 1
+                            quiet: bar.pill && current
                             dropEnabled: bar.dropEnabled
-                            onClicked: bar.pillClicked(segment.modelData.path)
+                            onClicked: quiet ? bar.startEditing() : bar.pillClicked(segment.modelData.path)
                             onMiddleClicked: bar.tabRequested(segment.modelData.path)
                             onDropped: drop => bar.itemsDropped(segment.modelData.path, drop)
                             onSpringLoaded: bar.navigated(segment.modelData.path)
@@ -469,7 +473,7 @@ FocusScope {
         anchors.fill: parent
         visible: bar.editing || bar.connecting
         readOnly: bar.connecting
-        cornerRadius: FileBrowserMetrics.pathPillRadius
+        cornerRadius: bar.frameRadius
         controlHeight: bar.height
         backgroundColor: bar.chipColor
         leftIconName: bar.jumpMode ? "history" : "edit_location"

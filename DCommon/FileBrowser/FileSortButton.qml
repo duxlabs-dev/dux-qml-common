@@ -49,93 +49,15 @@ Row {
     LayoutMirroring.enabled: I18n.isRtl
     LayoutMirroring.childrenInherit: true
 
-    component Segment: StyledButton {
-        id: segment
+    ControlSegment {
+        id: directionSegment
 
-        focusPolicy: Qt.TabFocus
-        required property bool leading
-        property bool round: false
-        property string tooltipText: ""
-
-        readonly property real outerRadius: Style.fullRadius(width, height)
-        readonly property real startRadius: round || leading ? outerRadius : FileBrowserMetrics.navPairInnerRadius
-        readonly property real endRadius: round || !leading ? outerRadius : FileBrowserMetrics.navPairInnerRadius
-
-        height: FileBrowserMetrics.controlSize
-        color: Style.chipSurface
-        topLeftRadius: mirrored ? endRadius : startRadius
-        bottomLeftRadius: mirrored ? endRadius : startRadius
-        topRightRadius: mirrored ? startRadius : endRadius
-        bottomRightRadius: mirrored ? startRadius : endRadius
-        Accessible.name: tooltipText
-
-        Behavior on topRightRadius {
-            enabled: FileBrowserMetrics.animationsEnabled
-            DAnim {
-                duration: Style.expressiveDurations.expressiveEffects
-                easing.bezierCurve: Style.expressiveCurves.expressiveEffects
-            }
-        }
-
-        Behavior on bottomRightRadius {
-            enabled: FileBrowserMetrics.animationsEnabled
-            DAnim {
-                duration: Style.expressiveDurations.expressiveEffects
-                easing.bezierCurve: Style.expressiveCurves.expressiveEffects
-            }
-        }
-
-        Behavior on topLeftRadius {
-            enabled: FileBrowserMetrics.animationsEnabled
-            DAnim {
-                duration: Style.expressiveDurations.expressiveEffects
-                easing.bezierCurve: Style.expressiveCurves.expressiveEffects
-            }
-        }
-
-        Behavior on bottomLeftRadius {
-            enabled: FileBrowserMetrics.animationsEnabled
-            DAnim {
-                duration: Style.expressiveDurations.expressiveEffects
-                easing.bezierCurve: Style.expressiveCurves.expressiveEffects
-            }
-        }
-
-        StateLayer {
-            control: segment
-            stateColor: Style.surfaceText
-            tooltipText: segment.tooltipText
-        }
-
-        FocusRing {
-            visible: segment.visualFocus
-            radius: segment.outerRadius
-        }
-    }
-
-    Segment {
-        id: keySegment
-
-        leading: true
-        width: control.showLabel ? Math.max(FileBrowserMetrics.navPairSegmentWidth, keyRow.implicitWidth + Style.spacingL * 2) : FileBrowserMetrics.navPairSegmentWidth
-        tooltipText: control.showLabel ? "" : I18n.tr("Sort By", "file browser sort menu section header")
+        joinEnd: true
+        width: Math.max(FileBrowserMetrics.navPairSegmentWidth, keyRow.implicitWidth + Style.spacingL * 2)
+        tooltipText: control.descending ? I18n.tr("Descending", "file browser sort order option") : I18n.tr("Ascending", "file browser sort order option")
         Accessible.name: I18n.tr("Sort By", "file browser sort menu section header")
-        Accessible.description: control.current.label
-        onClicked: control.openMenu()
-        Keys.onDownPressed: event => {
-            control.openMenu();
-            event.accepted = true;
-        }
-
-        Rectangle {
-            anchors.fill: parent
-            visible: control.menuOpen
-            topLeftRadius: keySegment.topLeftRadius
-            topRightRadius: keySegment.topRightRadius
-            bottomLeftRadius: keySegment.bottomLeftRadius
-            bottomRightRadius: keySegment.bottomRightRadius
-            color: Style.withAlpha(Style.surfaceText, Style.stateLayerPressed)
-        }
+        Accessible.description: `${control.current.label}, ${tooltipText}`
+        onClicked: control.directionToggled()
 
         Row {
             id: keyRow
@@ -158,6 +80,38 @@ Row {
                 font.pixelSize: Style.fontSizeMedium
                 font.weight: Style.fontWeightMedium
             }
+
+            DIcon {
+                anchors.verticalCenter: parent.verticalCenter
+                name: control.descending ? "arrow_downward" : "arrow_upward"
+                size: Style.iconSizeSmall
+                color: Style.surfaceText
+            }
+        }
+    }
+
+    ControlSegment {
+        id: keySegment
+
+        joinStart: true
+        width: FileBrowserMetrics.controlSize
+        iconName: "keyboard_arrow_down"
+        tooltipText: I18n.tr("Sort By", "file browser sort menu section header")
+        Accessible.description: control.current.label
+        onClicked: control.openMenu()
+        Keys.onDownPressed: event => {
+            control.openMenu();
+            event.accepted = true;
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            visible: control.menuOpen
+            topLeftRadius: keySegment.topLeftRadius
+            topRightRadius: keySegment.topRightRadius
+            bottomLeftRadius: keySegment.bottomLeftRadius
+            bottomRightRadius: keySegment.bottomRightRadius
+            color: Style.withAlpha(Style.surfaceText, Style.stateLayerPressed)
         }
 
         DDropdown {
@@ -176,21 +130,6 @@ Row {
                     return;
                 control.sortKeySelected(control.keys[index].key);
             }
-        }
-    }
-
-    Segment {
-        leading: false
-        round: control.descending
-        width: FileBrowserMetrics.controlSize
-        tooltipText: control.descending ? I18n.tr("Descending", "file browser sort order option") : I18n.tr("Ascending", "file browser sort order option")
-        onClicked: control.directionToggled()
-
-        DIcon {
-            anchors.centerIn: parent
-            name: control.descending ? "arrow_downward" : "arrow_upward"
-            size: Style.iconSizeMedium
-            color: Style.surfaceText
         }
     }
 }

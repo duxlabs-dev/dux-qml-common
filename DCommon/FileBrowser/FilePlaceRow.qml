@@ -30,7 +30,8 @@ StyledButton {
     signal springLoaded
     signal middleClicked
 
-    readonly property bool showAction: actionIcon !== "" && (hovered || actionArea.containsMouse)
+    readonly property bool iconOnly: width < FileBrowserMetrics.sidebarIconOnlyBelow
+    readonly property bool showAction: actionIcon !== "" && !iconOnly && (hovered || actionArea.containsMouse)
     readonly property var look: row.path !== "" && Host.appearance ? Host.appearance.lookup(row.path) : null
     readonly property color contentColor: {
         if (!enabled)
@@ -64,7 +65,11 @@ StyledButton {
 
     StateLayer {
         control: row
-        tooltipText: actionArea.containsMouse && row.actionTooltip !== "" ? "" : row.tooltipText
+        tooltipText: {
+            if (actionArea.containsMouse && row.actionTooltip !== "")
+                return "";
+            return row.iconOnly ? [row.label, row.tooltipText].filter(text => text !== "").join("\n") : row.tooltipText;
+        }
         tooltipMultiline: true
         stateColor: row.contentColor
     }
@@ -77,8 +82,8 @@ StyledButton {
 
     RowLayout {
         anchors.fill: parent
-        anchors.leftMargin: Style.spacingS
-        anchors.rightMargin: Style.spacingM
+        anchors.leftMargin: FileBrowserMetrics.sidebarRowInset
+        anchors.rightMargin: row.iconOnly ? FileBrowserMetrics.sidebarRowInset : Style.spacingM
         spacing: Style.spacingM
 
         DRingGauge {
@@ -92,7 +97,7 @@ StyledButton {
             Rectangle {
                 anchors.fill: parent
                 radius: row.ringValue >= 0 ? width / 2 : Style.fullRadius(width, height)
-                color: row.showAction ? Style.primaryContainer : Style.withAlpha(Style.primary, Style.tonalTintAlpha)
+                color: row.showAction ? Style.primaryContainer : row.ringValue >= 0 ? Style.withAlpha(Style.primary, Style.tonalTintAlpha) : "transparent"
 
                 DSpinner {
                     anchors.centerIn: parent
@@ -152,7 +157,7 @@ StyledButton {
                     id: actionArea
 
                     anchors.fill: parent
-                    enabled: row.actionIcon !== "" && !row.busy
+                    enabled: row.actionIcon !== "" && !row.busy && !row.iconOnly
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: row.actionTriggered()
@@ -163,6 +168,7 @@ StyledButton {
         ColumnLayout {
             id: labels
 
+            visible: !row.iconOnly
             Layout.fillWidth: true
             spacing: Style.spacingXS
 
@@ -187,7 +193,7 @@ StyledButton {
         }
 
         DIcon {
-            visible: row.expandable
+            visible: row.expandable && !row.iconOnly
             name: "expand_more"
             size: FileBrowserMetrics.sidebarGlyphSize
             color: row.contentColor

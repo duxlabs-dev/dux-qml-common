@@ -14,6 +14,9 @@ Item {
     property real preferredWidth: 0
     property real dragWidth: 0
     property color chipColor: Style.chipSurface
+    property real viewMinimum: FileBrowserMetrics.previewViewMinWidth
+    property color rowColor: Style.chipSurfaceNested
+    property bool closable: true
     property var resolved: []
     property var strip: []
     property string focusPath: ""
@@ -25,7 +28,7 @@ Item {
     property int folderRequest: 0
 
     readonly property real gap: FileBrowserMetrics.contentSpacing
-    readonly property real targetWidth: FilePreview.drawerWidth(available, grip.pressed ? dragWidth : preferredWidth, FileBrowserMetrics.previewDrawerMinWidth, FileBrowserMetrics.previewViewMinWidth, FileBrowserMetrics.previewDrawerRatio)
+    readonly property real targetWidth: FilePreview.drawerWidth(available, grip.pressed ? dragWidth : preferredWidth, FileBrowserMetrics.previewDrawerMinWidth, drawer.viewMinimum, FileBrowserMetrics.previewDrawerRatio)
     readonly property bool shown: open && targetWidth > 0
     readonly property string folderName: FilePaths.baseName(body.directory.path) || body.directory.path
     readonly property real devicePixelRatio: Window.window?.devicePixelRatio ?? Screen.devicePixelRatio
@@ -121,7 +124,7 @@ Item {
         }
         const towardFiles = LayoutMirroring.enabled ? direction > 0 : direction < 0;
         const wanted = targetWidth + (towardFiles ? 1 : -1) * FileBrowserMetrics.previewKeyStep;
-        resized(FilePreview.drawerWidth(available, wanted, FileBrowserMetrics.previewDrawerMinWidth, FileBrowserMetrics.previewViewMinWidth, FileBrowserMetrics.previewDrawerRatio));
+        resized(FilePreview.drawerWidth(available, wanted, FileBrowserMetrics.previewDrawerMinWidth, drawer.viewMinimum, FileBrowserMetrics.previewDrawerRatio));
     }
 
     function handleKey(action, direction) {
@@ -161,6 +164,7 @@ Item {
 
     width: shown || reveal > 0 ? Math.round(targetWidth) : 0
     clip: true
+    onBodyChanged: resolveLater.restart()
 
     Behavior on reveal {
         enabled: FileBrowserMetrics.animationsEnabled && drawer.visible
@@ -200,7 +204,8 @@ Item {
                 readsAllowed: FilePreview.readsAllowed(drawer.body.directory)
                 thumbnailsEnabled: drawer.body.directory.thumbnailsEnabled ?? true
                 chipColor: drawer.chipColor
-                closable: true
+                rowColor: drawer.rowColor
+                closable: drawer.closable
                 onCloseRequested: drawer.body.previewKeyRequested("toggle", 0)
                 caption: drawer.strip.length > 1 && drawer.focusIndex >= 0 ? I18n.tr("%1 of %2", "position of the previewed item among the selected items").arg(drawer.focusIndex + 1).arg(drawer.strip.length) : ""
             }
@@ -368,6 +373,7 @@ Item {
 
     Connections {
         target: content.item ? drawer.body.directory : null
+        ignoreUnknownSignals: true
 
         function onPathReset() {
             resolveLater.restart();
@@ -430,7 +436,7 @@ Item {
             onReleased: {
                 if (!moved)
                     return;
-                drawer.resized(FilePreview.drawerWidth(drawer.available, drawer.dragWidth, FileBrowserMetrics.previewDrawerMinWidth, FileBrowserMetrics.previewViewMinWidth, FileBrowserMetrics.previewDrawerRatio));
+                drawer.resized(FilePreview.drawerWidth(drawer.available, drawer.dragWidth, FileBrowserMetrics.previewDrawerMinWidth, drawer.viewMinimum, FileBrowserMetrics.previewDrawerRatio));
             }
             onDoubleClicked: drawer.resized(0)
         }

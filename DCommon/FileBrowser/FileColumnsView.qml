@@ -441,6 +441,7 @@ Item {
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 width: columns.columnWidth - Style.dividerWidth
+                sidewaysTarget: strip
                 selection: column.active ? columns.body.selection : column.ownSelection
                 iconSize: columns.body.iconSize
                 zoom: columns.body.zoom

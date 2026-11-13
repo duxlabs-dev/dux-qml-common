@@ -37,6 +37,12 @@ function isHorizontal(wheel) {
     return Math.abs(wheel.angleDelta.x) > Math.abs(wheel.angleDelta.y);
 }
 
+function sidewaysDelta(wheel, notch) {
+    if (isTouchpad(wheel))
+        return dominantDelta(wheel.pixelDelta);
+    return dominantDelta(wheel.angleDelta) / 120 * notch;
+}
+
 function dominantDelta(point) {
     return Math.abs(point.x) > Math.abs(point.y) ? point.x : point.y;
 }
