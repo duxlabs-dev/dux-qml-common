@@ -262,7 +262,11 @@ FocusScope {
     Timer {
         id: digitBufferTimer
         interval: 1500
-        onTriggered: root._digitBuffer = ""
+        onTriggered: {
+            if (!root._minuteMode && !(root._digitBuffer === "0" && !root.is24Hour))
+                advanceTimer.restart();
+            root._digitBuffer = "";
+        }
     }
 
     Timer {
