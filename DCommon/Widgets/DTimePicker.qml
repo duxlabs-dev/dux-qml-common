@@ -21,6 +21,12 @@ FocusScope {
     property bool _minuteMode: false
     property bool _minuteInnerRing: false
     property bool _dragging: false
+    property string _digitBuffer: ""
+
+    on_MinuteModeChanged: {
+        _digitBuffer = "";
+        digitBufferTimer.stop();
+    }
 
     readonly property bool animationsEnabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
     readonly property real digitHeight: Style.iconButtonSize * 2
@@ -48,6 +54,8 @@ FocusScope {
         _minute = Math.max(0, Math.min(59, minute));
         _minuteMode = false;
         _minuteInnerRing = (_minute % 5 !== 0);
+        _digitBuffer = "";
+        digitBufferTimer.stop();
         _opened = true;
         hourDigit.forceActiveFocus();
     }
@@ -59,6 +67,86 @@ FocusScope {
     function setPeriod(pm) {
         const base = _hour % 12;
         _hour = pm ? base + 12 : base;
+    }
+
+    function setDisplayHour(h12) {
+        _hour = h12 === 12 ? (isPm ? 12 : 0) : (isPm ? h12 + 12 : h12);
+    }
+
+    function handleDigitInput(digit) {
+        if (_minuteMode) {
+            if (_digitBuffer === "") {
+                _minute = digit;
+                _minuteInnerRing = (_minute % 5 !== 0);
+                if (digit <= 5) {
+                    _digitBuffer = String(digit);
+                    digitBufferTimer.restart();
+                } else {
+                    digitBufferTimer.stop();
+                }
+                return;
+            }
+            const nextMinute = parseInt(_digitBuffer, 10) * 10 + digit;
+            _digitBuffer = "";
+            digitBufferTimer.stop();
+            _minute = nextMinute;
+            _minuteInnerRing = (_minute % 5 !== 0);
+            return;
+        }
+
+        if (is24Hour) {
+            if (_digitBuffer === "") {
+                _hour = digit;
+                if (digit <= 2) {
+                    _digitBuffer = String(digit);
+                    digitBufferTimer.restart();
+                } else {
+                    digitBufferTimer.stop();
+                    advanceTimer.restart();
+                }
+                return;
+            }
+            const candidate = parseInt(_digitBuffer, 10) * 10 + digit;
+            _digitBuffer = "";
+            digitBufferTimer.stop();
+            _hour = candidate <= 23 ? candidate : digit;
+            advanceTimer.restart();
+            return;
+        }
+
+        if (_digitBuffer === "") {
+            if (digit === 0) {
+                _digitBuffer = "0";
+                digitBufferTimer.restart();
+                return;
+            }
+            setDisplayHour(digit);
+            if (digit === 1) {
+                _digitBuffer = "1";
+                digitBufferTimer.restart();
+            } else {
+                digitBufferTimer.stop();
+                advanceTimer.restart();
+            }
+            return;
+        }
+
+        const prefix = _digitBuffer;
+        _digitBuffer = "";
+        digitBufferTimer.stop();
+        if (prefix === "0") {
+            if (digit >= 1) {
+                setDisplayHour(digit);
+                advanceTimer.restart();
+            } else {
+                _digitBuffer = "0";
+                digitBufferTimer.restart();
+            }
+            return;
+        }
+
+        setDisplayHour(digit <= 2 ? 10 + digit : digit);
+        advanceTimer.restart();
     }
 
     function selectHour(h) {
@@ -83,6 +171,8 @@ FocusScope {
     }
 
     function applyPoint(x, y) {
+        _digitBuffer = "";
+        digitBufferTimer.stop();
         const angle = angleFromPoint(x, y);
         const dist = distanceFromCenter(x, y);
         const threshold = (outerRingRadius + innerRingRadius) / 2;
@@ -119,7 +209,16 @@ FocusScope {
     }
 
     Keys.onPressed: event => {
+        if (event.key >= Qt.Key_0 && event.key <= Qt.Key_9) {
+            root.handleDigitInput(event.key - Qt.Key_0);
+            event.accepted = true;
+            return;
+        }
         switch (event.key) {
+        case Qt.Key_Backspace:
+            root._digitBuffer = "";
+            digitBufferTimer.stop();
+            break;
         case Qt.Key_Escape:
             root.rejected();
             root.close();
@@ -150,12 +249,20 @@ FocusScope {
     }
 
     function nudge(direction) {
+        _digitBuffer = "";
+        digitBufferTimer.stop();
         if (_minuteMode) {
             _minute = (_minute + direction + 60) % 60;
             _minuteInnerRing = (_minute % 5 !== 0);
             return;
         }
         _hour = (_hour + direction + 24) % 24;
+    }
+
+    Timer {
+        id: digitBufferTimer
+        interval: 1500
+        onTriggered: root._digitBuffer = ""
     }
 
     Timer {
@@ -502,8 +609,7 @@ FocusScope {
                             visible: root._minuteMode && root._minuteInnerRing
                             text: root.pad(root._minute)
                             reserveText: "00"
-                            isMonospace: false
-                            font.pixelSize: Style.fontSizeSmall
+                            font.pixelSize: Style.fontSizeMedium
                             font.weight: Style.fontWeightBold
                             color: Style.onPrimary
                             rotation: -hand.rotation
