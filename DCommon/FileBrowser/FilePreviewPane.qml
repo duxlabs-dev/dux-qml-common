@@ -311,19 +311,26 @@ Item {
 
             Column {
                 width: parent.width
-                spacing: Style.spacingXXS
+                spacing: Style.groupedListGap
 
                 Repeater {
+                    id: details
+
                     model: pane.rows
 
                     Rectangle {
                         id: detail
 
                         required property var modelData
+                        required property int index
 
                         width: parent.width
                         height: Math.max(label.implicitHeight, content.implicitHeight) + Style.spacingS * 2
-                        radius: Style.cornerRadiusS
+                        radius: Style.groupedListInnerRadius
+                        topLeftRadius: index === 0 ? Style.groupedListOuterRadius : radius
+                        topRightRadius: topLeftRadius
+                        bottomLeftRadius: index === details.count - 1 ? Style.groupedListOuterRadius : radius
+                        bottomRightRadius: bottomLeftRadius
                         color: pane.rowColor
 
                         StyledText {

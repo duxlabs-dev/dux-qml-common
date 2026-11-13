@@ -12,6 +12,7 @@ StyledButton {
     property string iconName: ""
     property color iconColor: Style.surfaceText
     property string tooltipText: ""
+    property string tooltipSide: "bottom"
 
     readonly property real outerRadius: Style.fullRadius(width, height)
     readonly property real startRadius: joinStart ? FileBrowserMetrics.navPairInnerRadius : outerRadius
@@ -46,6 +47,7 @@ StyledButton {
         disabled: !segment.enabled
         stateColor: segment.iconColor
         tooltipText: segment.tooltipText
+        tooltipSide: segment.tooltipSide
     }
 
     DIcon {

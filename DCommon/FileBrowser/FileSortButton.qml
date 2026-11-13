@@ -10,6 +10,7 @@ Row {
     property string sortKey: "name"
     property bool descending: false
     property bool showLabel: false
+    property string tooltipSide: "bottom"
 
     signal sortKeySelected(string key)
     signal directionToggled
@@ -55,6 +56,7 @@ Row {
         joinEnd: true
         width: Math.max(FileBrowserMetrics.navPairSegmentWidth, keyRow.implicitWidth + Style.spacingL * 2)
         tooltipText: control.descending ? I18n.tr("Descending", "file browser sort order option") : I18n.tr("Ascending", "file browser sort order option")
+        tooltipSide: control.tooltipSide
         Accessible.name: I18n.tr("Sort By", "file browser sort menu section header")
         Accessible.description: `${control.current.label}, ${tooltipText}`
         onClicked: control.directionToggled()
@@ -95,8 +97,9 @@ Row {
 
         joinStart: true
         width: FileBrowserMetrics.controlSize
-        iconName: "keyboard_arrow_down"
+        iconName: control.menuOpen ? "keyboard_arrow_up" : "keyboard_arrow_down"
         tooltipText: I18n.tr("Sort By", "file browser sort menu section header")
+        tooltipSide: control.tooltipSide
         Accessible.description: control.current.label
         onClicked: control.openMenu()
         Keys.onDownPressed: event => {

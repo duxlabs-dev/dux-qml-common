@@ -126,12 +126,15 @@ Singleton {
     readonly property real splitterWidth: Style.spacingM
     readonly property real splitterHandleHeight: Style.iconSizeLarge
     readonly property real menuMargin: Style.spacingL
+    readonly property real submenuOverlap: Style.spacingS
+    readonly property real submenuAimSlope: 0.3
     readonly property real pickerWidth: Style.launcherWidthLarge
     readonly property real pickerHeight: Style.launcherHeightDefault + Style.spacingXL
     readonly property real pickerMinWidth: Style.launcherWidthMicro
     readonly property real pickerMinHeight: Style.smallBreakpoint
     readonly property real pickerScreenFraction: 0.9
     readonly property int settleInterval: 150
+    readonly property int submenuDelay: 200
     readonly property int countPrefetchScreens: 3
     readonly property int skeletonDelay: 150
     readonly property int typeAheadInterval: 1000
