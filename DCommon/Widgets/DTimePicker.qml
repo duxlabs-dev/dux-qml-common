@@ -81,6 +81,8 @@ FocusScope {
     }
 
     function handleDigitInput(digit) {
+        if (!_minuteMode && advanceTimer.running)
+            switchToMinutes();
         if (_minuteMode) {
             if (_digitBuffer === "") {
                 _minute = digit;
