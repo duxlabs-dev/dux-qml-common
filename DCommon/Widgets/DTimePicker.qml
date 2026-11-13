@@ -73,6 +73,13 @@ FocusScope {
         _hour = h12 === 12 ? (isPm ? 12 : 0) : (isPm ? h12 + 12 : h12);
     }
 
+    function switchToMinutes() {
+        advanceTimer.stop();
+        _minuteMode = true;
+        if (hourDigit.activeFocus)
+            minuteDigit.forceActiveFocus(Qt.TabFocusReason);
+    }
+
     function handleDigitInput(digit) {
         if (_minuteMode) {
             if (_digitBuffer === "") {
@@ -109,8 +116,13 @@ FocusScope {
             const candidate = parseInt(_digitBuffer, 10) * 10 + digit;
             _digitBuffer = "";
             digitBufferTimer.stop();
-            _hour = candidate <= 23 ? candidate : digit;
-            advanceTimer.restart();
+            if (candidate <= 23) {
+                _hour = candidate;
+                advanceTimer.restart();
+                return;
+            }
+            switchToMinutes();
+            handleDigitInput(digit);
             return;
         }
 
@@ -145,8 +157,13 @@ FocusScope {
             return;
         }
 
-        setDisplayHour(digit <= 2 ? 10 + digit : digit);
-        advanceTimer.restart();
+        if (digit <= 2) {
+            setDisplayHour(10 + digit);
+            advanceTimer.restart();
+            return;
+        }
+        switchToMinutes();
+        handleDigitInput(digit);
     }
 
     function selectHour(h) {
@@ -272,11 +289,7 @@ FocusScope {
     Timer {
         id: advanceTimer
         interval: Style.clockSwitchDelay
-        onTriggered: {
-            root._minuteMode = true;
-            if (hourDigit.activeFocus)
-                minuteDigit.forceActiveFocus(Qt.TabFocusReason);
-        }
+        onTriggered: root.switchToMinutes()
     }
 
     Rectangle {
