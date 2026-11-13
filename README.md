@@ -12,7 +12,7 @@ import qs.DCommon.Session
 ## What's in here
 
 - **Widgets** (`DCommon/Widgets`): buttons, FABs, split buttons, button groups, toggles, sliders, chips, badges, tabs, dropdowns, text fields, steppers, tooltips, dialogs, bottom sheets, window headers, navigation bars and rails, cards, list rows, reorderable lists, carousels, color pickers, sparklines, ring gauges, clocks, a month grid, a time picker, Material shapes and the loading indicator. `DFlickable`, `DListView` and `DGridView` wrap the Qt views with our scrollbars and wheel handling.
-- **Common** (`DCommon/Common`): `Style` (every theme token, with fallbacks), `Fonts` (bundled faces), `I18n`, `Paths`, `Log` and `Host` bridges, plus JS helpers for contrast, tonal colors, accents, HCT, shapes and wheel input.
+- **Common** (`DCommon/Common`): `Style` (every theme token, with fallbacks), `Fonts` (bundled faces), `I18n`, `Paths`, `Log` and `Host` bridges, `JsonStore` (one JSON file, debounced atomic writes), plus JS helpers for contrast, tonal colors, accents, HCT, shapes, wheel input and the stock preset palettes (`StockTheme.js`).
 - **FileBrowser** (`DCommon/FileBrowser`): the browser behind Dux Files and the DMS file picker. `FilePicker` is the dialog, `FileBrowserView` is the browser without dialog behavior, and the parts (list, grid and column views, path bar, preview pane, selection, history) work on their own too.
 - **Session** (`DCommon/Session`): the power menu and on-screen keyboard shared by the DMS lock screen and [dms-greeter](https://github.com/duxlabs-dev/dux-greeter).
 

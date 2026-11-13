@@ -12,6 +12,7 @@ Singleton {
     readonly property url xdgCache: StandardPaths.standardLocations(StandardPaths.GenericCacheLocation)[0]
     readonly property url cache: `${xdgCache}/dank-qml-common`
     readonly property url imagecache: `${cache}/imagecache`
+    readonly property bool ready: true
 
     function stringify(path: url): string {
         return path.toString().replace(/%20/g, " ");

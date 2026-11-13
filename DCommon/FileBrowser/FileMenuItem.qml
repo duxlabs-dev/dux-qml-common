@@ -11,6 +11,7 @@ StyledButton {
     property bool submenu: false
     property bool danger: false
     property bool highlighted: false
+    property string shortcutText: ""
 
     readonly property color contentColor: {
         if (!enabled)
@@ -57,7 +58,7 @@ StyledButton {
 
         StyledText {
             anchors.verticalCenter: parent.verticalCenter
-            width: parent.width - (root.iconName !== "" ? Style.menuItemIconSize + parent.spacing : 0) - (root.submenu || root.checked ? Style.menuItemIconSize + Style.spacingM : 0)
+            width: parent.width - (root.iconName !== "" ? Style.menuItemIconSize + parent.spacing : 0) - (root.submenu || root.checked ? Style.menuItemIconSize + Style.spacingM : 0) - (hint.visible ? hint.implicitWidth + Style.spacingM : 0)
             text: root.text
             color: root.contentColor
             font.pixelSize: Style.fontSizeMedium
@@ -65,6 +66,19 @@ StyledButton {
             wrapMode: Text.NoWrap
             elide: Text.ElideRight
         }
+    }
+
+    StyledText {
+        id: hint
+
+        anchors.right: parent.right
+        anchors.rightMargin: Style.spacingM + (root.submenu || root.checked ? Style.menuItemIconSize + Style.spacingM : 0)
+        anchors.verticalCenter: parent.verticalCenter
+        visible: root.shortcutText !== ""
+        text: root.shortcutText
+        color: root.iconColor
+        font.pixelSize: Style.fontSizeSmall
+        wrapMode: Text.NoWrap
     }
 
     DIcon {

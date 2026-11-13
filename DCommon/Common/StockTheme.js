@@ -1,0 +1,357 @@
+.pragma library
+
+// Semantic colors are shared across every preset; presets only carry the
+// Material tonal palette, mirroring Dux Shell's stock themes.
+const SEMANTIC_DARK = {
+    error: "#F2B8B5",
+    warning: "#FF9800",
+    info: "#2196F3",
+    success: "#4CAF50"
+};
+
+const SEMANTIC_LIGHT = {
+    error: "#B3261E",
+    warning: "#E58A00",
+    info: "#1565C0",
+    success: "#2E7D32"
+};
+
+const PRESET_ORDER = ["purple", "blue", "green", "orange", "red", "cyan", "pink", "amber", "coral", "monochrome"];
+
+const DARK = {
+    purple: {
+        name: "Purple",
+        primary: "#D0BCFF",
+        primaryText: "#381E72",
+        primaryContainer: "#4F378B",
+        secondary: "#CCC2DC",
+        surface: "#141218",
+        surfaceText: "#e6e0e9",
+        surfaceVariant: "#49454e",
+        surfaceVariantText: "#cac4cf",
+        surfaceTint: "#D0BCFF",
+        outline: "#948f99",
+        surfaceContainer: "#211f24",
+        surfaceContainerHigh: "#2b292f",
+        surfaceContainerHighest: "#36343a"
+    },
+    blue: {
+        name: "Blue",
+        primary: "#42a5f5",
+        primaryText: "#000000",
+        primaryContainer: "#0d47a1",
+        secondary: "#8ab4f8",
+        surface: "#101418",
+        surfaceText: "#e0e2e8",
+        surfaceVariant: "#42474e",
+        surfaceVariantText: "#c2c7cf",
+        surfaceTint: "#8ab4f8",
+        outline: "#8c9199",
+        surfaceContainer: "#1d2024",
+        surfaceContainerHigh: "#272a2f",
+        surfaceContainerHighest: "#32353a"
+    },
+    green: {
+        name: "Green",
+        primary: "#4caf50",
+        primaryText: "#000000",
+        primaryContainer: "#1b5e20",
+        secondary: "#81c995",
+        surface: "#10140f",
+        surfaceText: "#e0e4db",
+        surfaceVariant: "#424940",
+        surfaceVariantText: "#c2c9bd",
+        surfaceTint: "#81c995",
+        outline: "#8c9388",
+        surfaceContainer: "#1d211b",
+        surfaceContainerHigh: "#272b25",
+        surfaceContainerHighest: "#323630"
+    },
+    orange: {
+        name: "Orange",
+        primary: "#ff6d00",
+        primaryText: "#000000",
+        primaryContainer: "#3e2723",
+        secondary: "#ffb74d",
+        surface: "#1a120e",
+        surfaceText: "#f0dfd8",
+        surfaceVariant: "#52443d",
+        surfaceVariantText: "#d7c2b9",
+        surfaceTint: "#ffb74d",
+        outline: "#a08d85",
+        surfaceContainer: "#271e1a",
+        surfaceContainerHigh: "#322824",
+        surfaceContainerHighest: "#3d332e"
+    },
+    red: {
+        name: "Red",
+        primary: "#f44336",
+        primaryText: "#000000",
+        primaryContainer: "#4a0e0e",
+        secondary: "#f28b82",
+        surface: "#1a1110",
+        surfaceText: "#f1dedc",
+        surfaceVariant: "#534341",
+        surfaceVariantText: "#d8c2be",
+        surfaceTint: "#f28b82",
+        outline: "#a08c89",
+        surfaceContainer: "#271d1c",
+        surfaceContainerHigh: "#322826",
+        surfaceContainerHighest: "#3d3231"
+    },
+    cyan: {
+        name: "Cyan",
+        primary: "#00bcd4",
+        primaryText: "#000000",
+        primaryContainer: "#004d5c",
+        secondary: "#4dd0e1",
+        surface: "#0e1416",
+        surfaceText: "#dee3e5",
+        surfaceVariant: "#3f484a",
+        surfaceVariantText: "#bfc8ca",
+        surfaceTint: "#4dd0e1",
+        outline: "#899295",
+        surfaceContainer: "#1b2122",
+        surfaceContainerHigh: "#252b2c",
+        surfaceContainerHighest: "#303637"
+    },
+    pink: {
+        name: "Pink",
+        primary: "#e91e63",
+        primaryText: "#000000",
+        primaryContainer: "#4a0e2f",
+        secondary: "#f8bbd9",
+        surface: "#191112",
+        surfaceText: "#f0dee0",
+        surfaceVariant: "#524345",
+        surfaceVariantText: "#d6c2c3",
+        surfaceTint: "#f8bbd9",
+        outline: "#9f8c8e",
+        surfaceContainer: "#261d1e",
+        surfaceContainerHigh: "#312829",
+        surfaceContainerHighest: "#3c3233"
+    },
+    amber: {
+        name: "Amber",
+        primary: "#ffc107",
+        primaryText: "#000000",
+        primaryContainer: "#4a3c00",
+        secondary: "#ffd54f",
+        surface: "#17130b",
+        surfaceText: "#ebe1d4",
+        surfaceVariant: "#4d4639",
+        surfaceVariantText: "#d0c5b4",
+        surfaceTint: "#ffd54f",
+        outline: "#998f80",
+        surfaceContainer: "#231f17",
+        surfaceContainerHigh: "#2e2921",
+        surfaceContainerHighest: "#39342b"
+    },
+    coral: {
+        name: "Coral",
+        primary: "#ffb4ab",
+        primaryText: "#000000",
+        primaryContainer: "#8c1d18",
+        secondary: "#f9dedc",
+        surface: "#1a1110",
+        surfaceText: "#f1dedc",
+        surfaceVariant: "#534341",
+        surfaceVariantText: "#d8c2bf",
+        surfaceTint: "#ffb4ab",
+        outline: "#a08c8a",
+        surfaceContainer: "#271d1c",
+        surfaceContainerHigh: "#322826",
+        surfaceContainerHighest: "#3d3231"
+    },
+    monochrome: {
+        name: "Monochrome",
+        primary: "#ffffff",
+        primaryText: "#2b303c",
+        primaryContainer: "#424753",
+        secondary: "#c4c6d0",
+        surface: "#2a2a2a",
+        surfaceText: "#e4e2e3",
+        surfaceVariant: "#474648",
+        surfaceVariantText: "#c8c6c7",
+        surfaceTint: "#c2c6d6",
+        background: "#131315",
+        outline: "#929092",
+        surfaceContainer: "#353535",
+        surfaceContainerHigh: "#424242",
+        surfaceContainerHighest: "#505050"
+    }
+};
+
+const LIGHT = {
+    purple: {
+        primary: "#6750A4",
+        primaryText: "#FFFFFF",
+        primaryContainer: "#EADDFF",
+        secondary: "#625B71",
+        surface: "#FEF7FF",
+        surfaceText: "#1D1B20",
+        surfaceVariant: "#E7E0EC",
+        surfaceVariantText: "#49454F",
+        surfaceTint: "#6750A4",
+        outline: "#79747E",
+        surfaceContainer: "#F3EDF7",
+        surfaceContainerHigh: "#ECE6F0",
+        surfaceContainerHighest: "#E6E0E9"
+    },
+    blue: {
+        primary: "#1976d2",
+        primaryText: "#ffffff",
+        primaryContainer: "#e3f2fd",
+        secondary: "#42a5f5",
+        surface: "#f7f9ff",
+        surfaceText: "#181c20",
+        surfaceVariant: "#dee3eb",
+        surfaceVariantText: "#42474e",
+        surfaceTint: "#1976d2",
+        outline: "#72777f",
+        surfaceContainer: "#eceef4",
+        surfaceContainerHigh: "#e6e8ee",
+        surfaceContainerHighest: "#e0e2e8"
+    },
+    green: {
+        primary: "#2e7d32",
+        primaryText: "#ffffff",
+        primaryContainer: "#e8f5e8",
+        secondary: "#4caf50",
+        surface: "#f7fbf1",
+        surfaceText: "#191d17",
+        surfaceVariant: "#dee5d8",
+        surfaceVariantText: "#424940",
+        surfaceTint: "#2e7d32",
+        outline: "#72796f",
+        surfaceContainer: "#ecefe6",
+        surfaceContainerHigh: "#e6e9e0",
+        surfaceContainerHighest: "#e0e4db"
+    },
+    orange: {
+        primary: "#e65100",
+        primaryText: "#ffffff",
+        primaryContainer: "#ffecb3",
+        secondary: "#ff9800",
+        surface: "#fff8f6",
+        surfaceText: "#221a16",
+        surfaceVariant: "#f4ded5",
+        surfaceVariantText: "#52443d",
+        surfaceTint: "#e65100",
+        outline: "#85736c",
+        surfaceContainer: "#fceae3",
+        surfaceContainerHigh: "#f6e5de",
+        surfaceContainerHighest: "#f0dfd8"
+    },
+    red: {
+        primary: "#d32f2f",
+        primaryText: "#ffffff",
+        primaryContainer: "#ffebee",
+        secondary: "#f44336",
+        surface: "#fff8f7",
+        surfaceText: "#231918",
+        surfaceVariant: "#f5ddda",
+        surfaceVariantText: "#534341",
+        surfaceTint: "#d32f2f",
+        outline: "#857370",
+        surfaceContainer: "#fceae7",
+        surfaceContainerHigh: "#f7e4e1",
+        surfaceContainerHighest: "#f1dedc"
+    },
+    cyan: {
+        primary: "#0097a7",
+        primaryText: "#ffffff",
+        primaryContainer: "#e0f2f1",
+        secondary: "#00bcd4",
+        surface: "#f5fafc",
+        surfaceText: "#171d1e",
+        surfaceVariant: "#dbe4e6",
+        surfaceVariantText: "#3f484a",
+        surfaceTint: "#0097a7",
+        outline: "#6f797b",
+        surfaceContainer: "#e9eff0",
+        surfaceContainerHigh: "#e3e9eb",
+        surfaceContainerHighest: "#dee3e5"
+    },
+    pink: {
+        primary: "#c2185b",
+        primaryText: "#ffffff",
+        primaryContainer: "#fce4ec",
+        secondary: "#e91e63",
+        surface: "#fff8f7",
+        surfaceText: "#22191a",
+        surfaceVariant: "#f3dddf",
+        surfaceVariantText: "#524345",
+        surfaceTint: "#c2185b",
+        outline: "#847375",
+        surfaceContainer: "#fbeaeb",
+        surfaceContainerHigh: "#f5e4e5",
+        surfaceContainerHighest: "#f0dee0"
+    },
+    amber: {
+        primary: "#ff8f00",
+        primaryText: "#000000",
+        primaryContainer: "#fff8e1",
+        secondary: "#ffc107",
+        surface: "#fff8f2",
+        surfaceText: "#1f1b13",
+        surfaceVariant: "#ede1cf",
+        surfaceVariantText: "#4d4639",
+        surfaceTint: "#ff8f00",
+        outline: "#7f7667",
+        surfaceContainer: "#f6ecdf",
+        surfaceContainerHigh: "#f1e7d9",
+        surfaceContainerHighest: "#ebe1d4"
+    },
+    coral: {
+        primary: "#8c1d18",
+        primaryText: "#ffffff",
+        primaryContainer: "#ffdad6",
+        secondary: "#ff5449",
+        surface: "#fff8f7",
+        surfaceText: "#231918",
+        surfaceVariant: "#f5ddda",
+        surfaceVariantText: "#534341",
+        surfaceTint: "#8c1d18",
+        outline: "#857371",
+        surfaceContainer: "#fceae7",
+        surfaceContainerHigh: "#f6e4e2",
+        surfaceContainerHighest: "#f1dedc"
+    },
+    monochrome: {
+        primary: "#2b303c",
+        primaryText: "#ffffff",
+        primaryContainer: "#d6d7dc",
+        secondary: "#4a4d56",
+        surface: "#f5f5f6",
+        surfaceText: "#2a2a2a",
+        surfaceVariant: "#e0e0e2",
+        surfaceVariantText: "#424242",
+        surfaceTint: "#5a5f6e",
+        background: "#ffffff",
+        backgroundText: "#1a1a1a",
+        outline: "#757577",
+        surfaceContainer: "#e8e8ea",
+        surfaceContainerHigh: "#dcdcde",
+        surfaceContainerHighest: "#d0d0d2"
+    }
+};
+
+function getPreset(name, isLight) {
+    const set = isLight ? LIGHT : DARK;
+    const base = set[name] || set.purple;
+    const semantic = isLight ? SEMANTIC_LIGHT : SEMANTIC_DARK;
+    return Object.assign({}, semantic, {
+        background: base.surface,
+        backgroundText: base.surfaceText
+    }, base);
+}
+
+function presetNames() {
+    return PRESET_ORDER.slice();
+}
+
+function presetLabel(name) {
+    const preset = DARK[name];
+    return preset ? preset.name : name;
+}

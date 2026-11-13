@@ -10,6 +10,7 @@ Singleton {
 
     property var backend: null
 
+    readonly property bool ready: backend?.ready ?? true
     readonly property url xdgCache: backend?.xdgCache ?? StandardPaths.standardLocations(StandardPaths.GenericCacheLocation)[0]
     readonly property url imagecache: backend?.imagecache ?? `${xdgCache}/imagecache`
 

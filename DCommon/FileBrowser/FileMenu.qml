@@ -11,6 +11,8 @@ Popup {
     property Item anchorItem: parent
     property Item highlightedItem: null
     default property alias rows: column.children
+    property Popup parentMenu: null
+    property string backText: I18n.tr("Back", "menu row that returns to the parent menu")
 
     readonly property bool motionEnabled: FileBrowserMetrics.animationsEnabled
 
@@ -18,6 +20,15 @@ Popup {
         x = pointX;
         y = pointY;
         open();
+    }
+
+    function back() {
+        if (!parentMenu)
+            return;
+        parentMenu.x = x;
+        parentMenu.y = y;
+        close();
+        parentMenu.open();
     }
 
     function navigableItems() {
@@ -119,6 +130,17 @@ Popup {
             case Qt.Key_K:
                 root.moveHighlight(-1);
                 break;
+            case Qt.Key_Left:
+            case Qt.Key_Backspace:
+                if (!root.parentMenu)
+                    return;
+                root.back();
+                break;
+            case Qt.Key_Right:
+                if (!root.highlightedItem?.submenu)
+                    return;
+                root.highlightedItem.click();
+                break;
             case Qt.Key_Home:
                 root.highlightEdge(false);
                 break;
@@ -150,6 +172,17 @@ Popup {
 
             width: parent.width
             spacing: 0
+
+            FileMenuItem {
+                visible: root.parentMenu !== null
+                iconName: "arrow_back"
+                text: root.backText
+                onClicked: root.back()
+            }
+
+            FileMenuDivider {
+                visible: root.parentMenu !== null
+            }
         }
     }
 
