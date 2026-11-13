@@ -49,6 +49,7 @@ FocusScope {
     property var selected: []
     property real _lastActivation: 0
     property real _pendingScroll: -1
+    property string _enteringPath: ""
 
     readonly property var view: viewLoader.item
     readonly property bool columnsMode: viewMode === "columns" && directoryPool !== null
@@ -233,8 +234,22 @@ FocusScope {
 
     function enterCursor() {
         const entry = cursorEntry();
-        if (entry?.isDir)
-            openRequested(entry.path);
+        if (!entry?.isDir)
+            return;
+
+        openRequested(entry.path);
+        if (directory.path !== entry.path)
+            return;
+        _enteringPath = entry.path;
+        _selectEntered();
+    }
+
+    function _selectEntered() {
+        if (_enteringPath === "" || (directory.count === 0 && directory.loading))
+            return;
+        _enteringPath = "";
+        if (directory.count > 0 && selection.empty)
+            jumpTo(0, Qt.NoModifier);
     }
 
     function leaveColumn() {
@@ -487,6 +502,7 @@ FocusScope {
     onDirectoryChanged: {
         selection.clear();
         renamingPath = "";
+        _enteringPath = "";
         typeAheadTimer.prefix = "";
         childCounts = ({});
         countsPending = ({});
@@ -514,6 +530,7 @@ FocusScope {
         function onPathReset() {
             body.selection.clear();
             body.renamingPath = "";
+            body._enteringPath = "";
             typeAheadTimer.prefix = "";
             body.childCounts = ({});
             body.countsPending = ({});
@@ -522,6 +539,7 @@ FocusScope {
 
         function onListed() {
             body._syncEntries();
+            body._selectEntered();
             body._applyPendingScroll();
             body.settleNow();
         }
