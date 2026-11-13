@@ -29,6 +29,8 @@ DListView {
     readonly property real rowHeight: FileBrowserMetrics.listRowHeightFor(iconSize, compact)
     readonly property real rowPitch: rowHeight + spacing
     readonly property real contentOrigin: headerItem ? headerItem.y + headerItem.height : originY
+    readonly property real leadingX: I18n.isRtl ? Math.max(0, contentWidth - width) : 0
+    property bool atLeading: true
 
     signal itemClicked(int index, int modifiers)
     signal itemActivated(int index)
@@ -58,6 +60,13 @@ DListView {
             out.push(i);
         return out;
     }
+
+    onLeadingXChanged: {
+        if (atLeading)
+            contentX = leadingX;
+        atLeading = Math.abs(contentX - leadingX) < 1;
+    }
+    onContentXChanged: atLeading = Math.abs(contentX - leadingX) < 1
 
     clip: true
     contentWidth: rowWidth
