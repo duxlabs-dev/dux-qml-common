@@ -28,6 +28,14 @@ Item {
 
     readonly property int columns: 7
     readonly property int rows: 6
+    readonly property var dayDots: {
+        revision;
+        const dots = [];
+        for (let i = 0; i < columns * rows; i++)
+            dots.push(dotColorsFor ? (dotColorsFor(dateAt(i)) ?? []) : []);
+        return dots;
+    }
+    readonly property bool hasDots: dayDots.some(colors => colors.length > 0)
     readonly property bool floatingWindow: Style.isFloatingWindow(root)
     readonly property int firstFocusIndex: {
         for (let i = 0; i < columns * rows; i++) {
@@ -157,10 +165,7 @@ Item {
             readonly property bool isToday: root.sameDay(dayDate, root.today)
             readonly property bool isSelected: root.sameDay(dayDate, root.selectedDate)
             readonly property bool weekend: root.highlightWeekends && root.isWeekend(dayDate)
-            readonly property var dotColors: {
-                root.revision;
-                return root.dotColorsFor ? (root.dotColorsFor(dayDate) ?? []) : [];
-            }
+            readonly property var dotColors: root.dayDots[index] ?? []
             readonly property int extraCount: Math.max(0, dotColors.length - root.maxDots)
 
             x: mirrored ? root.width - root.gridLeft - (index % root.columns) * (root.cellWidth + root.cellGap) - width : root.gridLeft + (index % root.columns) * (root.cellWidth + root.cellGap)
@@ -182,7 +187,7 @@ Item {
 
             StyledText {
                 anchors.top: parent.top
-                anchors.topMargin: Style.spacingXS
+                anchors.topMargin: root.hasDots ? Style.spacingXS : (parent.height - height) / 2
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: cell.dayDate.getDate()
                 font.pixelSize: Style.fontSizeMedium
@@ -202,7 +207,8 @@ Item {
             Row {
                 anchors.bottom: parent.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.bottomMargin: Style.spacingXS
+                anchors.bottomMargin: Style.spacingXXS
+                height: extraLabel.implicitHeight
                 spacing: Style.spacingXXS
                 visible: cell.dotColors.length > 0
 
@@ -221,6 +227,7 @@ Item {
                 }
 
                 StyledText {
+                    id: extraLabel
                     anchors.verticalCenter: parent.verticalCenter
                     text: "+" + cell.extraCount
                     font.pixelSize: Style.fontSizeSmall
