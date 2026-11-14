@@ -338,11 +338,47 @@ Item {
             id: stackedRoot
 
             readonly property bool hasAmPm: !root.use24HourClock && root.showAmPm
-            readonly property real extraContent: (root.showDigitalSeconds ? 0.12 : 0) + (root.showDate ? 0.08 : 0) + (hasAmPm ? 0.08 : 0)
-            readonly property real baseSize: height * (0.42 - extraContent * 0.5)
-            readonly property real digitWidth: baseSize * 0.58
-            readonly property real smallSize: baseSize * 0.5
-            readonly property real rowSpacing: -baseSize * 0.17
+            readonly property int referenceSize: 100
+            readonly property font metricsFont: Qt.font({
+                "family": root.fontFamily !== "" ? root.fontFamily : Style.fontFor("ui"),
+                "pixelSize": referenceSize,
+                "weight": root.digitWeight,
+                "italic": root.italic
+            })
+            readonly property string dateText: root.now?.toLocaleDateString(root.locale, "MMM dd") ?? ""
+            readonly property real lineHeightRatio: metrics.height / referenceSize
+            // Method calls don't track the font property; reading it registers the dependency.
+            readonly property real digitAdvanceRatio: {
+                void metrics.font;
+                return Math.max(..."0123456789".split("").map(digit => metrics.advanceWidth(digit))) / referenceSize;
+            }
+            readonly property real dateAdvanceRatio: {
+                void metrics.font;
+                return metrics.advanceWidth(dateText) / referenceSize;
+            }
+            readonly property real ampmAdvanceRatio: {
+                void metrics.font;
+                return Math.max(metrics.advanceWidth("AM"), metrics.advanceWidth("PM")) / referenceSize;
+            }
+
+            readonly property real smallScale: 0.5
+            readonly property real dateScale: smallScale * 0.7
+            readonly property real rowSpacingScale: -0.17
+            readonly property real dateGapScale: 0.1
+
+            readonly property real heightPerSize: 2 * lineHeightRatio + rowSpacingScale + (root.showDigitalSeconds ? smallScale * lineHeightRatio : 0) + (root.showDate ? dateGapScale + dateScale * lineHeightRatio : 0) + (hasAmPm ? dateScale * lineHeightRatio : 0)
+            readonly property real widthPerSize: Math.max(2 * digitAdvanceRatio, root.showDigitalSeconds ? 2 * smallScale * digitAdvanceRatio : 0, root.showDate ? dateScale * dateAdvanceRatio : 0, hasAmPm ? dateScale * ampmAdvanceRatio : 0)
+            readonly property real baseSize: Math.max(1, Math.min(width / widthPerSize, height / heightPerSize))
+            readonly property real digitWidth: baseSize * digitAdvanceRatio
+            readonly property real smallSize: baseSize * smallScale
+            readonly property real smallDigitWidth: smallSize * digitAdvanceRatio
+            readonly property real dateSize: baseSize * dateScale
+            readonly property real rowSpacing: baseSize * rowSpacingScale
+
+            FontMetrics {
+                id: metrics
+                font: stackedRoot.metricsFont
+            }
 
             Column {
                 anchors.centerIn: parent
@@ -396,7 +432,7 @@ Item {
 
                         DigitText {
                             required property string modelData
-                            width: stackedRoot.smallSize * 0.58
+                            width: stackedRoot.smallDigitWidth
                             text: modelData
                             font.pixelSize: stackedRoot.smallSize
                             color: root.dimColor
@@ -406,15 +442,15 @@ Item {
 
                 Item {
                     width: 1
-                    height: stackedRoot.baseSize * 0.1
+                    height: stackedRoot.baseSize * stackedRoot.dateGapScale
                     visible: root.showDate
                 }
 
                 DigitText {
                     visible: root.showDate
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: root.now?.toLocaleDateString(root.locale, "MMM dd") ?? ""
-                    font.pixelSize: stackedRoot.smallSize * 0.7
+                    text: stackedRoot.dateText
+                    font.pixelSize: stackedRoot.dateSize
                     color: root.dimColor
                 }
 
@@ -422,7 +458,7 @@ Item {
                     visible: stackedRoot.hasAmPm
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: root.meridiem
-                    font.pixelSize: stackedRoot.smallSize * 0.7
+                    font.pixelSize: stackedRoot.dateSize
                     color: root.dimColor
                 }
             }
