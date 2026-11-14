@@ -495,6 +495,7 @@ StyledRect {
         verticalAlignment: TextInput.AlignVCenter
         selectByMouse: true
         echoMode: root.passwordVisible && root.echoMode === TextInput.Password ? TextInput.Normal : root.echoMode
+        passwordCharacter: Style.passwordMaskCharacter
         clip: true
         activeFocusOnTab: root.enabled && !root.imeShielded
         cursorVisible: root.inputFocused

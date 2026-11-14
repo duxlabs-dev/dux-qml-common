@@ -410,6 +410,7 @@ Singleton {
     readonly property string fontFamily: theme?.fontFamily ?? Fonts.sans
     readonly property string monoFontFamily: theme?.monoFontFamily ?? Fonts.mono
     readonly property string displayFontFamily: theme?.displayFontFamily ?? Fonts.display
+    readonly property string passwordMaskCharacter: "●"
 
     function fontFor(token) {
         switch (token) {
