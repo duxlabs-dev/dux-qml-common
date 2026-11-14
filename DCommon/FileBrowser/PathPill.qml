@@ -28,7 +28,7 @@ StyledButton {
     implicitWidth: row.implicitWidth + FileBrowserMetrics.pathPillPadding * 2
     implicitHeight: FileBrowserMetrics.pathPillHeight
     radius: FileBrowserMetrics.pathPillRadius
-    color: dropTarget ? Style.primaryContainer : flat ? "transparent" : current ? Style.selectedContainer : chipColor
+    color: dropTarget ? Style.primaryContainer : flat ? "transparent" : current ? Style.selectedColor(Style.isFloatingWindow(pill)) : chipColor
     Accessible.name: label
 
     StateLayer {

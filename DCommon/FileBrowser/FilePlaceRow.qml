@@ -43,7 +43,7 @@ StyledButton {
     width: parent?.width ?? 0
     implicitHeight: Math.max(FileBrowserMetrics.sidebarRowHeight, labels.implicitHeight + Style.spacingM)
     radius: FileBrowserMetrics.sidebarRowRadius
-    color: dropZone.containsDrag ? Style.primaryContainer : selected ? Style.selectedContainer : "transparent"
+    color: dropZone.containsDrag ? Style.primaryContainer : selected ? Style.selectedColor(Style.isFloatingWindow(row)) : "transparent"
     Accessible.name: label
     Accessible.description: tooltipText
 

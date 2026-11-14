@@ -53,7 +53,7 @@ StyledButton {
 
     focusPolicy: Qt.NoFocus
     radius: contentRadius
-    color: selected ? Style.selectedContainer : dropTarget ? Style.primaryContainer : "transparent"
+    color: selected ? Style.selectedColor(Style.isFloatingWindow(surface)) : dropTarget ? Style.primaryContainer : "transparent"
     Accessible.name: path.substring(path.lastIndexOf("/") + 1)
     Accessible.selected: selected
 

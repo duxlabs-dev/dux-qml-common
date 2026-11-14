@@ -10,6 +10,8 @@ Row {
     property bool backEnabled: false
     property bool forwardEnabled: false
 
+    readonly property color chipColor: Style.foregroundColor(Style.chipSurface, Style.isFloatingWindow(pair))
+
     signal backRequested
     signal forwardRequested
 
@@ -19,7 +21,7 @@ Row {
 
     ControlSegment {
         joinEnd: true
-        color: enabled ? Style.chipSurface : Style.onSurface_12
+        color: enabled ? pair.chipColor : Style.onSurface_12
         enabled: pair.backEnabled
         iconName: I18n.isRtl ? "arrow_forward" : "arrow_back"
         tooltipText: I18n.tr("Back", "tooltip on the button going to the previous location")
@@ -28,7 +30,7 @@ Row {
 
     ControlSegment {
         joinStart: true
-        color: enabled ? Style.chipSurface : Style.onSurface_12
+        color: enabled ? pair.chipColor : Style.onSurface_12
         enabled: pair.forwardEnabled
         iconName: I18n.isRtl ? "arrow_back" : "arrow_forward"
         tooltipText: I18n.tr("Forward", "tooltip on the button going to the next location")

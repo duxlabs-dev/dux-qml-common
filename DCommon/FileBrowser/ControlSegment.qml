@@ -21,7 +21,7 @@ StyledButton {
     focusPolicy: Qt.TabFocus
     width: FileBrowserMetrics.navPairSegmentWidth
     height: FileBrowserMetrics.controlSize
-    color: Style.chipSurface
+    color: Style.foregroundColor(Style.chipSurface, Style.isFloatingWindow(segment))
     topLeftRadius: mirrored ? endRadius : startRadius
     bottomLeftRadius: mirrored ? endRadius : startRadius
     topRightRadius: mirrored ? startRadius : endRadius

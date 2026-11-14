@@ -214,7 +214,7 @@ Item {
                 anchors.fill: parent
                 visible: content.active && drawer.resolved.length === 0
                 radius: FileBrowserMetrics.previewCardRadius
-                color: drawer.chipColor
+                color: Style.foregroundColor(drawer.chipColor, Style.isFloatingWindow(drawer))
             }
 
             Column {

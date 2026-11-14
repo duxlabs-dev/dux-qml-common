@@ -116,7 +116,7 @@ Item {
             visible: !root.compositorDecorated
             enabled: root.closeEnabled
             iconName: "close"
-            backgroundColor: Style.secondaryContainer
+            backgroundColor: Style.foregroundColor(Style.secondaryContainer, Style.isFloatingWindow(root))
             iconColor: Style.onSecondaryContainer
             tooltipText: root.closeTooltipText || null
             Accessible.name: root.closeTooltipText || I18n.tr("Close")

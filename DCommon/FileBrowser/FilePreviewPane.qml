@@ -19,7 +19,7 @@ Item {
     property color rowColor: Style.chipSurfaceNested
     property string caption: ""
     property bool closable: false
-    readonly property color surfaceColor: chipColor
+    readonly property color surfaceColor: Style.foregroundColor(chipColor, Style.isFloatingWindow(pane))
     readonly property string summary: {
         const notes = [caption, viewerItem?.note ?? ""].filter(part => part !== "");
         if (notes.length > 0)
