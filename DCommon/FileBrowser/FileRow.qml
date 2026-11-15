@@ -126,7 +126,7 @@ FileItemSurface {
         text: FileFormat.highlight(FileFormat.shownName(row.displayName, row.name, row.isDir), row.highlight, row.selected ? row.contentColor : Style.primary)
         textFormat: row.highlight === "" ? Text.PlainText : Text.StyledText
         color: row.contentColor
-        font.pixelSize: Style.fontSizeMedium
+        font.pixelSize: FileBrowserSettings.fileNamePixelSize
         wrapMode: Text.NoWrap
         elide: Text.ElideMiddle
     }

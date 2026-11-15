@@ -72,7 +72,7 @@ FileItemSurface {
             text: tile.highlight === "" ? (tile.view?.fitName(shown, tile.isDir) ?? shown) : FileFormat.highlight(shown, tile.highlight, tile.selected ? tile.contentColor : Style.primary)
             textFormat: tile.highlight === "" ? Text.PlainText : Text.StyledText
             color: tile.contentColor
-            font.pixelSize: Style.fontSizeSmall
+            font.pixelSize: FileBrowserSettings.fileNamePixelSize
             horizontalAlignment: Text.AlignHCenter
             elide: Text.ElideRight
             maximumLineCount: 2

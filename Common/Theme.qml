@@ -182,6 +182,7 @@ Singleton {
     property real spacingL: 16
     property real spacingXL: 24
 
+    readonly property real fontScale: 1
     property real fontSizeSmall: 12
     property real fontSizeMedium: 14
     property real fontSizeLarge: 16

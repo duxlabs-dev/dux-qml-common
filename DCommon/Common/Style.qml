@@ -278,6 +278,7 @@ Singleton {
     readonly property real spacingXL: theme?.spacingXL ?? 24
     readonly property real fontSizeXSmall: theme?.fontSizeXSmall ?? 10
     readonly property real fontSizeSmall: theme?.fontSizeSmall ?? 12
+    readonly property real fontScale: theme?.fontScale ?? 1
     readonly property real fontSizeMedium: theme?.fontSizeMedium ?? 14
     readonly property real fontSizeLarge: theme?.fontSizeLarge ?? 16
     readonly property real fontSizeXLarge: theme?.fontSizeXLarge ?? 20

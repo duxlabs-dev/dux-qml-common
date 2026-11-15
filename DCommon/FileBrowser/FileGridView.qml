@@ -100,7 +100,7 @@ DGridView {
 
         font.family: Style.fontFor("ui")
         font.weight: Style.fontWeightFor("ui")
-        font.pixelSize: Style.fontSizeSmall
+        font.pixelSize: FileBrowserSettings.fileNamePixelSize
     }
 
     TextEdit {

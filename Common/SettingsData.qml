@@ -45,6 +45,7 @@ Singleton {
     property bool scrollbarsEnabled: true
     property bool showExtensions: true
     property string dateFormat: "locale"
+    property int fileNameSize: 0
     property int textRenderType: SettingsData.TextRenderType.Qt
     property int textRenderQuality: SettingsData.TextRenderQuality.Default
 }
