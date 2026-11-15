@@ -1,42 +1,121 @@
 import QtQuick
-import QtQuick.Window
+import Quickshell
 import qs.DCommon.Common
 import "../Common/Surface.js" as Surface
 
-// Fading edges for a vertical Flickable, drawn as gradients in the color of the nearest painted
-// ancestor surface. Each strip ramps in with scroll distance like Android's View fading edge.
 Item {
     id: root
 
     required property Flickable target
     property real length: Style.spacingXL
 
-    readonly property var surfaceHost: resolveSurfaceHost()
+    property var backdropHosts: []
+    readonly property var hostWindow: QsWindow.window
     readonly property color color: {
-        const host = surfaceHost;
-        if (!host)
-            return Surface.isFloatingWindow(target) ? Style.floatingWindowSurface : Style.hostSurface;
-        if (host.surfaceColor !== undefined)
-            return host.surfaceColor;
-        if (host.backgroundColor !== undefined)
-            return host.backgroundColor;
-        return host.color;
+        const paints = [];
+        for (const host of backdropHosts)
+            addPaint(paints, paintOf(host), !paintsOwnColor(host));
+        if (hostWindow)
+            addPaint(paints, hostWindow.surfaceColor ?? hostWindow.backgroundColor ?? hostWindow.color, true);
+        const flat = Surface.composite(paints);
+        if (flat.a > 0)
+            return Qt.rgba(flat.r, flat.g, flat.b, flat.a);
+        return Surface.isFloatingWindow(target) ? Style.floatingWindowSurface : Style.hostSurface;
     }
     readonly property color clear: Style.withAlpha(color, 0)
     readonly property real topStrength: Math.min(1, Math.max(0, (target.contentY - target.originY) / length))
     readonly property real bottomStrength: Math.min(1, Math.max(0, (target.originY + target.contentHeight - target.height - target.contentY) / length))
 
-    function resolveSurfaceHost() {
-        for (let current = target.parent; current; current = current.parent) {
-            if (current.surfaceColor !== undefined || current.backgroundColor !== undefined)
-                return current;
-            if (current instanceof Rectangle && current.color.a >= 0.5)
-                return current;
+    function addPaint(paints, paint, declared) {
+        if (!paint || paint.a <= 0)
+            return;
+        const below = paints[paints.length - 1];
+        if (declared && below && Qt.colorEqual(paint, below))
+            return;
+        paints.push(paint);
+    }
+
+    function paintsOwnColor(host) {
+        return host instanceof Rectangle && host.color.a > 0;
+    }
+
+    function paintOf(host) {
+        if (!host?.visible)
+            return null;
+        if (paintsOwnColor(host))
+            return Style.withAlpha(host.color, host.color.a * host.opacity);
+        return host.surfaceColor ?? host.backgroundColor ?? null;
+    }
+
+    function declaresSurface(item) {
+        return item.surfaceColor !== undefined || item.backgroundColor !== undefined;
+    }
+
+    function covers(item) {
+        const area = item.mapFromItem(root, 0, 0, root.width, root.height);
+        return area.x >= -1 && area.y >= -1 && area.x + area.width <= item.width + 1 && area.y + area.height <= item.height + 1;
+    }
+
+    function rectanglesBehind(node) {
+        const siblings = node.parent.children;
+        const behind = [];
+        let nodePassed = false;
+        for (let i = 0; i < siblings.length; i++) {
+            const sibling = siblings[i];
+            if (sibling === node) {
+                nodePassed = true;
+                continue;
+            }
+            if (!(sibling instanceof Rectangle) || sibling.gradient)
+                continue;
+            if (sibling.z > node.z || (sibling.z === node.z && nodePassed))
+                continue;
+            if (!covers(sibling))
+                continue;
+            behind.push({
+                item: sibling,
+                order: i
+            });
         }
-        const window = root.Window.window;
-        if (window && (window.surfaceColor !== undefined || window.backgroundColor !== undefined))
-            return window;
-        return null;
+        behind.sort((a, b) => b.item.z - a.item.z || b.order - a.order);
+        return behind.map(entry => entry.item);
+    }
+
+    function resolveBackdropHosts() {
+        const hosts = [];
+        for (let node = target; node.parent; node = node.parent) {
+            const parent = node.parent;
+            hosts.push(...rectanglesBehind(node));
+            if (parent instanceof Rectangle ? !parent.gradient : declaresSurface(parent))
+                hosts.push(parent);
+        }
+        return hosts;
+    }
+
+    function refresh() {
+        backdropHosts = resolveBackdropHosts();
+    }
+
+    Component.onCompleted: {
+        refresh();
+        settle.restart();
+    }
+    onWidthChanged: settle.restart()
+    onHeightChanged: settle.restart()
+    onVisibleChanged: settle.restart()
+
+    Timer {
+        id: settle
+        interval: 0
+        onTriggered: root.refresh()
+    }
+
+    Connections {
+        target: root.target
+
+        function onParentChanged() {
+            settle.restart();
+        }
     }
 
     Rectangle {

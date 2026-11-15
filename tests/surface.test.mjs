@@ -38,3 +38,23 @@ test("older floating hosts retain their transparency marker", () => {
     host.isFloatingWindowSurface = false;
     assert.equal(surface.isFloatingWindow({ parent: host }), false);
 });
+
+const paint = (r, g, b, a) => ({ r, g, b, a });
+const near = (actual, expected) => {
+    for (const channel of ["r", "g", "b", "a"])
+        assert.ok(Math.abs(actual[channel] - expected[channel]) < 1e-9, `${channel}: ${actual[channel]} != ${expected[channel]}`);
+};
+
+test("an opaque paint hides everything behind it", () => {
+    near(surface.composite([paint(0.2, 0.3, 0.4, 1), paint(1, 1, 1, 1)]), paint(0.2, 0.3, 0.4, 1));
+});
+
+test("translucent paints stack nearest first", () => {
+    near(surface.composite([paint(1, 0, 0, 0.5), paint(0, 0, 1, 1)]), paint(0.5, 0, 0.5, 1));
+    near(surface.composite([paint(1, 0, 0, 0.5), paint(0, 0, 1, 0.5)]), paint(2 / 3, 0, 1 / 3, 0.75));
+});
+
+test("no paint composes to nothing", () => {
+    near(surface.composite([]), paint(0, 0, 0, 0));
+    near(surface.composite([paint(1, 1, 1, 0)]), paint(0, 0, 0, 0));
+});
