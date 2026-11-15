@@ -39,6 +39,52 @@ StyledButton {
         return selected ? Style.onSelectedContainer : Style.surfaceText;
     }
 
+    component RevealText: Item {
+        id: reveal
+
+        property alias text: content.text
+        property alias color: content.color
+        property alias font: content.font
+        property real shift: 0
+
+        readonly property real overflow: Math.max(0, content.implicitWidth - width)
+        readonly property bool active: overflow > 0 && (row.hovered || row.visualFocus) && FileBrowserMetrics.animationsEnabled
+
+        implicitHeight: content.implicitHeight
+        clip: true
+        onActiveChanged: {
+            slide.stop();
+            shift = 0;
+            if (active)
+                slide.start();
+        }
+
+        StyledText {
+            id: content
+
+            anchors.left: parent.left
+            anchors.leftMargin: -reveal.shift
+            width: reveal.active ? implicitWidth : reveal.width
+            wrapMode: Text.NoWrap
+            elide: reveal.active ? Text.ElideNone : Text.ElideMiddle
+        }
+
+        SequentialAnimation {
+            id: slide
+
+            PauseAnimation {
+                duration: FileBrowserMetrics.labelRevealDelay
+            }
+
+            NumberAnimation {
+                target: reveal
+                property: "shift"
+                to: reveal.overflow
+                duration: reveal.overflow / FileBrowserMetrics.labelRevealSpeed * 1000
+            }
+        }
+    }
+
     focusPolicy: Qt.TabFocus
     width: parent?.width ?? 0
     implicitHeight: Math.max(FileBrowserMetrics.sidebarRowHeight, labels.implicitHeight + Style.spacingM)
@@ -172,23 +218,19 @@ StyledButton {
             Layout.fillWidth: true
             spacing: Style.spacingXS
 
-            StyledText {
+            RevealText {
                 Layout.fillWidth: true
                 text: row.label
                 color: row.contentColor
                 font.pixelSize: Style.fontSizeMedium
-                wrapMode: Text.NoWrap
-                elide: Text.ElideMiddle
             }
 
-            StyledText {
+            RevealText {
                 Layout.fillWidth: true
                 visible: row.subtitle !== ""
                 text: row.subtitle
                 color: row.selected || !row.enabled ? row.contentColor : Style.onSurfaceVariant
                 font.pixelSize: Style.fontSizeSmall
-                wrapMode: Text.NoWrap
-                elide: Text.ElideMiddle
             }
         }
 

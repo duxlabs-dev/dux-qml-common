@@ -474,6 +474,9 @@ FocusScope {
         visible: bar.editing || bar.connecting
         readOnly: bar.connecting
         cornerRadius: bar.frameRadius
+        bottomLeftRadius: suggestionPopup.visible ? 0 : radius
+        bottomRightRadius: bottomLeftRadius
+        color: suggestionPopup.visible ? suggestionPopup.containerColor : Style.foregroundColor(backgroundColor, !usePopupTransparency)
         controlHeight: bar.height
         backgroundColor: bar.chipColor
         leftIconName: bar.jumpMode ? "history" : "edit_location"

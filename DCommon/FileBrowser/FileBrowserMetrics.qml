@@ -117,6 +117,8 @@ Singleton {
     readonly property real sidebarRowGap: Math.max(0, Style.groupedListGap + densityLevel * Style.spacingXXS)
     readonly property real sidebarGlyphSize: densityLevel < -1 ? Style.iconSizeSmall : Style.iconSizeMedium
     readonly property real usageWarnRatio: 0.9
+    readonly property int labelRevealDelay: 300
+    readonly property real labelRevealSpeed: 60
     readonly property real paneRadius: Style.windowRadius
     readonly property real paneMargin: Style.spacingM
     readonly property real paneMarginHorizontal: Style.spacingL

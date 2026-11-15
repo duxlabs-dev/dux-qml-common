@@ -8,11 +8,16 @@ import qs.DCommon.Widgets
 Popup {
     id: root
 
-    property Item anchorItem: null
+    property Rectangle anchorItem: null
     property var rows: []
     property string errorText: ""
     property int highlightIndex: -1
     readonly property real rowHeight: Style.menuRowHeight
+    readonly property color containerColor: Style.surfaceContainerHigh
+    readonly property real cornerRadius: anchorItem?.radius ?? Style.cornerRadiusL
+    readonly property real borderWidth: anchorItem?.border.width ?? 0
+    readonly property real seam: Math.ceil(borderWidth)
+    readonly property real overhangRadius: width > (anchorItem?.width ?? 0) ? cornerRadius : 0
 
     signal chosen(var row)
 
@@ -40,7 +45,7 @@ Popup {
 
     parent: anchorItem
     x: I18n.isRtl ? (anchorItem?.width ?? 0) - width : 0
-    y: (anchorItem?.height ?? 0) + Style.spacingXS
+    y: (anchorItem?.height ?? 0) - seam
     width: Math.max(anchorItem?.width ?? 0, FileBrowserMetrics.suggestionMinWidth)
     margins: 0
     padding: Style.spacingXS
@@ -59,15 +64,43 @@ Popup {
     }
 
     background: Item {
-        ElevationShadow {
+        Item {
             anchors.fill: parent
-            level: Style.elevationLevel2
-            fallbackOffset: Style.spacingXS
-            targetRadius: Style.cornerRadiusL
-            targetColor: Style.surfaceContainer
-            borderColor: Style.outlineMedium
-            borderWidth: Style.layerOutlineWidth
-            shadowEnabled: Style.elevationEnabled && Style.popoutElevationEnabled
+            anchors.leftMargin: -shadow._pad
+            anchors.rightMargin: -shadow._pad
+            anchors.bottomMargin: -shadow._pad
+            clip: true
+
+            ElevationShadow {
+                id: shadow
+
+                x: _pad
+                width: root.width
+                height: root.height
+                level: Style.elevationLevel2
+                fallbackOffset: Style.spacingXS
+                targetRadius: root.cornerRadius
+                topLeftRadius: I18n.isRtl ? root.overhangRadius : 0
+                topRightRadius: I18n.isRtl ? 0 : root.overhangRadius
+                targetColor: root.containerColor
+                borderColor: root.anchorItem?.border.color ?? "transparent"
+                borderWidth: root.borderWidth
+                shadowEnabled: Style.elevationEnabled && Style.popoutElevationEnabled
+            }
+        }
+
+        Rectangle {
+            x: root.seam
+            width: Math.min(parent.width, root.anchorItem?.width ?? 0) - root.seam * 2
+            height: Math.max(root.seam, Style.dividerWidth)
+            color: root.containerColor
+
+            Rectangle {
+                anchors.bottom: parent.bottom
+                width: parent.width
+                height: Style.dividerWidth
+                color: Style.outlineVariant
+            }
         }
     }
 
