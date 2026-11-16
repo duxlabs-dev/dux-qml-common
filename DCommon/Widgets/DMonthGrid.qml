@@ -158,8 +158,16 @@ Item {
                 event.accepted = true;
             }
 
-            FocusRing {
-                visible: cell.visualFocus
+            Loader {
+                anchors.fill: parent
+                anchors.margins: -Style.focusRingOffset
+                active: cell.visualFocus
+
+                sourceComponent: FocusRing {
+                    anchors.margins: 0
+                    radius: Math.min(Style.fullRadius(width, height), cell.radius + Style.focusRingOffset)
+                    visible: true
+                }
             }
             readonly property bool inMonth: dayDate.getMonth() === root.displayDate.getMonth()
             readonly property bool isToday: root.sameDay(dayDate, root.today)
@@ -204,36 +212,42 @@ Item {
                 }
             }
 
-            Row {
-                anchors.bottom: parent.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.bottomMargin: Style.spacingXXS
-                height: extraLabel.implicitHeight
-                spacing: Style.spacingXXS
-                visible: cell.dotColors.length > 0
+            Loader {
+                anchors.fill: parent
+                active: cell.dotColors.length > 0
 
-                Repeater {
-                    model: cell.dotColors.slice(0, root.maxDots)
+                sourceComponent: Item {
+                    Row {
+                        anchors.bottom: parent.bottom
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.bottomMargin: Style.spacingXXS
+                        height: extraLabel.implicitHeight
+                        spacing: Style.spacingXXS
 
-                    Rectangle {
-                        required property var modelData
+                        Repeater {
+                            model: cell.dotColors.slice(0, root.maxDots)
 
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: Style.spacingXS
-                        height: Style.spacingXS
-                        radius: Style.fullRadius(width, height)
-                        color: modelData
+                            Rectangle {
+                                required property var modelData
+
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: Style.spacingXS
+                                height: Style.spacingXS
+                                radius: Style.fullRadius(width, height)
+                                color: modelData
+                            }
+                        }
+
+                        StyledText {
+                            id: extraLabel
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: "+" + cell.extraCount
+                            font.pixelSize: Style.fontSizeSmall
+                            font.weight: Style.fontWeightMedium
+                            color: cell.isSelected ? Style.onPrimary : Style.primary
+                            visible: cell.extraCount > 0
+                        }
                     }
-                }
-
-                StyledText {
-                    id: extraLabel
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: "+" + cell.extraCount
-                    font.pixelSize: Style.fontSizeSmall
-                    font.weight: Style.fontWeightMedium
-                    color: cell.isSelected ? Style.onPrimary : Style.primary
-                    visible: cell.extraCount > 0
                 }
             }
 
