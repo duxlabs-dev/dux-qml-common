@@ -16,6 +16,8 @@ Item {
     property real _shownFill: fill
     property int _shownWeight: weight
     property bool _ready: false
+    property Loader _incoming: null
+    property Timer _rotationTimer: null
 
     implicitWidth: Math.round(size)
     implicitHeight: Math.round(size)
@@ -34,16 +36,19 @@ Item {
             settle();
             return;
         }
-        incoming.active = true;
-        crossfade.restart();
+        if (!_incoming)
+            _incoming = incomingComponent.createObject(root);
+        _incoming.fadeIn();
     }
 
     function settle() {
-        crossfade.stop();
+        _incoming?.stopFade();
         _shownFill = fill;
         _shownWeight = weight;
-        shownLayer.opacity = 1;
-        incoming.active = false;
+        if (!_incoming)
+            return;
+        icon.opacity = 1;
+        _incoming.active = false;
     }
 
     Component.onCompleted: {
@@ -52,92 +57,95 @@ Item {
         _ready = true;
     }
 
-    Item {
-        id: shownLayer
+    DIconGlyph {
+        id: icon
 
         anchors.fill: parent
 
-        StyledText {
-            id: icon
+        font.pixelSize: Math.round(Style.fontSizeMedium)
+        font.weight: root._shownWeight
+        color: Style.surfaceText
+        renderType: root.smoothTransform ? Text.QtRendering : Text.NativeRendering
+
+        font.variableAxes: {
+            "FILL": root._shownFill,
+            "GRAD": root.grade,
+            "opsz": 24,
+            "wght": root._shownWeight
+        }
+    }
+
+    Component {
+        id: incomingComponent
+
+        Loader {
+            id: incoming
+
+            function fadeIn() {
+                active = true;
+                crossfade.restart();
+            }
+
+            function stopFade() {
+                crossfade.stop();
+            }
 
             anchors.fill: parent
+            active: false
+            opacity: 0
 
-            font.family: Fonts.icons
-            font.pixelSize: Math.round(Style.fontSizeMedium)
-            font.weight: root._shownWeight
-            font.hintingPreference: Font.PreferNoHinting
-            color: Style.surfaceText
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
-            renderType: root.smoothTransform ? Text.QtRendering : Text.NativeRendering
+            sourceComponent: DIconGlyph {
+                text: icon.text
+                font.pixelSize: icon.font.pixelSize
+                font.weight: root.weight
+                color: icon.color
+                renderType: icon.renderType
 
-            font.variableAxes: {
-                "FILL": root._shownFill,
-                "GRAD": root.grade,
-                "opsz": 24,
-                "wght": root._shownWeight
+                font.variableAxes: {
+                    "FILL": root.fill,
+                    "GRAD": root.grade,
+                    "opsz": 24,
+                    "wght": root.weight
+                }
+            }
+
+            SequentialAnimation {
+                id: crossfade
+
+                NumberAnimation {
+                    target: incoming
+                    property: "opacity"
+                    from: 0
+                    to: 1
+                    duration: Style.shortDuration / 2
+                    easing.type: Style.standardEasing
+                }
+                NumberAnimation {
+                    target: icon
+                    property: "opacity"
+                    from: 1
+                    to: 0
+                    duration: Style.shortDuration / 2
+                    easing.type: Style.standardEasing
+                }
+
+                onFinished: root.settle()
             }
         }
     }
 
-    Loader {
-        id: incoming
+    Component {
+        id: rotationTimerComponent
 
-        anchors.fill: parent
-        active: false
-        opacity: 0
-
-        sourceComponent: StyledText {
-            text: icon.text
-            font.family: Fonts.icons
-            font.pixelSize: icon.font.pixelSize
-            font.weight: root.weight
-            font.hintingPreference: Font.PreferNoHinting
-            color: icon.color
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
-            renderType: icon.renderType
-
-            font.variableAxes: {
-                "FILL": root.fill,
-                "GRAD": root.grade,
-                "opsz": 24,
-                "wght": root.weight
-            }
+        Timer {
+            interval: 16
+            onTriggered: root.rotationCompleted()
         }
-    }
-
-    SequentialAnimation {
-        id: crossfade
-
-        NumberAnimation {
-            target: incoming
-            property: "opacity"
-            from: 0
-            to: 1
-            duration: Style.shortDuration / 2
-            easing.type: Style.standardEasing
-        }
-        NumberAnimation {
-            target: shownLayer
-            property: "opacity"
-            from: 1
-            to: 0
-            duration: Style.shortDuration / 2
-            easing.type: Style.standardEasing
-        }
-
-        onFinished: root.settle()
-    }
-
-    Timer {
-        id: rotationTimer
-        interval: 16
-        repeat: false
-        onTriggered: root.rotationCompleted()
     }
 
     onRotationChanged: {
-        rotationTimer.restart();
+        if (!_rotationTimer)
+            _rotationTimer = rotationTimerComponent.createObject(root);
+        _rotationTimer.restart();
     }
 }

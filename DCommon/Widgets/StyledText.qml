@@ -35,12 +35,6 @@ Text {
         }
     }
 
-    readonly property var standardAnimation: {
-        "duration": Appearance.anim.durations.normal,
-        "easing.type": Easing.BezierSpline,
-        "easing.bezierCurve": Appearance.anim.curves.standard
-    }
-
     color: Style.surfaceText
     font.pixelSize: Appearance.fontSize.normal
     font.family: resolvedFontFamily
@@ -54,9 +48,9 @@ Text {
 
     Behavior on opacity {
         NumberAnimation {
-            duration: standardAnimation.duration
-            easing.type: standardAnimation["easing.type"]
-            easing.bezierCurve: standardAnimation["easing.bezierCurve"]
+            duration: Appearance.anim.durations.normal
+            easing.type: Easing.BezierSpline
+            easing.bezierCurve: Appearance.anim.curves.standard
         }
     }
 }

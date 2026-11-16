@@ -39,6 +39,10 @@ MouseArea {
     }
     readonly property bool controlPressed: control ? control.pressed : false
 
+    property Rectangle _stateRect: null
+    property DRipple _ripple: null
+    property bool _completed: false
+
     anchors.fill: parent
     cursorShape: disabled ? Qt.ArrowCursor : Qt.PointingHandCursor
     hoverEnabled: true
@@ -60,56 +64,75 @@ MouseArea {
             tooltipLoader.active = false;
     }
 
-    onPressed: mouse => {
-        if (!disabled && enableRipple)
-            rippleLayer.trigger(mouse.x, mouse.y, true);
+    function pressRipple(x, y) {
+        if (disabled || !rippleDrawsPress)
+            return;
+        if (!_ripple)
+            _ripple = rippleComponent.createObject(root);
+        _ripple.trigger(x, y, true);
     }
-    onReleased: rippleLayer.release()
-    onCanceled: rippleLayer.release()
+
+    onPressed: mouse => pressRipple(mouse.x, mouse.y)
+    onReleased: _ripple?.release()
+    onCanceled: _ripple?.release()
 
     onControlPressedChanged: {
         if (!controlPressed) {
-            rippleLayer.release();
+            _ripple?.release();
             return;
         }
-        if (disabled || !enableRipple)
-            return;
         const point = mapFromItem(control, control.pressX, control.pressY);
-        rippleLayer.trigger(point.x, point.y, true);
+        pressRipple(point.x, point.y);
     }
 
-    Rectangle {
-        id: stateRect
+    onStateOpacityChanged: {
+        if (stateOpacity > 0 && !_stateRect)
+            _stateRect = stateRectComponent.createObject(root);
+    }
 
-        property real stateAlpha: root.stateOpacity
+    Component.onCompleted: _completed = true
 
-        anchors.fill: parent
-        radius: root.cornerRadius
-        topLeftRadius: root.topLeftRadius
-        topRightRadius: root.topRightRadius
-        bottomLeftRadius: root.bottomLeftRadius
-        bottomRightRadius: root.bottomRightRadius
-        color: Style.withAlpha(root.stateColor, stateAlpha)
+    // z -1 keeps both layers under children declared at the use site, whenever they get created
+    Component {
+        id: stateRectComponent
 
-        Behavior on stateAlpha {
-            enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
-            DAnim {
-                duration: root.transitionDuration
-                easing.bezierCurve: root.transitionCurve
+        Rectangle {
+            // 0 until _stateRect is assigned, so a first tint after completion fades in like every later one
+            property real stateAlpha: root._stateRect ? root.stateOpacity : 0
+
+            anchors.fill: parent
+            z: -1
+            radius: root.cornerRadius
+            topLeftRadius: root.topLeftRadius
+            topRightRadius: root.topRightRadius
+            bottomLeftRadius: root.bottomLeftRadius
+            bottomRightRadius: root.bottomRightRadius
+            color: Style.withAlpha(root.stateColor, stateAlpha)
+
+            Behavior on stateAlpha {
+                enabled: root._completed && !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                DAnim {
+                    duration: root.transitionDuration
+                    easing.bezierCurve: root.transitionCurve
+                }
             }
         }
     }
 
-    DRipple {
-        id: rippleLayer
-        anchors.fill: parent
-        rippleColor: root.stateColor
-        cornerRadius: root.cornerRadius
-        topLeftRadius: root.topLeftRadius
-        topRightRadius: root.topRightRadius
-        bottomLeftRadius: root.bottomLeftRadius
-        bottomRightRadius: root.bottomRightRadius
-        enableRipple: root.enableRipple
+    Component {
+        id: rippleComponent
+
+        DRipple {
+            anchors.fill: parent
+            z: -1
+            rippleColor: root.stateColor
+            cornerRadius: root.cornerRadius
+            topLeftRadius: root.topLeftRadius
+            topRightRadius: root.topRightRadius
+            bottomLeftRadius: root.bottomLeftRadius
+            bottomRightRadius: root.bottomRightRadius
+            enableRipple: root.enableRipple
+        }
     }
 
     onEntered: presentTooltip(Style.tooltipDelay)
