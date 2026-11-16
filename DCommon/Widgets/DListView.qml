@@ -17,8 +17,8 @@ ListView {
     property real fadeTopInset: 0
     property real fadeBottomInset: 0
     property real fadeSideInset: 0
-    readonly property real revealInsetTop: fadeEdges ? fadeTopInset + fadeLength : 0
-    readonly property real revealInsetBottom: fadeEdges ? fadeBottomInset + fadeLength : 0
+    readonly property real revealInsetTop: fadeEdges && Style.scrollShadowsEnabled ? fadeTopInset + fadeLength : 0
+    readonly property real revealInsetBottom: fadeEdges && Style.scrollShadowsEnabled ? fadeBottomInset + fadeLength : 0
 
     function revealRange(top, bottom) {
         contentY = Reveal.contentYFor(listView, top, bottom, revealInsetTop, revealInsetBottom);
@@ -412,7 +412,7 @@ ListView {
         anchors.leftMargin: listView.fadeSideInset
         anchors.rightMargin: listView.fadeSideInset
         z: 1
-        active: listView.fadeEdges && listView.contentHeight > listView.height + 1
+        active: Style.scrollShadowsEnabled && listView.fadeEdges && listView.contentHeight > listView.height + 1
         sourceComponent: DEdgeFade {
             target: listView
             length: listView.fadeLength

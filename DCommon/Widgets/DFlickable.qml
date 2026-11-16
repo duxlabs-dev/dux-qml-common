@@ -20,8 +20,8 @@ Flickable {
     property real fadeTopInset: 0
     property real fadeBottomInset: 0
     property real fadeSideInset: 0
-    readonly property real revealInsetTop: fadeEdges ? fadeTopInset + fadeLength : 0
-    readonly property real revealInsetBottom: fadeEdges ? fadeBottomInset + fadeLength : 0
+    readonly property real revealInsetTop: fadeEdges && Style.scrollShadowsEnabled ? fadeTopInset + fadeLength : 0
+    readonly property real revealInsetBottom: fadeEdges && Style.scrollShadowsEnabled ? fadeBottomInset + fadeLength : 0
 
     function revealRange(top, bottom) {
         contentY = Reveal.contentYFor(flickable, top, bottom, revealInsetTop, revealInsetBottom);
@@ -262,7 +262,7 @@ Flickable {
         anchors.leftMargin: flickable.fadeSideInset
         anchors.rightMargin: flickable.fadeSideInset
         z: 1
-        active: flickable.fadeEdges && !flickable.horizontal && flickable.contentHeight > flickable.height + 1
+        active: Style.scrollShadowsEnabled && flickable.fadeEdges && !flickable.horizontal && flickable.contentHeight > flickable.height + 1
         sourceComponent: DEdgeFade {
             target: flickable
             length: flickable.fadeLength

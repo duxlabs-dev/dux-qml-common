@@ -20,8 +20,8 @@ GridView {
     property real fadeTopInset: 0
     property real fadeBottomInset: 0
     property real fadeSideInset: 0
-    readonly property real revealInsetTop: fadeEdges ? fadeTopInset + fadeLength : 0
-    readonly property real revealInsetBottom: fadeEdges ? fadeBottomInset + fadeLength : 0
+    readonly property real revealInsetTop: fadeEdges && Style.scrollShadowsEnabled ? fadeTopInset + fadeLength : 0
+    readonly property real revealInsetBottom: fadeEdges && Style.scrollShadowsEnabled ? fadeBottomInset + fadeLength : 0
 
     function revealRange(top, bottom) {
         contentY = Reveal.contentYFor(gridView, top, bottom, revealInsetTop, revealInsetBottom);
@@ -236,7 +236,7 @@ GridView {
         anchors.leftMargin: gridView.fadeSideInset
         anchors.rightMargin: gridView.fadeSideInset
         z: 1
-        active: gridView.fadeEdges && gridView.contentHeight > gridView.height + 1
+        active: Style.scrollShadowsEnabled && gridView.fadeEdges && gridView.contentHeight > gridView.height + 1
         sourceComponent: DEdgeFade {
             target: gridView
             length: gridView.fadeLength

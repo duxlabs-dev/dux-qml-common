@@ -43,6 +43,7 @@ Singleton {
     property bool powerMenuGridLayout: false
     property bool popoutElevationEnabled: true
     property bool scrollbarsEnabled: true
+    property bool scrollShadowsEnabled: true
     property bool showExtensions: true
     property string dateFormat: "locale"
     property int fileNameSize: 0
