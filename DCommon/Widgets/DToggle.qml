@@ -36,7 +36,7 @@ FocusScope {
     readonly property int insetCircle: Style.switchThumbSelected
 
     width: showText ? parent.width : trackWidth
-    height: showText ? Math.max(trackHeight, textColumn.implicitHeight + Style.spacingM * 2) : trackHeight
+    height: showText ? Math.max(trackHeight, (labelLoader.item?.implicitHeight ?? 0) + Style.spacingM * 2) : trackHeight
     activeFocusOnTab: enabled
     readonly property Item focusTarget: input
     readonly property var focusTargets: [input]
@@ -63,11 +63,13 @@ FocusScope {
         toggled(!checked);
     }
 
+    // Only a toggle that shows its own label needs the row state layer and the text
     Loader {
-        id: rowLoader
+        id: labelLoader
         anchors.fill: parent
         active: toggle.showText
         sourceComponent: StyledRect {
+            implicitHeight: textColumn.implicitHeight
             radius: Style.cornerRadiusM
             color: "transparent"
 
@@ -77,42 +79,35 @@ FocusScope {
                 disabled: !toggle.enabled || toggle.toggling
                 stateColor: Style.primary
             }
-        }
-    }
 
-    Row {
-        anchors.left: parent.left
-        anchors.right: toggleTrack.left
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.leftMargin: Style.spacingM
-        anchors.rightMargin: Style.spacingM
-        spacing: Style.spacingXS
-        visible: showText
+            Column {
+                id: textColumn
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.leftMargin: Style.spacingM
+                anchors.rightMargin: toggle.trackWidth + Style.spacingM * 2
+                spacing: Style.spacingXS
 
-        Column {
-            id: textColumn
-            width: parent.width
-            anchors.verticalCenter: parent.verticalCenter
-            spacing: Style.spacingXS
+                StyledText {
+                    text: toggle.text
+                    font.pixelSize: Style.fontSizeMedium
+                    font.weight: Style.fontWeightMedium
+                    color: toggle.enabled ? Style.surfaceText : Style.onSurface_38
+                    width: parent.width
+                    wrapMode: Text.WordWrap
+                    horizontalAlignment: Text.AlignLeft
+                }
 
-            StyledText {
-                text: toggle.text
-                font.pixelSize: Style.fontSizeMedium
-                font.weight: Style.fontWeightMedium
-                color: toggle.enabled ? Style.surfaceText : Style.onSurface_38
-                width: parent.width
-                wrapMode: Text.WordWrap
-                horizontalAlignment: Text.AlignLeft
-            }
-
-            StyledText {
-                text: toggle.description
-                font.pixelSize: Style.fontSizeSmall
-                color: toggle.enabled ? toggle.descriptionColor : Style.onSurface_38
-                wrapMode: Text.WordWrap
-                width: parent.width
-                visible: toggle.description.length > 0
-                horizontalAlignment: Text.AlignLeft
+                StyledText {
+                    text: toggle.description
+                    font.pixelSize: Style.fontSizeSmall
+                    color: toggle.enabled ? toggle.descriptionColor : Style.onSurface_38
+                    wrapMode: Text.WordWrap
+                    width: parent.width
+                    visible: toggle.description.length > 0
+                    horizontalAlignment: Text.AlignLeft
+                }
             }
         }
     }
