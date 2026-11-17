@@ -65,11 +65,10 @@ QtObject {
     function _commit() {
         if (path === "")
             return;
-        _selfWrite = watchChanges;
-        if (serialize)
-            file.setText(serialize());
-        else
-            file.writeAdapter();
+        // A skipped identical write brings no fileChanged; runtimes before 0.4.7 return undefined.
+        const wrote = serialize ? file.setText(serialize()) : file.writeAdapter();
+        if (wrote !== false)
+            _selfWrite = watchChanges;
         written();
     }
 
