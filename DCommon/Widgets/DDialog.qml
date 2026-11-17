@@ -96,7 +96,7 @@ FocusScope {
 
     // An overlay shares its window with the app and a FocusScope doesn't fence Tab, so focus would walk out behind
     // the scrim, where Escape no longer reaches the dialog. Past either end it wraps instead.
-    readonly property bool overlayOpen: !embedded && opened
+    readonly property bool overlayOpen: !embedded && opened && visible
     property real overlayOpenedAt: 0
     property Item lastFocused: null
     onOverlayOpenChanged: {

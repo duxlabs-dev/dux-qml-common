@@ -83,3 +83,22 @@ function tintedContainer(base, tint, onColor, target = 4.5) {
     }
     return mix(base, tint, low);
 }
+
+// Strengthens a subtle tint until the container stands apart from every neighbor, while onColor stays readable
+function distinctTint(base, tint, onColor, amount, neighbors, distinction = 1.15, target = 4.5) {
+    let best = subtleTint(base, tint, onColor, amount, target);
+    let bestRatio = worstRatio(best, neighbors);
+    for (let strength = amount; strength <= 0.6; strength += 0.02) {
+        const candidate = mix(base, tint, strength);
+        if (ratio(candidate, onColor) < target)
+            break;
+        const apart = worstRatio(candidate, neighbors);
+        if (apart >= distinction)
+            return candidate;
+        if (apart <= bestRatio)
+            continue;
+        best = candidate;
+        bestRatio = apart;
+    }
+    return best;
+}

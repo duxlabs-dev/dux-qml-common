@@ -44,8 +44,11 @@ Singleton {
     readonly property color primaryText: theme?.primaryText ?? "#381E72"
     readonly property color primaryContainer: theme?.primaryContainer ?? "#4F378B"
     readonly property real selectedContainerTint: theme?.selectedContainerTint ?? 0.2
-    readonly property bool themedSelectedContainer: theme?.themedSelectedContainer ?? (Contrast.isTonal(secondaryContainer, onSecondaryContainer) && Contrast.isTonal(secondaryContainer, surfaceText))
-    readonly property color selectedContainer: theme?.selectedContainer ?? (themedSelectedContainer ? secondaryContainer : Contrast.subtleTint(surfaceContainerHigh, primary, surfaceText, selectedContainerTint))
+    // A selected row has to read against the rows beside it and the surface behind them
+    readonly property var selectionNeighbors: [hostSurface, cardSurface, chipSurface]
+    readonly property real selectedContainerDistinction: 1.15
+    readonly property bool themedSelectedContainer: theme?.themedSelectedContainer ?? (Contrast.isTonal(secondaryContainer, onSecondaryContainer) && Contrast.isTonal(secondaryContainer, surfaceText) && Contrast.worstRatio(secondaryContainer, selectionNeighbors) >= selectedContainerDistinction)
+    readonly property color selectedContainer: theme?.selectedContainer ?? (themedSelectedContainer ? secondaryContainer : Contrast.distinctTint(chipSurface, primary, surfaceText, selectedContainerTint, selectionNeighbors, selectedContainerDistinction))
     readonly property color accentOnSelectedContainer: theme?.accentOnSelectedContainer ?? (Contrast.ratio(primary, selectedContainer) >= 3 ? primary : onSelectedContainer)
     readonly property color accentOnPrimaryContainer: theme?.accentOnPrimaryContainer ?? (Contrast.ratio(primary, primaryContainer) >= 3 ? primary : onPrimaryContainer)
     readonly property var accents: theme?.accents ?? Accents.derive(primary, isLightMode, null)
@@ -68,9 +71,9 @@ Singleton {
     readonly property color surfaceContainerHighest: theme?.surfaceContainerHighest ?? "#36343b"
     readonly property color surfaceBright: theme?.surfaceBright ?? "#3b383e"
     readonly property color surfaceDim: theme?.surfaceDim ?? "#141218"
-    readonly property color hostSurface: theme?.hostSurface ?? surface
+    readonly property color hostSurface: theme?.hostSurface ?? (isLightMode ? surfaceContainerHighest : surface)
     readonly property color cardSurface: theme?.cardSurface ?? surfaceContainer
-    readonly property color chipSurface: theme?.chipSurface ?? surfaceContainerHigh
+    readonly property color chipSurface: theme?.chipSurface ?? (isLightMode ? surface : surfaceContainerHigh)
     readonly property color chipSurfaceNested: theme?.chipSurfaceNested ?? surfaceContainerHighest
     readonly property color tooltipSurface: theme?.tooltipSurface ?? inverseSurface
     readonly property color tooltipText: theme?.tooltipText ?? Contrast.readableOn(tooltipSurface, [inverseOnSurface, surfaceText, contrastLight, contrastDark])
