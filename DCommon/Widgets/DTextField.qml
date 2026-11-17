@@ -21,6 +21,7 @@ StyledRect {
     property alias cursorPosition: textInput.cursorPosition
     property string placeholderText: ""
     property string labelText: ""
+    property bool alwaysFloatLabel: false
     property bool outlined: false
     property bool isError: false
     property string supportingText: ""
@@ -138,7 +139,7 @@ StyledRect {
     }
 
     readonly property real labelBandHeight: Math.round(Style.fontSizeSmall * 1.4) + Style.spacingXS * 2
-    readonly property bool labelFloated: root.inputFocused || text.length > 0 || root.composing
+    readonly property bool labelFloated: root.alwaysFloatLabel || root.inputFocused || text.length > 0 || root.composing
     readonly property real labelProgress: Math.max(0, Math.min(1, labelMotion.value))
     readonly property real containerTop: outlined && labelText ? Style.outlinedFieldLabelLineHeight / 2 : 0
     readonly property string shownPlaceholderText: expressive && labelText ? labelText : placeholderText
