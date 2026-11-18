@@ -400,12 +400,9 @@ FocusScope {
         }
         const match = TypeAhead.next(directory.count, index => directory.entries.get(index).name, cursorIndex(), typeAheadTimer.prefix, text);
         typeAheadTimer.prefix = match.prefix;
-        if (match.index < 0) {
-            typeAheadTimer.stop();
-            return;
-        }
         typeAheadTimer.restart();
-        jumpTo(match.index, Qt.NoModifier);
+        if (match.index >= 0)
+            jumpTo(match.index, Qt.NoModifier);
     }
 
     function springLoad(index) {

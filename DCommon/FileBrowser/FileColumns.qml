@@ -75,6 +75,15 @@ Singleton {
         }
     ]
 
+    readonly property var searchColumns: [
+        {
+            "id": "match",
+            "sortKey": "",
+            "width": FileBrowserMetrics.matchColumnWidth,
+            "align": Text.AlignLeft
+        }
+    ]
+
     function label(id) {
         switch (id) {
         case "name":
@@ -99,6 +108,8 @@ Singleton {
             return I18n.tr("Deleted", "trash list column header, when an item was moved to the trash");
         case "used":
             return I18n.tr("Last used", "recent files list column header, when a file was last opened");
+        case "match":
+            return I18n.tr("Match", "search results list column header, the line of text a content search found");
         default:
             return id;
         }
@@ -131,13 +142,15 @@ Singleton {
             return FileFormat.modified(entry.deletedMs);
         case "used":
             return FileFormat.modified(entry.usedMs);
+        case "match":
+            return entry.line > 0 ? `${entry.line}: ${entry.snippet}` : entry.snippet ?? "";
         default:
             return "";
         }
     }
 
     function specFor(id) {
-        return optional.find(column => column.id === id) ?? trashColumns.find(column => column.id === id) ?? recentColumns.find(column => column.id === id) ?? null;
+        return optional.find(column => column.id === id) ?? trashColumns.find(column => column.id === id) ?? recentColumns.find(column => column.id === id) ?? searchColumns.find(column => column.id === id) ?? null;
     }
 
     function sortKeyFor(id) {

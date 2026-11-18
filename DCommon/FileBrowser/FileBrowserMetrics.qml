@@ -95,6 +95,7 @@ Singleton {
     readonly property real ownerColumnWidth: Style.spacingXL * 4
     readonly property real permissionsColumnWidth: Style.spacingXL * 4
     readonly property real locationColumnWidth: Style.spacingXL * 8
+    readonly property real matchColumnWidth: Style.spacingXL * 12
 
     readonly property real selectionFooterHeight: Style.buttonHeightS
     readonly property real emblemMinSize: Style.iconSizeSmall

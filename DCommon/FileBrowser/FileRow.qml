@@ -40,7 +40,9 @@ FileItemSurface {
             "mode": mode,
             "originalPath": model.originalPath ?? "",
             "deletedMs": model.deletedMs ?? 0,
-            "usedMs": model.usedMs ?? 0
+            "usedMs": model.usedMs ?? 0,
+            "line": model.line ?? 0,
+            "snippet": model.snippet ?? ""
         })
 
     hitTargets: [visual, nameLabel, chevron]

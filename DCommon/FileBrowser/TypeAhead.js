@@ -10,17 +10,12 @@ function find(count, nameAt, start, needle) {
 }
 
 function next(count, nameAt, current, prefix, text) {
-    const letter = text.toLowerCase();
-    const repeated = prefix !== "" && Array.from(prefix).every(typed => typed === letter);
-    const continued = repeated ? find(count, nameAt, Math.max(0, current + 1), letter) : find(count, nameAt, 0, prefix + letter);
-    if (continued >= 0)
-        return {
-            "index": continued,
-            "prefix": prefix + letter
-        };
-    const fresh = prefix === "" ? -1 : find(count, nameAt, 0, letter);
+    const typed = prefix + text.toLowerCase();
+    const letters = Array.from(typed);
+    const repeated = letters.length > 1 && letters.every(letter => letter === letters[0]);
+    const skipsRow = current >= 0 && (prefix === "" || repeated);
     return {
-        "index": fresh,
-        "prefix": fresh >= 0 ? letter : ""
+        "index": find(count, nameAt, skipsRow ? current + 1 : Math.max(0, current), repeated ? letters[0] : typed),
+        "prefix": typed
     };
 }

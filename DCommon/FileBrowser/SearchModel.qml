@@ -30,6 +30,7 @@ QtObject {
     property string servedBy: ""
     property string indexPhase: ""
     property int depthLimit: 0
+    property bool contentsAvailable: false
 
     readonly property string path: rootPath
     readonly property bool available: backend?.connected === true && typeof backend?.search === "function"
@@ -242,6 +243,8 @@ QtObject {
     function _insert(entry) {
         entry.seq = _seq++;
         entry.nameKey = NaturalSort.key(entry.name);
+        entry.line = entry.line ?? 0;
+        entry.snippet = entry.snippet ?? "";
         let low = 0;
         let high = _rows.length;
         while (low < high) {
@@ -276,6 +279,7 @@ QtObject {
             return;
         switch (data.kind) {
         case "backend":
+            contentsAvailable = data.contents === true;
             servedBy = data.backend || "";
             indexPhase = data.phase || "";
             depthLimit = data.depthLimit || 0;
@@ -291,6 +295,8 @@ QtObject {
             truncated = data.truncated === true;
             partial = data.partial === true;
             unreadable = data.unreadable || 0;
+            error = data.error || "";
+            errorCode = data.code || "";
             searchId = "";
             _token = null;
             loading = false;
