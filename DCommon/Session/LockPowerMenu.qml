@@ -457,7 +457,7 @@ Rectangle {
 
     Timer {
         id: holdTimer
-        interval: 16
+        interval: Timing.cappedTick
         repeat: true
         onTriggered: {
             root.holdProgress = Math.min(1, root.holdProgress + (interval / root.holdDurationMs));
@@ -470,7 +470,7 @@ Rectangle {
 
     Timer {
         id: hintTimer
-        interval: 2000
+        interval: Timing.holdHintTimeout
         onTriggered: root.showHoldHint = false
     }
 

@@ -708,7 +708,7 @@ FocusScope {
 
                                     Timer {
                                         id: searchDebounce
-                                        interval: 50
+                                        interval: Timing.dropdownSearchDebounce
                                         onTriggered: {
                                             if (searchField.text === root.searchQuery)
                                                 return;

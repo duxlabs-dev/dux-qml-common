@@ -254,7 +254,7 @@ Item {
     }
 
     Timer {
-        interval: 16
+        interval: Timing.cappedTick
         repeat: true
         running: root.draggingIndex >= 0 && root.visible && !!root.flickable
         onTriggered: {

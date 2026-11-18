@@ -12,7 +12,7 @@ Item {
     property real amp: 1.6
     property real phase: 0.0
     property real phaseSpeed: 1.8
-    property int tickInterval: 16
+    property int tickInterval: Timing.cappedTick
     property bool isPlaying: false
     property real currentAmp: isPlaying ? amp : 0
     property color trackColor: Style.onSurface_12

@@ -84,7 +84,7 @@ Item {
 
     Timer {
         id: settleTimer
-        interval: 16
+        interval: Timing.frame
         onTriggered: {
             if (!root.targetWindow?.visible)
                 return;
@@ -95,7 +95,7 @@ Item {
 
     Timer {
         id: settleRepeatTimer
-        interval: 96
+        interval: Timing.blurSettleRepeatDelay
         onTriggered: {
             if (!root.targetWindow?.visible)
                 return;

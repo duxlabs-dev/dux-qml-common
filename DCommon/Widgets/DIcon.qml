@@ -140,7 +140,7 @@ Item {
         id: rotationTimerComponent
 
         Timer {
-            interval: 16
+            interval: Timing.frame
             onTriggered: root.rotationCompleted()
         }
     }
