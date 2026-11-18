@@ -22,6 +22,7 @@ Popup {
     readonly property real cornerRadius: Math.min(anchorItem?.radius ?? Style.cornerRadiusL, height / 2)
     readonly property real borderWidth: anchorItem?.border.width ?? 0
     readonly property real seam: Math.ceil(anchorItem?.focusedBorderWidth ?? 0)
+    readonly property real seamOverlap: Style.outlineWidth
     readonly property real overhangRadius: width > (anchorItem?.width ?? 0) ? cornerRadius : 0
     readonly property real foldedHeight: topPadding + bottomPadding
 
@@ -149,12 +150,14 @@ Popup {
 
         Rectangle {
             x: root.seam
+            y: -root.seamOverlap
             width: Math.min(parent.width, root.anchorItem?.width ?? 0) - root.seam * 2
-            height: Math.max(root.seam, Style.dividerWidth)
+            height: Math.max(root.seam, Style.dividerWidth) + root.seamOverlap * 2
             color: root.containerColor
 
             Rectangle {
                 anchors.bottom: parent.bottom
+                anchors.bottomMargin: root.seamOverlap
                 width: parent.width
                 height: Style.dividerWidth
                 color: Style.outlineVariant
