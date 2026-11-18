@@ -40,12 +40,14 @@ Flow {
             return;
         const forwardKey = I18n.isRtl ? Qt.Key_Left : Qt.Key_Right;
         const backwardKey = I18n.isRtl ? Qt.Key_Right : Qt.Key_Left;
-        let next = -1;
-        if (event.key === forwardKey)
-            next = (currentIndex + 1) % count;
-        if (event.key === backwardKey)
-            next = (currentIndex - 1 + count) % count;
-        if (next < 0)
+        const step = event.key === forwardKey ? 1 : event.key === backwardKey ? -1 : 0;
+        if (step === 0)
+            return;
+        let next = currentIndex;
+        do
+            next = (next + step + count) % count;
+        while (next !== currentIndex && !chipRepeater.itemAt(next)?.enabled)
+        if (next === currentIndex)
             return;
         currentIndex = next;
         selectionChanged(next);
@@ -63,6 +65,7 @@ Flow {
             required property int index
 
             property var value: typeof modelData === "string" ? modelData : (modelData.value !== undefined ? modelData.value : (modelData.label || ""))
+            enabled: typeof modelData !== "object" || modelData.enabled !== false
             focusPolicy: activeFocus || root.multiSelect || index === root.focusIndex ? Qt.StrongFocus : Qt.ClickFocus
             Accessible.role: root.multiSelect ? Accessible.CheckBox : Accessible.RadioButton
             Accessible.name: label
@@ -72,7 +75,7 @@ Flow {
             onClicked: activate()
 
             function activate() {
-                if (!root.enabled)
+                if (!enabled)
                     return;
                 if (root.multiSelect) {
                     root.selectionToggled(index, !selected);
@@ -123,7 +126,7 @@ Flow {
             StateLayer {
                 id: stateLayer
                 control: chip
-                disabled: !root.enabled
+                disabled: !chip.enabled
                 stateColor: chip.contentColor
                 tooltipText: chip.tooltip || null
                 transitionDuration: Style.expressiveDurations.expressiveEffects
@@ -142,6 +145,7 @@ Flow {
                     size: Style.chipIconSize
                     anchors.verticalCenter: parent.verticalCenter
                     color: chip.selected || !chip.enabled ? chip.contentColor : Style.primary
+                    filled: chip.selected && !chip.hasCheck
                     visible: chip.hasLeadingIcon
                 }
 
