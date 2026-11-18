@@ -20,7 +20,7 @@ Item {
 
     // hold keeps the ripple as the pressed state layer until release() is called
     function trigger(x, y, hold = false) {
-        if (!enableRipple || Style.reduceMotion || Style.currentAnimationSpeed === Style.AnimationSpeed.None)
+        if (!enableRipple || Style.reduceMotion)
             return;
         if (!fxItem)
             fxItem = fxComponent.createObject(root);
@@ -93,7 +93,7 @@ Item {
                     from: 0
                     to: fx.rippleMaxRadius
                     duration: root.animationDuration
-                    easing.bezierCurve: Style.expressiveCurves.standardDecel
+                    easing.bezierCurve: Style.expressiveCurves.expressiveDefaultSpatial
                 }
             }
 
@@ -107,8 +107,8 @@ Item {
                     target: rippleFx
                     property: "rippleOpacity"
                     to: 0
-                    duration: root.animationDuration
-                    easing.bezierCurve: Style.expressiveCurves.standard
+                    duration: Style.expressiveDurations.expressiveSlowEffects
+                    easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
                 }
             }
 

@@ -21,7 +21,6 @@ FocusScope {
     property bool _minuteMode: false
     property bool _dragging: false
 
-    readonly property bool animationsEnabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
     readonly property real digitHeight: Style.iconButtonSize * 2
     readonly property real chromeHeight: Style.spacingXL * 5 + Style.spacingL + Style.spacingXS + Style.spacingM + titleText.implicitHeight + digitHeight + actionRow.implicitHeight
     readonly property real digitWidth: is24Hour ? digitHeight + Style.spacingL * 2 + Style.spacingXXS : digitHeight + Style.spacingL
@@ -96,7 +95,6 @@ FocusScope {
     z: 1000
 
     Behavior on opacity {
-        enabled: root.animationsEnabled
         DAnim {
             duration: Style.expressiveDurations.expressiveEffects
             easing.bezierCurve: Style.expressiveCurves.expressiveEffects
@@ -178,7 +176,6 @@ FocusScope {
         scale: root._opened ? 1 : Style.popupEnterScale
 
         Behavior on scale {
-            enabled: root.animationsEnabled
             DAnim {
                 duration: Style.expressiveDurations.expressiveDefaultSpatial
                 easing.bezierCurve: Style.expressiveCurves.expressiveDefaultSpatial
@@ -242,7 +239,6 @@ FocusScope {
                     }
 
                     Behavior on color {
-                        enabled: root.animationsEnabled
                         DColorAnim {
                             duration: Style.expressiveDurations.expressiveEffects
                             easing.bezierCurve: Style.expressiveCurves.expressiveEffects
@@ -297,7 +293,6 @@ FocusScope {
                     }
 
                     Behavior on color {
-                        enabled: root.animationsEnabled
                         DColorAnim {
                             duration: Style.expressiveDurations.expressiveEffects
                             easing.bezierCurve: Style.expressiveCurves.expressiveEffects
@@ -433,7 +428,6 @@ FocusScope {
                 color: Style.chipSurface
 
                 Behavior on color {
-                    enabled: root.animationsEnabled
                     DColorAnim {
                         duration: Style.expressiveDurations.expressiveEffects
                         easing.bezierCurve: Style.expressiveCurves.expressiveEffects
@@ -450,20 +444,20 @@ FocusScope {
                     rotation: root.handAngle + 180
 
                     Behavior on rotation {
-                        enabled: root.animationsEnabled && !root._dragging
+                        enabled: !root._dragging
                         RotationAnimation {
                             direction: RotationAnimation.Shortest
-                            duration: Style.expressiveDurations.expressiveFastSpatial
+                            duration: Style.expressiveDurations.expressiveDefaultSpatial
                             easing.type: Easing.BezierSpline
                             easing.bezierCurve: Style.expressiveCurves.expressiveDefaultSpatial
                         }
                     }
 
                     Behavior on height {
-                        enabled: root.animationsEnabled && !root._dragging
+                        enabled: !root._dragging
                         DAnim {
-                            duration: Style.expressiveDurations.expressiveFastSpatial
-                            easing.bezierCurve: Style.expressiveCurves.standard
+                            duration: Style.expressiveDurations.expressiveDefaultSpatial
+                            easing.bezierCurve: Style.expressiveCurves.expressiveDefaultSpatial
                         }
                     }
 

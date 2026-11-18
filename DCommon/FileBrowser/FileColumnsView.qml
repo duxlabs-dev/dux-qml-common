@@ -315,14 +315,16 @@ Item {
             Behavior on slide {
                 enabled: FileBrowserMetrics.animationsEnabled && !column.leaving
                 DAnim {
-                    duration: Style.expressiveDurations.expressiveFastSpatial
+                    duration: Style.expressiveDurations.expressiveSlowEffects
+                    easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
                 }
             }
 
             Behavior on span {
                 enabled: FileBrowserMetrics.animationsEnabled && !column.leaving
                 DAnim {
-                    duration: Style.expressiveDurations.expressiveFastSpatial
+                    duration: Style.expressiveDurations.expressiveSlowEffects
+                    easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
                 }
             }
 
@@ -334,7 +336,8 @@ Item {
                         target: column
                         property: "span"
                         to: 0
-                        duration: Style.expressiveDurations.expressiveFastSpatial
+                        duration: Style.expressiveDurations.expressiveSlowEffects
+                        easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
                     }
 
                     DAnim {
@@ -605,7 +608,8 @@ Item {
 
             target: strip
             property: "contentX"
-            duration: Style.expressiveDurations.expressiveFastSpatial
+            duration: Style.expressiveDurations.expressiveDefaultSpatial
+            easing.bezierCurve: Style.expressiveCurves.expressiveDefaultSpatial
             onRunningChanged: {
                 if (!running)
                     columns.settleStrip();

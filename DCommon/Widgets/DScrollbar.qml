@@ -130,7 +130,6 @@ ScrollBar {
     opacity: policy !== ScrollBar.AlwaysOff && shouldShow ? (placement?.opacity ?? 1) : 0
 
     Behavior on opacity {
-        enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
         DAnim {
             duration: Style.expressiveDurations.expressiveEffects
             easing.bezierCurve: Style.expressiveCurves.expressiveEffects

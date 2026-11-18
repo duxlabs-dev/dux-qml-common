@@ -28,8 +28,9 @@ Rectangle {
 
     Behavior on color {
         ColorAnimation {
-            duration: Style.shortDuration
-            easing.type: Style.standardEasing
+            duration: Style.expressiveDurations.expressiveFastEffects
+            easing.type: Easing.BezierSpline
+            easing.bezierCurve: Style.expressiveCurves.expressiveFastEffects
         }
     }
 
@@ -295,8 +296,9 @@ Rectangle {
 
                                             Behavior on color {
                                                 ColorAnimation {
-                                                    duration: Style.shortDuration
-                                                    easing.type: Style.standardEasing
+                                                    duration: Style.expressiveDurations.expressiveFastEffects
+                                                    easing.type: Easing.BezierSpline
+                                                    easing.bezierCurve: Style.expressiveCurves.expressiveFastEffects
                                                 }
                                             }
                                         }

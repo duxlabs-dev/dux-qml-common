@@ -24,4 +24,5 @@ QtObject {
     readonly property real shakeDistance: Style.spacingS
     readonly property int effectsDuration: Style.reduceMotion ? 0 : Style.expressiveDurations.expressiveEffects
     readonly property int shakeDuration: Style.reduceMotion ? 0 : Style.expressiveDurations.expressiveFastSpatial
+    readonly property int settleDuration: Style.reduceMotion ? 0 : Style.expressiveDurations.expressiveDefaultSpatial
 }

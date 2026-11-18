@@ -71,7 +71,7 @@ Item {
         amplitudeAnim.stop();
         amplitudeAnim.from = currentAmplitude;
         amplitudeAnim.to = targetAmplitude;
-        amplitudeAnim.easing.bezierCurve = (targetAmplitude > currentAmplitude) ? Style.expressiveCurves.standard : Style.expressiveCurves.emphasizedAccel;
+        amplitudeAnim.easing.bezierCurve = (targetAmplitude > currentAmplitude) ? Style.expressiveCurves.expressiveSlowEffects : Style.expressiveCurves.expressiveFastEffects;
         amplitudeAnim.start();
     }
     onIndeterminateChanged: {
@@ -186,7 +186,7 @@ Item {
             to: root.indeterminateMinProgress
             duration: root.indeterminateCycleDuration / 2
             easing.type: Easing.BezierSpline
-            easing.bezierCurve: Style.expressiveCurves.standard
+            easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
         }
     }
 

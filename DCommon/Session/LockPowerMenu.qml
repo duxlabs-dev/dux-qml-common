@@ -844,7 +844,9 @@ Rectangle {
 
                         Behavior on opacity {
                             NumberAnimation {
-                                duration: 150
+                                duration: Style.expressiveDurations.expressiveFastEffects
+                                easing.type: Easing.BezierSpline
+                                easing.bezierCurve: Style.expressiveCurves.expressiveFastEffects
                             }
                         }
 

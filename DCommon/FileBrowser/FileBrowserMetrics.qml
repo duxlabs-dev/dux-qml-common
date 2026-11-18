@@ -151,5 +151,5 @@ Singleton {
     readonly property real suggestionMinWidth: Style.launcherWidthMicro * 0.6
     readonly property int completionLimit: 500
 
-    readonly property bool animationsEnabled: !Style.reduceMotion && Style.currentAnimationBaseDuration > 0
+    readonly property bool animationsEnabled: !Style.reduceMotion
 }

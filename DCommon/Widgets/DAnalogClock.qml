@@ -133,14 +133,16 @@ Item {
 
         Behavior on x {
             NumberAnimation {
-                duration: Style.shortDuration
-                easing.type: Style.standardEasing
+                duration: Style.expressiveDurations.expressiveFastSpatial
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Style.expressiveCurves.expressiveFastSpatial
             }
         }
         Behavior on y {
             NumberAnimation {
-                duration: Style.shortDuration
-                easing.type: Style.standardEasing
+                duration: Style.expressiveDurations.expressiveFastSpatial
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Style.expressiveCurves.expressiveFastSpatial
             }
         }
     }
@@ -172,14 +174,16 @@ Item {
 
         Behavior on x {
             NumberAnimation {
-                duration: Style.mediumDuration
-                easing.type: Style.emphasizedEasing
+                duration: Style.expressiveDurations.expressiveFastSpatial
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Style.expressiveCurves.expressiveFastSpatial
             }
         }
         Behavior on y {
             NumberAnimation {
-                duration: Style.mediumDuration
-                easing.type: Style.emphasizedEasing
+                duration: Style.expressiveDurations.expressiveFastSpatial
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Style.expressiveCurves.expressiveFastSpatial
             }
         }
     }

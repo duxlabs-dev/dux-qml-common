@@ -100,7 +100,7 @@ T.Control {
                         visible: hasIcon
 
                         Behavior on color {
-                            enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                            enabled: !Style.reduceMotion
                             DColorAnim {
                                 duration: Style.expressiveDurations.expressiveEffects
                                 easing.bezierCurve: Style.expressiveCurves.expressiveEffects
@@ -117,7 +117,7 @@ T.Control {
                         visible: hasText
 
                         Behavior on color {
-                            enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                            enabled: !Style.reduceMotion
                             DColorAnim {
                                 duration: Style.expressiveDurations.expressiveEffects
                                 easing.bezierCurve: Style.expressiveCurves.expressiveEffects
@@ -204,18 +204,18 @@ T.Control {
         }
 
         Behavior on leftX {
-            enabled: indicator.animationEnabled && !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+            enabled: indicator.animationEnabled && !Style.reduceMotion
             DAnim {
                 duration: indicator.movingRight ? Style.expressiveDurations.expressiveDefaultSpatial : Style.expressiveDurations.expressiveFastSpatial
-                easing.bezierCurve: Style.expressiveCurves.emphasized
+                easing.bezierCurve: indicator.movingRight ? Style.expressiveCurves.expressiveDefaultSpatial : Style.expressiveCurves.expressiveFastSpatial
             }
         }
 
         Behavior on rightX {
-            enabled: indicator.animationEnabled && !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+            enabled: indicator.animationEnabled && !Style.reduceMotion
             DAnim {
                 duration: indicator.movingRight ? Style.expressiveDurations.expressiveFastSpatial : Style.expressiveDurations.expressiveDefaultSpatial
-                easing.bezierCurve: Style.expressiveCurves.emphasized
+                easing.bezierCurve: indicator.movingRight ? Style.expressiveCurves.expressiveFastSpatial : Style.expressiveCurves.expressiveDefaultSpatial
             }
         }
     }

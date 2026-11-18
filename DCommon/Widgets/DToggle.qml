@@ -138,7 +138,6 @@ FocusScope {
         opacity: toggle.toggling ? Style.pendingOpacity : 1
 
         Behavior on color {
-            enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
             DColorAnim {
                 duration: Style.expressiveDurations.expressiveEffects
                 easing.bezierCurve: Style.expressiveCurves.expressiveEffects
@@ -163,9 +162,8 @@ FocusScope {
 
         SpringMotion {
             id: thumbSpring
-            enabled: !Style.springMotionDisabled
-            stiffness: Style.springPreset("fast", Style.expressiveDurations.expressiveFastSpatial).stiffness
-            damping: Style.springPreset("fast", Style.expressiveDurations.expressiveFastSpatial).damping
+            stiffness: Style.springPreset("fastSpatial").stiffness
+            damping: Style.springPreset("fastSpatial").damping
             onRunningChanged: {
                 if (running || !toggle._settling)
                     return;
@@ -186,7 +184,6 @@ FocusScope {
 
         SpringMotion {
             id: sizeSpring
-            enabled: !Style.springMotionDisabled
             stiffness: thumbSpring.stiffness
             damping: thumbSpring.damping
         }
@@ -223,7 +220,6 @@ FocusScope {
             }
 
             Behavior on color {
-                enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
                 DColorAnim {
                     duration: Style.expressiveDurations.expressiveEffects
                     easing.bezierCurve: Style.expressiveCurves.expressiveEffects
@@ -241,7 +237,6 @@ FocusScope {
             opacity: !toggle.enabled ? 0 : (input.down ? Style.stateLayerPressed : (trackStateLayer.containsMouse ? Style.stateLayerHover : 0))
 
             Behavior on opacity {
-                enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
                 DAnim {
                     duration: Style.expressiveDurations.expressiveEffects
                     easing.bezierCurve: Style.expressiveCurves.expressiveEffects

@@ -207,7 +207,7 @@ T.Control {
                         color: destination.selected ? Style.selectedContainer : "transparent"
 
                         Behavior on color {
-                            enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                            enabled: !Style.reduceMotion
                             DColorAnim {
                                 duration: Style.expressiveDurations.expressiveEffects
                                 easing.bezierCurve: Style.expressiveCurves.expressiveEffects

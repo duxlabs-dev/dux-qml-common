@@ -13,7 +13,7 @@ Item {
     property color ringColor: Style.primary
     property color trackColor: Style.withAlpha(Style.onSurface, Style.stateLayerFocus)
     property bool animated: true
-    property int animationDuration: Style.expressiveDurations.normal
+    property int animationDuration: Style.expressiveDurations.expressiveSlowEffects
     default property alias content: center.data
 
     readonly property bool hasRing: value >= 0
@@ -29,11 +29,11 @@ Item {
     implicitHeight: implicitWidth
 
     Behavior on sweep {
-        enabled: root.animated && !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+        enabled: root.animated && !Style.reduceMotion
         NumberAnimation {
             duration: root.animationDuration
             easing.type: Easing.BezierSpline
-            easing.bezierCurve: Style.expressiveCurves.standard
+            easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
         }
     }
 

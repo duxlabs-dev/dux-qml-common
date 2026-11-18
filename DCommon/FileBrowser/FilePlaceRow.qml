@@ -244,7 +244,7 @@ StyledButton {
             Behavior on rotation {
                 enabled: FileBrowserMetrics.animationsEnabled
                 DAnim {
-                    duration: Style.expressiveDurations.expressiveFastSpatial
+                    duration: Style.expressiveDurations.expressiveDefaultSpatial
                     easing.bezierCurve: Style.expressiveCurves.expressiveDefaultSpatial
                 }
             }

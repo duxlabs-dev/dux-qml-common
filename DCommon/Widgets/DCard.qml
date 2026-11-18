@@ -63,7 +63,7 @@ FocusScope {
     }
 
     Behavior on bodyRadius {
-        enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+        enabled: !Style.reduceMotion
         DAnim {
             duration: Style.expressiveDurations.expressiveFastSpatial
             easing.bezierCurve: Style.expressiveCurves.expressiveFastSpatial
@@ -139,7 +139,7 @@ FocusScope {
         }
 
         Behavior on opacity {
-            enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+            enabled: !Style.reduceMotion
             DAnim {
                 duration: Style.expressiveDurations.expressiveEffects
                 easing.bezierCurve: Style.expressiveCurves.expressiveEffects
@@ -147,7 +147,7 @@ FocusScope {
         }
 
         Behavior on scale {
-            enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+            enabled: !Style.reduceMotion
             DAnim {
                 duration: Style.expressiveDurations.expressiveFastSpatial
                 easing.bezierCurve: Style.expressiveCurves.expressiveFastSpatial

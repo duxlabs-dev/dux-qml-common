@@ -17,14 +17,16 @@ Column {
 
         NumberAnimation {
             to: FileBrowserMetrics.skeletonOpacity
-            duration: Style.currentAnimationBaseDuration
-            easing.type: Style.standardEasing
+            duration: Style.motionMs(500)
+            easing.type: Easing.BezierSpline
+            easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
         }
 
         NumberAnimation {
             to: 1
-            duration: Style.currentAnimationBaseDuration
-            easing.type: Style.standardEasing
+            duration: Style.motionMs(500)
+            easing.type: Easing.BezierSpline
+            easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
         }
     }
 

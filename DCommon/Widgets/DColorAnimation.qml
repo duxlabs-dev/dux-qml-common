@@ -9,8 +9,7 @@ QtObject {
 
     property color to
     property bool animated: true
-    property int duration: Style.mediumDuration
-    property int easingType: Style.emphasizedEasing
+    property int duration: Style.expressiveDurations.expressiveSlowEffects
 
     property color _from: to
     property color _target: to
@@ -33,7 +32,8 @@ QtObject {
         from: 0
         to: 1
         duration: root.duration
-        easing.type: root.easingType
+        easing.type: Easing.BezierSpline
+        easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
     }
 
     onToChanged: {

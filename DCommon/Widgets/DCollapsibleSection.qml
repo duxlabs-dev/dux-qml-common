@@ -47,18 +47,16 @@ ColumnLayout {
         border.color: Style.outlineMedium
 
         Behavior on bottomLeftRadius {
-            enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
             DAnim {
-                duration: Style.expressiveDurations.expressiveFastSpatial
-                easing.bezierCurve: Style.expressiveCurves.standard
+                duration: Style.expressiveDurations.expressiveSlowEffects
+                easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
             }
         }
 
         Behavior on bottomRightRadius {
-            enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
             DAnim {
-                duration: Style.expressiveDurations.expressiveFastSpatial
-                easing.bezierCurve: Style.expressiveCurves.standard
+                duration: Style.expressiveDurations.expressiveSlowEffects
+                easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
             }
         }
 
@@ -84,9 +82,8 @@ ColumnLayout {
                 rotation: root.expanded ? 180 : 0
 
                 Behavior on rotation {
-                    enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
                     DAnim {
-                        duration: Style.expressiveDurations.expressiveFastSpatial
+                        duration: Style.expressiveDurations.expressiveDefaultSpatial
                         easing.bezierCurve: Style.expressiveCurves.expressiveDefaultSpatial
                     }
                 }
@@ -111,10 +108,9 @@ ColumnLayout {
         clip: true
 
         Behavior on Layout.preferredHeight {
-            enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
             DAnim {
                 duration: Style.expressiveDurations.expressiveDefaultSpatial
-                easing.bezierCurve: Style.expressiveCurves.standard
+                easing.bezierCurve: Style.expressiveCurves.expressiveDefaultSpatial
             }
         }
 
@@ -132,7 +128,6 @@ ColumnLayout {
             visible: root.showBackground
 
             Behavior on opacity {
-                enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
                 DAnim {
                     duration: Style.expressiveDurations.expressiveEffects
                     easing.bezierCurve: Style.expressiveCurves.expressiveEffects
@@ -151,7 +146,6 @@ ColumnLayout {
             opacity: root.expanded ? 1.0 : 0.0
 
             Behavior on opacity {
-                enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
                 DAnim {
                     duration: Style.expressiveDurations.expressiveEffects
                     easing.bezierCurve: Style.expressiveCurves.expressiveEffects

@@ -47,7 +47,7 @@ ListView {
     readonly property real maximumContentY: Math.max(originY, contentHeight - height + originY)
     // Rows the model just inserted fade in; rows the view creates while scrolling do not
     readonly property bool populating: orphanSweep.running
-    property bool rowFadeEnabled: Math.floor(Style.currentAnimationBaseDuration * 0.4) >= 1
+    property bool rowFadeEnabled: true
     property bool fadeInitialRows: true
     property int _insertFirst: 0
     property bool _populateInsert: false
@@ -74,7 +74,7 @@ ListView {
             required property int stagger
 
             PauseAnimation {
-                duration: fade.stagger * Math.round(Style.currentAnimationBaseDuration * 0.03)
+                duration: fade.stagger * Style.motionMs(15)
             }
 
             DAnim {
@@ -82,8 +82,8 @@ ListView {
                 property: "opacity"
                 from: 0
                 to: 1
-                duration: Style.expressiveDurations.fast
-                easing.bezierCurve: Style.expressiveCurves.emphasizedDecel
+                duration: Style.expressiveDurations.expressiveEffects
+                easing.bezierCurve: Style.expressiveCurves.expressiveEffects
             }
 
             onStopped: destroy()

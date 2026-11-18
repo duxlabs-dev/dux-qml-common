@@ -20,12 +20,12 @@ MouseArea {
     property bool tooltipMultiline: false
     property string tooltipSide: "bottom"
     property bool enableRipple: Style.enableRippleEffects
-    property int transitionDuration: Style.shorterDuration
-    property var transitionCurve: Style.expressiveCurves.standardDecel
+    property int transitionDuration: Style.expressiveDurations.expressiveFastEffects
+    property var transitionCurve: Style.expressiveCurves.expressiveFastEffects
 
     readonly property bool isPressed: control ? control.down : pressed
     // the held ripple is the pressed layer whenever it can draw
-    readonly property bool rippleDrawsPress: enableRipple && !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+    readonly property bool rippleDrawsPress: enableRipple && !Style.reduceMotion
     readonly property real stateOpacity: {
         if (disabled)
             return 0;
@@ -110,7 +110,7 @@ MouseArea {
             color: Style.withAlpha(root.stateColor, stateAlpha)
 
             Behavior on stateAlpha {
-                enabled: root._completed && !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                enabled: root._completed && !Style.reduceMotion
                 DAnim {
                     duration: root.transitionDuration
                     easing.bezierCurve: root.transitionCurve

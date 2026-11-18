@@ -154,10 +154,10 @@ Item {
         border.color: enabled ? Style.outlineVariant : Style.onSurface_12
 
         Behavior on innerRadius {
-            enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+            enabled: !Style.reduceMotion
             DAnim {
                 duration: Style.expressiveDurations.expressiveEffects
-                easing.bezierCurve: Style.expressiveCurves.standard
+                easing.bezierCurve: Style.expressiveCurves.expressiveEffects
             }
         }
 
@@ -281,10 +281,10 @@ Item {
             rotation: root.expanded ? 180 : 0
 
             Behavior on rotation {
-                enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                enabled: !Style.reduceMotion
                 DAnim {
-                    duration: Style.expressiveDurations.expressiveEffects
-                    easing.bezierCurve: Style.expressiveCurves.standard
+                    duration: Style.expressiveDurations.expressiveFastSpatial
+                    easing.bezierCurve: Style.expressiveCurves.expressiveFastSpatial
                 }
             }
         }

@@ -47,7 +47,7 @@ Item {
                 to: 90
                 duration: 300
                 easing.type: Easing.BezierSpline
-                easing.bezierCurve: Anims.emphasizedDecel
+                easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
             }
             PauseAnimation {
                 duration: 1200
@@ -96,7 +96,7 @@ Item {
                     to: 0.87
                     duration: 3000
                     easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Anims.standard
+                    easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
                 }
                 NumberAnimation {
                     from: 0.87

@@ -5,14 +5,6 @@ import QtQuick
 import Quickshell
 
 Singleton {
-    enum AnimationSpeed {
-        None,
-        Short,
-        Medium,
-        Long,
-        Custom
-    }
-
     enum TextRenderType {
         Qt,
         Native,
@@ -27,7 +19,6 @@ Singleton {
         VeryHigh
     }
 
-    property int animationSpeed: SettingsData.AnimationSpeed.Short
     property bool reduceMotion: false
     property bool blurBorderEnabled: false
     property real blurLayerOutlineOpacity: 0

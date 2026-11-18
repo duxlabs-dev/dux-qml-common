@@ -389,7 +389,7 @@ FocusScope {
         border.width: active ? Style.outlineWidthFocused : Style.outlineWidth
 
         Behavior on color {
-            enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+            enabled: !Style.reduceMotion
             DColorAnim {
                 duration: Style.expressiveDurations.expressiveEffects
                 easing.bezierCurve: Style.expressiveCurves.expressiveEffects
@@ -397,7 +397,7 @@ FocusScope {
         }
 
         Behavior on border.color {
-            enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+            enabled: !Style.reduceMotion
             DColorAnim {
                 duration: Style.expressiveDurations.expressiveEffects
                 easing.bezierCurve: Style.expressiveCurves.expressiveEffects
@@ -483,9 +483,9 @@ FocusScope {
             rotation: root.menuVisible ? 180 : 0
 
             Behavior on rotation {
-                enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                enabled: !Style.reduceMotion
                 DAnim {
-                    duration: Style.expressiveDurations.expressiveFastSpatial
+                    duration: Style.expressiveDurations.expressiveDefaultSpatial
                     easing.bezierCurve: Style.expressiveCurves.expressiveDefaultSpatial
                 }
             }
@@ -615,16 +615,16 @@ FocusScope {
                     transformOrigin: dropdownMenu.opensUpwards ? Item.Bottom : Item.Top
 
                     Behavior on opacity {
-                        enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                        enabled: !Style.reduceMotion
                         DAnim {
                             duration: Style.expressiveDurations.expressiveEffects
                             easing.bezierCurve: Style.expressiveCurves.expressiveEffects
                         }
                     }
                     Behavior on scale {
-                        enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                        enabled: !Style.reduceMotion
                         DAnim {
-                            duration: Style.expressiveDurations.expressiveFastSpatial
+                            duration: Style.expressiveDurations.expressiveDefaultSpatial
                             easing.bezierCurve: Style.expressiveCurves.expressiveDefaultSpatial
                         }
                     }
@@ -807,7 +807,7 @@ FocusScope {
                                 }
 
                                 Behavior on color {
-                                    enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                                    enabled: !Style.reduceMotion
                                     DColorAnim {
                                         duration: Style.expressiveDurations.expressiveEffects
                                         easing.bezierCurve: Style.expressiveCurves.expressiveEffects

@@ -419,10 +419,9 @@ Controls.Control {
                 border.width: 0
 
                 Behavior on width {
-                    enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
                     DAnim {
-                        duration: Style.expressiveDurations.expressiveEffects
-                        easing.bezierCurve: Style.expressiveCurves.standard
+                        duration: Style.expressiveDurations.expressiveFastSpatial
+                        easing.bezierCurve: Style.expressiveCurves.expressiveFastSpatial
                     }
                 }
 
@@ -611,7 +610,7 @@ Controls.Control {
                 }
 
                 enter: Transition {
-                    enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                    enabled: !Style.reduceMotion
                     DAnim {
                         property: "opacity"
                         from: 0
@@ -629,7 +628,7 @@ Controls.Control {
                 }
 
                 exit: Transition {
-                    enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                    enabled: !Style.reduceMotion
                     DAnim {
                         property: "opacity"
                         from: 1

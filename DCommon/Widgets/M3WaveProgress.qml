@@ -27,10 +27,11 @@ Item {
     property real handleGap: 0
 
     Behavior on currentAmp {
-        enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+        enabled: !Style.reduceMotion
         NumberAnimation {
-            duration: 300
-            easing.type: Easing.OutCubic
+            duration: Style.expressiveDurations.expressiveSlowEffects
+            easing.type: Easing.BezierSpline
+            easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
         }
     }
 
@@ -65,7 +66,7 @@ Item {
     Timer {
         interval: root.tickInterval
         repeat: true
-        running: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None && root.visible && root.isPlaying && (root.Window.window?.visible ?? false)
+        running: !Style.reduceMotion && root.visible && root.isPlaying && (root.Window.window?.visible ?? false)
         onTriggered: {
             root.phase = (root.phase + root.phaseSpeed * interval / 1000) % (2 * Math.PI);
             root.frameTicked();

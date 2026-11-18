@@ -129,7 +129,7 @@ FocusScope {
             }
 
             Behavior on opacity {
-                enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                enabled: !Style.reduceMotion
                 DAnim {
                     duration: Style.expressiveDurations.expressiveEffects
                     easing.bezierCurve: Style.expressiveCurves.expressiveEffects
@@ -149,14 +149,14 @@ FocusScope {
             opacity: root.embedded || root.opened ? 1 : 0
 
             Behavior on entryScale {
-                enabled: !root.embedded && !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                enabled: !root.embedded && !Style.reduceMotion
                 DAnim {
                     duration: Style.expressiveDurations.expressiveDefaultSpatial
                     easing.bezierCurve: Style.expressiveCurves.expressiveDefaultSpatial
                 }
             }
             Behavior on opacity {
-                enabled: !root.embedded && !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                enabled: !root.embedded && !Style.reduceMotion
                 DAnim {
                     duration: Style.expressiveDurations.expressiveEffects
                     easing.bezierCurve: Style.expressiveCurves.expressiveEffects

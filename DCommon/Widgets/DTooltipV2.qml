@@ -152,17 +152,15 @@ Item {
     SpringMotion {
         id: scaleMotion
         value: 1
-        enabled: !Style.springMotionDisabled
-        stiffness: Style.springPreset("fastSpatial", Style.currentAnimationBaseDuration).stiffness
-        damping: Style.springPreset("fastSpatial", Style.currentAnimationBaseDuration).damping
+        stiffness: Style.springPreset("fastSpatial").stiffness
+        damping: Style.springPreset("fastSpatial").damping
     }
 
     SpringMotion {
         id: fadeMotion
         value: 1
-        enabled: !Style.springMotionDisabled
-        stiffness: Style.springPreset("fastEffects", Style.currentAnimationBaseDuration).stiffness
-        damping: Style.springPreset("fastEffects", Style.currentAnimationBaseDuration).damping
+        stiffness: Style.springPreset("fastEffects").stiffness
+        damping: Style.springPreset("fastEffects").damping
         onRunningChanged: {
             if (!running && target === 0)
                 tooltip.close();

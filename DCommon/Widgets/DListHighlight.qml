@@ -13,19 +13,19 @@ Rectangle {
     bottomRightRadius: bottomLeftRadius
 
     Behavior on x {
-        enabled: parent && parent.visible && animate && !Style.reduceMotion && !Style.springMotionDisabled
+        enabled: parent && parent.visible && animate && !Style.reduceMotion
         NumberAnimation {
-            duration: Style.shorterDuration
+            duration: Style.expressiveDurations.expressiveFastEffects
             easing.type: Easing.BezierSpline
-            easing.bezierCurve: Style.expressiveCurves.expressiveFastSpatial
+            easing.bezierCurve: Style.expressiveCurves.expressiveFastEffects
         }
     }
     Behavior on y {
-        enabled: parent && parent.visible && animate && !Style.reduceMotion && !Style.springMotionDisabled
+        enabled: parent && parent.visible && animate && !Style.reduceMotion
         NumberAnimation {
-            duration: Style.shorterDuration
+            duration: Style.expressiveDurations.expressiveFastEffects
             easing.type: Easing.BezierSpline
-            easing.bezierCurve: Style.expressiveCurves.expressiveFastSpatial
+            easing.bezierCurve: Style.expressiveCurves.expressiveFastEffects
         }
     }
 }

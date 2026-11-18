@@ -183,10 +183,10 @@ Item {
             radius: Math.min(pressed && Style.shapeMorph ? Style.cornerRadiusXS : root.cellRadius, Math.min(width, height) / 2)
 
             Behavior on radius {
-                enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                enabled: !Style.reduceMotion
                 DAnim {
                     duration: Style.expressiveDurations.expressiveEffects
-                    easing.bezierCurve: Style.expressiveCurves.standard
+                    easing.bezierCurve: Style.expressiveCurves.expressiveEffects
                 }
             }
             color: isSelected ? Style.primary : (inMonth ? Style.foregroundColor(Style.chipSurface, root.floatingWindow) : Style.withAlpha(Style.chipSurface, Style.stateLayerFocus))

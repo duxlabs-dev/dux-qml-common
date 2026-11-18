@@ -169,8 +169,8 @@ Item {
     Behavior on reveal {
         enabled: FileBrowserMetrics.animationsEnabled && drawer.visible
         DAnim {
-            duration: Style.expressiveDurations.expressiveFastSpatial
-            easing.bezierCurve: Style.expressiveCurves.standard
+            duration: Style.expressiveDurations.expressiveSlowEffects
+            easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
         }
     }
 

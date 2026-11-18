@@ -26,7 +26,7 @@ FocusScope {
     readonly property bool active: opened || progress > 0
     readonly property Item focusTarget: initialFocusItem?.visible && initialFocusItem.enabled ? initialFocusItem : focusItems(body)[0] ?? root
     readonly property real focusPadding: Style.focusRingOffset + Style.focusRingWidth
-    readonly property bool animationsEnabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+    readonly property bool animationsEnabled: !Style.reduceMotion
     property real progress: opened ? 1 : 0
     property real dragOffset: 0
     property bool backwardsFocus: false

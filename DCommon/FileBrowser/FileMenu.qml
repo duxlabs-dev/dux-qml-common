@@ -326,8 +326,8 @@ Popup {
             property: "opacity"
             from: 1
             to: 0
-            duration: Style.shorterDuration
-            easing.bezierCurve: Style.expressiveCurves.expressiveEffects
+            duration: Style.expressiveDurations.expressiveFastEffects
+            easing.bezierCurve: Style.expressiveCurves.expressiveFastEffects
         }
     }
 }

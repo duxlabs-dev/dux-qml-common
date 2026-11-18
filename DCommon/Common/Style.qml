@@ -11,14 +11,6 @@ import Quickshell
 Singleton {
     id: root
 
-    enum AnimationSpeed {
-        None,
-        Short,
-        Medium,
-        Long,
-        Custom
-    }
-
     enum TextRenderType {
         Qt,
         Native,
@@ -458,21 +450,18 @@ Singleton {
         return Math.max(Font.Thin, Math.min(Font.Black, weight + fontWeight - Font.Normal));
     }
 
-    readonly property int currentAnimationSpeed: theme?.currentAnimationSpeed ?? Style.AnimationSpeed.Short
-    readonly property int currentAnimationBaseDuration: theme?.currentAnimationBaseDuration ?? 500
-    readonly property int shorterDuration: theme?.shorterDuration ?? 50
-    readonly property int shortDuration: theme?.shortDuration ?? 75
-    readonly property int mediumDuration: theme?.mediumDuration ?? 150
-    readonly property int standardEasing: theme?.standardEasing ?? Easing.OutCubic
-    readonly property int emphasizedEasing: theme?.emphasizedEasing ?? Easing.OutQuart
+    readonly property real motionScale: theme?.motionScale ?? 1
+    readonly property bool motionOff: theme?.motionOff ?? false
+
+    function motionMs(specMs) {
+        return Math.round(specMs * motionScale);
+    }
+
+    readonly property int shorterDuration: theme?.shorterDuration ?? 100
+    readonly property int shortDuration: theme?.shortDuration ?? 150
+    readonly property int mediumDuration: theme?.mediumDuration ?? 300
 
     readonly property var expressiveCurves: theme?.expressiveCurves ?? ({
-            "emphasized": [0.05, 0, 2 / 15, 0.06, 1 / 6, 0.4, 5 / 24, 0.82, 0.25, 1, 1, 1],
-            "emphasizedAccel": [0.3, 0, 0.8, 0.15, 1, 1],
-            "emphasizedDecel": [0.05, 0.7, 0.1, 1, 1, 1],
-            "standard": [0.2, 0, 0, 1, 1, 1],
-            "standardAccel": [0.3, 0, 1, 1, 1, 1],
-            "standardDecel": [0, 0, 0, 1, 1, 1],
             "expressiveFastSpatial": [0.42, 1.67, 0.21, 0.9, 1, 1],
             "expressiveDefaultSpatial": [0.38, 1.21, 0.22, 1, 1, 1],
             "expressiveSlowSpatial": [0.39, 1.29, 0.35, 0.98, 1, 1],
@@ -482,10 +471,6 @@ Singleton {
         })
 
     readonly property var expressiveDurations: theme?.expressiveDurations ?? ({
-            "fast": 200,
-            "normal": 400,
-            "large": 600,
-            "extraLarge": 1000,
             "expressiveFastSpatial": 350,
             "expressiveDefaultSpatial": 500,
             "expressiveSlowSpatial": 650,
@@ -538,11 +523,8 @@ Singleton {
     readonly property real stateLayerPressed: theme?.stateLayerPressed ?? 0.1
     readonly property real stateLayerDrag: theme?.stateLayerDrag ?? 0.16
 
-    // [stiffness, damping] at unit mass; *Spatial and *Effects are Compose ExpressiveMotionTokens with the damping ratio converted
+    // [stiffness, damping] at unit mass, Compose ExpressiveMotionTokens with the damping ratio converted
     readonly property var springSpecs: theme?.springSpecs ?? ({
-            "expressive": [560, 37],
-            "fast": [220, 23],
-            "default": [300, 24],
             "fastSpatial": [800, 33.9],
             "defaultSpatial": [380, 31.2],
             "slowSpatial": [200, 22.6],
@@ -551,7 +533,6 @@ Singleton {
             "slowEffects": [800, 56.6]
         })
     readonly property var springDampingScales: theme?.springDampingScales ?? [1.22, 1.0, 0.82]
-    readonly property bool springMotionDisabled: theme?.springMotionDisabled ?? (currentAnimationBaseDuration <= 0)
 
     readonly property bool blurLayersActive: theme?.blurLayersActive ?? true
     readonly property bool connectedSurfaceBlurEnabled: theme?.connectedSurfaceBlurEnabled ?? true
@@ -585,18 +566,17 @@ Singleton {
     readonly property var powerMenuActions: settings?.powerMenuActions ?? ["reboot", "logout", "poweroff", "lock", "suspend", "restart"]
     readonly property string powerMenuDefaultAction: settings?.powerMenuDefaultAction ?? "logout"
     readonly property bool powerMenuGridLayout: settings?.powerMenuGridLayout ?? false
-    readonly property bool reduceMotion: settings?.reduceMotion ?? false
+    readonly property bool reduceMotion: theme?.reduceMotion ?? settings?.reduceMotion ?? false
     readonly property int springBounce: settings?.springBounce ?? 1
 
-    function springPreset(name, baseDuration) {
-        if (theme && typeof theme.springPreset === "function")
-            return theme.springPreset(name, baseDuration);
-        const spec = springSpecs[name] ?? springSpecs["default"];
-        const f = Math.max(0.05, baseDuration / 500);
-        const bounce = springBounce >= 0 && springBounce < springDampingScales.length ? springDampingScales[Math.round(springBounce)] : 1;
+    function springPreset(name) {
+        if (theme)
+            return theme.springPreset(name);
+        const spec = springSpecs[name];
+        const dampingScale = name.endsWith("Spatial") ? (springDampingScales[springBounce] ?? 1) : 1;
         return {
-            "stiffness": spec[0] / (f * f),
-            "damping": spec[1] / f * bounce,
+            "stiffness": spec[0],
+            "damping": spec[1] * dampingScale,
             "mass": 1
         };
     }

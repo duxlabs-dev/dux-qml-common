@@ -99,9 +99,8 @@ Flow {
             radius: root.chipRadius
 
             Behavior on radius {
-                enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
                 DAnim {
-                    duration: Style.expressiveDurations.expressiveFastSpatial
+                    duration: Style.expressiveDurations.expressiveEffects
                     easing.bezierCurve: Style.expressiveCurves.expressiveEffects
                 }
             }
@@ -115,7 +114,6 @@ Flow {
             }
 
             Behavior on color {
-                enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
                 DColorAnim {
                     duration: Style.expressiveDurations.expressiveEffects
                     easing.bezierCurve: Style.expressiveCurves.expressiveEffects

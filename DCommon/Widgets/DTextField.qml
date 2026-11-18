@@ -66,6 +66,7 @@ StyledRect {
     readonly property real morphSize: controlHeight - Style.spacingS * 2
     readonly property bool morphShown: expressive && morph
     readonly property int spatialDuration: Style.reduceMotion ? 0 : Style.expressiveDurations.expressiveFastSpatial
+    readonly property int settleDuration: Style.reduceMotion ? 0 : Style.expressiveDurations.expressiveDefaultSpatial
     readonly property int effectsDuration: Style.reduceMotion ? 0 : Style.expressiveDurations.expressiveEffects
 
     readonly property real accessorySize: outlined ? Math.min(controlHeight, Style.fieldHeightLarge) : Style.buttonHeightXS
@@ -193,14 +194,14 @@ StyledRect {
 
     SpringMotion {
         id: labelMotion
-        enabled: root.outlined && !Style.springMotionDisabled
-        stiffness: Style.springPreset("fastSpatial", Style.currentAnimationBaseDuration).stiffness
-        damping: Style.springPreset("fastSpatial", Style.currentAnimationBaseDuration).damping
+        enabled: root.outlined
+        stiffness: Style.springPreset("fastSpatial").stiffness
+        damping: Style.springPreset("fastSpatial").damping
     }
 
     SpringMotion {
         id: strokeMotion
-        enabled: root.outlined && root.enabled && !Style.springMotionDisabled
+        enabled: root.outlined && root.enabled
         stiffness: labelMotion.stiffness
         damping: labelMotion.damping
     }
@@ -225,9 +226,9 @@ StyledRect {
         }
         property SpringMotion progress: SpringMotion {
             value: 1
-            enabled: root.outlined && root.enabled && !Style.springMotionDisabled
-            stiffness: Style.springPreset("fastEffects", Style.currentAnimationBaseDuration).stiffness
-            damping: Style.springPreset("fastEffects", Style.currentAnimationBaseDuration).damping
+            enabled: root.outlined && root.enabled
+            stiffness: Style.springPreset("fastEffects").stiffness
+            damping: Style.springPreset("fastEffects").damping
         }
     }
 
@@ -274,7 +275,6 @@ StyledRect {
             border.width: errorOutline ? Style.outlineWidth : root.inputFocused ? root.focusedBorderWidth : root.borderWidth
 
             Behavior on border.color {
-                enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
                 DColorAnim {
                     duration: Style.expressiveDurations.expressiveEffects
                     easing.bezierCurve: Style.expressiveCurves.expressiveEffects
@@ -282,7 +282,6 @@ StyledRect {
             }
 
             Behavior on border.width {
-                enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
                 DAnim {
                     duration: Style.expressiveDurations.expressiveEffects
                     easing.bezierCurve: Style.expressiveCurves.expressiveEffects
@@ -359,7 +358,7 @@ StyledRect {
                         target: morphShape
                         property: "scale"
                         to: 1
-                        duration: root.spatialDuration
+                        duration: root.settleDuration
                         easing.type: Easing.BezierSpline
                         easing.bezierCurve: Style.expressiveCurves.expressiveDefaultSpatial
                     }
@@ -683,9 +682,9 @@ StyledRect {
 
     SpringMotion {
         id: placeholderMotion
-        enabled: root.outlined && !Style.springMotionDisabled
-        stiffness: Style.springPreset(root.placeholderVisible ? "slowEffects" : "fastEffects", Style.currentAnimationBaseDuration).stiffness
-        damping: Style.springPreset(root.placeholderVisible ? "slowEffects" : "fastEffects", Style.currentAnimationBaseDuration).damping
+        enabled: root.outlined
+        stiffness: Style.springPreset(root.placeholderVisible ? "slowEffects" : "fastEffects").stiffness
+        damping: Style.springPreset(root.placeholderVisible ? "slowEffects" : "fastEffects").damping
     }
 
     onPlaceholderVisibleChanged: placeholderMotion.retarget(placeholderVisible ? 1 : 0)
@@ -722,7 +721,6 @@ StyledRect {
     }
 
     Behavior on border.color {
-        enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
         DColorAnim {
             duration: Style.expressiveDurations.expressiveEffects
             easing.bezierCurve: Style.expressiveCurves.expressiveEffects
@@ -730,7 +728,6 @@ StyledRect {
     }
 
     Behavior on border.width {
-        enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
         DAnim {
             duration: Style.expressiveDurations.expressiveEffects
             easing.bezierCurve: Style.expressiveCurves.expressiveEffects

@@ -48,9 +48,9 @@ Text {
 
     Behavior on opacity {
         NumberAnimation {
-            duration: Appearance.anim.durations.normal
+            duration: Style.expressiveDurations.expressiveSlowEffects
             easing.type: Easing.BezierSpline
-            easing.bezierCurve: Appearance.anim.curves.standard
+            easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
         }
     }
 }

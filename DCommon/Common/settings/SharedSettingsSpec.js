@@ -118,8 +118,8 @@ var SPEC = {
     useFahrenheit: {
         def: false
     },
-    animationDuration: {
-        def: 250
+    motionDuration: {
+        def: 2
     },
     enableRippleEffects: {
         def: true

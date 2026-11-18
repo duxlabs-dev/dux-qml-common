@@ -162,7 +162,6 @@ StyledRect {
     }
 
     Behavior on border.color {
-        enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
         DColorAnim {
             duration: Style.expressiveDurations.expressiveEffects
             easing.bezierCurve: Style.expressiveCurves.expressiveEffects
@@ -170,7 +169,6 @@ StyledRect {
     }
 
     Behavior on border.width {
-        enabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
         DAnim {
             duration: Style.expressiveDurations.expressiveEffects
             easing.bezierCurve: Style.expressiveCurves.expressiveEffects

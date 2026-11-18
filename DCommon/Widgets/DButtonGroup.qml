@@ -210,39 +210,39 @@ Row {
             bottomRightRadius: mirrored ? leftRadius : rightRadius
 
             Behavior on topLeftRadius {
-                enabled: root.interactionStarted && !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                enabled: root.interactionStarted && !Style.reduceMotion
                 DAnim {
-                    duration: Style.expressiveDurations.expressiveFastSpatial
-                    easing.bezierCurve: Style.expressiveCurves.standard
+                    duration: Style.expressiveDurations.expressiveSlowEffects
+                    easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
                 }
             }
 
             Behavior on topRightRadius {
-                enabled: root.interactionStarted && !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                enabled: root.interactionStarted && !Style.reduceMotion
                 DAnim {
-                    duration: Style.expressiveDurations.expressiveFastSpatial
-                    easing.bezierCurve: Style.expressiveCurves.standard
+                    duration: Style.expressiveDurations.expressiveSlowEffects
+                    easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
                 }
             }
 
             Behavior on bottomLeftRadius {
-                enabled: root.interactionStarted && !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                enabled: root.interactionStarted && !Style.reduceMotion
                 DAnim {
-                    duration: Style.expressiveDurations.expressiveFastSpatial
-                    easing.bezierCurve: Style.expressiveCurves.standard
+                    duration: Style.expressiveDurations.expressiveSlowEffects
+                    easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
                 }
             }
 
             Behavior on bottomRightRadius {
-                enabled: root.interactionStarted && !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                enabled: root.interactionStarted && !Style.reduceMotion
                 DAnim {
-                    duration: Style.expressiveDurations.expressiveFastSpatial
-                    easing.bezierCurve: Style.expressiveCurves.standard
+                    duration: Style.expressiveDurations.expressiveSlowEffects
+                    easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
                 }
             }
 
             Behavior on color {
-                enabled: root.userInteracted && !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                enabled: root.userInteracted && !Style.reduceMotion
                 DColorAnim {
                     duration: Style.expressiveDurations.expressiveEffects
                     easing.bezierCurve: Style.expressiveCurves.expressiveEffects
@@ -287,7 +287,7 @@ Row {
                         anchors.verticalCenter: parent.verticalCenter
 
                         Behavior on opacity {
-                            enabled: root.userInteracted && !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                            enabled: root.userInteracted && !Style.reduceMotion
                             DAnim {
                                 duration: Style.expressiveDurations.expressiveEffects
                                 easing.bezierCurve: Style.expressiveCurves.expressiveEffects
@@ -295,7 +295,7 @@ Row {
                         }
 
                         Behavior on scale {
-                            enabled: root.userInteracted && !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+                            enabled: root.userInteracted && !Style.reduceMotion
                             DAnim {
                                 duration: Style.expressiveDurations.expressiveFastSpatial
                                 easing.bezierCurve: Style.expressiveCurves.expressiveFastSpatial

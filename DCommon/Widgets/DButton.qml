@@ -73,15 +73,15 @@ StyledButton {
     }
 
     Behavior on pressProgress {
-        enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+        enabled: !Style.reduceMotion
         DAnim {
             duration: Style.expressiveDurations.expressiveEffects
-            easing.bezierCurve: Style.expressiveCurves.standard
+            easing.bezierCurve: Style.expressiveCurves.expressiveEffects
         }
     }
 
     Behavior on scale {
-        enabled: enableScaleAnimation && !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+        enabled: enableScaleAnimation && !Style.reduceMotion
         DAnim {
             duration: Style.expressiveDurations.expressiveFastSpatial
             easing.bezierCurve: Style.expressiveCurves.expressiveFastSpatial

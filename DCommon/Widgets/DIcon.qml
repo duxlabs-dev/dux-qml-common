@@ -117,16 +117,18 @@ Item {
                     property: "opacity"
                     from: 0
                     to: 1
-                    duration: Style.shortDuration / 2
-                    easing.type: Style.standardEasing
+                    duration: Style.expressiveDurations.expressiveFastEffects / 2
+                    easing.type: Easing.BezierSpline
+                    easing.bezierCurve: Style.expressiveCurves.expressiveFastEffects
                 }
                 NumberAnimation {
                     target: icon
                     property: "opacity"
                     from: 1
                     to: 0
-                    duration: Style.shortDuration / 2
-                    easing.type: Style.standardEasing
+                    duration: Style.expressiveDurations.expressiveFastEffects / 2
+                    easing.type: Easing.BezierSpline
+                    easing.bezierCurve: Style.expressiveCurves.expressiveFastEffects
                 }
 
                 onFinished: root.settle()

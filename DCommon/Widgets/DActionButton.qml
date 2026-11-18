@@ -18,9 +18,9 @@ StyledButton {
     property var tooltipText: null
     property string tooltipSide: "bottom"
     property int shapeDuration: Style.expressiveDurations.expressiveEffects
-    property var shapeCurve: Style.expressiveCurves.standard
-    property int stateDuration: Style.shorterDuration
-    property var stateCurve: Style.expressiveCurves.standardDecel
+    property var shapeCurve: Style.expressiveCurves.expressiveEffects
+    property int stateDuration: Style.expressiveDurations.expressiveFastEffects
+    property var stateCurve: Style.expressiveCurves.expressiveFastEffects
 
     signal entered
     signal exited
@@ -37,7 +37,8 @@ StyledButton {
     Accessible.name: tooltipText || iconName
 
     Behavior on radius {
-        enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
+        // A hidden button takes its size without a morph, so a surface opens with its buttons in shape.
+        enabled: root.visible && !Style.reduceMotion
         DAnim {
             duration: root.shapeDuration
             easing.bezierCurve: root.shapeCurve

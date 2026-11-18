@@ -370,13 +370,9 @@ Singleton {
     property int fontWeight: Font.Normal
 
     property int shorterDuration: 100
-    property int shortDuration: 200
-    property int mediumDuration: 350
-    property int standardEasing: Easing.OutCubic
-    property int emphasizedEasing: Easing.OutQuart
+    property int shortDuration: 150
+    property int mediumDuration: 300
 
-    readonly property int currentAnimationSpeed: SettingsData.animationSpeed
-    readonly property int currentAnimationBaseDuration: 500
     readonly property bool elevationEnabled: true
 
     readonly property real stateLayerHover: 0.08
@@ -385,9 +381,6 @@ Singleton {
     readonly property real stateLayerDrag: 0.16
 
     readonly property var springSpecs: ({
-            "expressive": [560, 37],
-            "fast": [220, 23],
-            "default": [300, 24],
             "fastSpatial": [800, 33.9],
             "defaultSpatial": [380, 31.2],
             "slowSpatial": [200, 22.6],
@@ -396,15 +389,13 @@ Singleton {
             "slowEffects": [800, 56.6]
         })
     readonly property var springDampingScales: [1.22, 1.0, 0.82]
-    readonly property bool springMotionDisabled: currentAnimationBaseDuration <= 0
 
-    function springPreset(name, baseDuration) {
-        const spec = springSpecs[name] ?? springSpecs["default"];
-        const f = Math.max(0.05, baseDuration / 500);
-        const bounce = springDampingScales[Math.round(SettingsData.springBounce)] ?? 1;
+    function springPreset(name) {
+        const spec = springSpecs[name];
+        const dampingScale = name.endsWith("Spatial") ? (springDampingScales[SettingsData.springBounce] ?? 1) : 1;
         return {
-            "stiffness": spec[0] / (f * f),
-            "damping": spec[1] / f * bounce,
+            "stiffness": spec[0],
+            "damping": spec[1] * dampingScale,
             "mass": 1
         };
     }
@@ -433,12 +424,6 @@ Singleton {
         })
 
     readonly property var expressiveCurves: ({
-            "emphasized": [0.05, 0, 2 / 15, 0.06, 1 / 6, 0.4, 5 / 24, 0.82, 0.25, 1, 1, 1],
-            "emphasizedAccel": [0.3, 0, 0.8, 0.15, 1, 1],
-            "emphasizedDecel": [0.05, 0.7, 0.1, 1, 1, 1],
-            "standard": [0.2, 0, 0, 1, 1, 1],
-            "standardAccel": [0.3, 0, 1, 1, 1, 1],
-            "standardDecel": [0, 0, 0, 1, 1, 1],
             "expressiveFastSpatial": [0.42, 1.67, 0.21, 0.9, 1, 1],
             "expressiveDefaultSpatial": [0.38, 1.21, 0.22, 1, 1, 1],
             "expressiveSlowSpatial": [0.39, 1.29, 0.35, 0.98, 1, 1],
