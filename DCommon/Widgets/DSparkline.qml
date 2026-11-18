@@ -78,10 +78,13 @@ Item {
         const bottom = Math.max(top, height - insetBottom);
         const span = Math.max(range.max - range.min, 0.000001);
         const out = [];
+        let gap = false;
         for (let i = 0; i < count; i++) {
             const v = list[i];
-            if (typeof v !== "number" || !isFinite(v))
+            if (typeof v !== "number" || !isFinite(v)) {
+                gap = true;
                 continue;
+            }
             const explicitX = xValues.length > 0;
             const x = explicitX ? xValues[i] : i;
             if (typeof x !== "number" || !isFinite(x))
@@ -90,9 +93,13 @@ Item {
             out.push({
                 "x": explicitX ? width * Math.max(0, Math.min(1, (x - minimumX) / Math.max(maximumX - minimumX, 0.000001))) : startX + i * step,
                 "y": bottom - t * (bottom - top),
-                "value": v
+                "value": v,
+                "gap": gap
             });
+            gap = false;
         }
+        if (gap && out.length > 0)
+            out[out.length - 1].trailing = true;
         return out;
     }
 
@@ -105,16 +112,31 @@ Item {
         };
     }
 
-    function tracePath(pts) {
-        if (pts.length === 0)
-            return "";
-        const f = v => v.toFixed(2);
+    function splitRuns(pts) {
+        if (!pts.some(p => p.gap))
+            return [pts];
+        const runs = [];
+        for (const p of pts) {
+            if (runs.length === 0 || p.gap)
+                runs.push([]);
+            runs[runs.length - 1].push(p);
+        }
+        return runs;
+    }
+
+    function runExtensions(runs, r) {
         const extension = Math.max(0, edgeExtension);
-        const first = extendPoint(pts[0], pts[Math.min(1, pts.length - 1)], -extension);
-        const last = extendPoint(pts[pts.length - 1], pts[Math.max(0, pts.length - 2)], extension);
-        const tail = extension > 0 ? " L " + f(last.x) + " " + f(last.y) : "";
+        const run = runs[r];
+        return [r === 0 && !run[0].gap ? extension : 0, r === runs.length - 1 && !run[run.length - 1].trailing ? extension : 0];
+    }
+
+    function traceRun(pts, startExtension, endExtension) {
+        const f = v => v.toFixed(2);
+        const first = extendPoint(pts[0], pts[Math.min(1, pts.length - 1)], -startExtension);
+        const last = extendPoint(pts[pts.length - 1], pts[Math.max(0, pts.length - 2)], endExtension);
+        const tail = endExtension > 0 ? " L " + f(last.x) + " " + f(last.y) : "";
         let d = "M " + f(first.x) + " " + f(first.y);
-        if (extension > 0)
+        if (startExtension > 0)
             d += " L " + f(pts[0].x) + " " + f(pts[0].y);
         if (pts.length === 1)
             return d + tail;
@@ -133,13 +155,36 @@ Item {
         return d + tail;
     }
 
+    function tracePath(pts) {
+        if (pts.length === 0)
+            return "";
+        const runs = splitRuns(pts);
+        const parts = [];
+        for (let r = 0; r < runs.length; r++) {
+            if (runs.length > 1 && runs[r].length < 2)
+                continue;
+            const ext = runExtensions(runs, r);
+            parts.push(traceRun(runs[r], ext[0], ext[1]));
+        }
+        return parts.join(" ");
+    }
+
     function closePath(pts, line) {
         if (pts.length < 2)
             return "";
+        const runs = splitRuns(pts);
         const f = v => v.toFixed(2);
         const bottom = f(height);
-        const extension = Math.max(0, edgeExtension);
-        return line + " L " + f(pts[pts.length - 1].x + extension) + " " + bottom + " L " + f(pts[0].x - extension) + " " + bottom + " Z";
+        const parts = [];
+        for (let r = 0; r < runs.length; r++) {
+            const run = runs[r];
+            if (run.length < 2)
+                continue;
+            const ext = runExtensions(runs, r);
+            const d = runs.length === 1 ? line : traceRun(run, ext[0], ext[1]);
+            parts.push(d + " L " + f(run[run.length - 1].x + ext[1]) + " " + bottom + " L " + f(run[0].x - ext[0]) + " " + bottom + " Z");
+        }
+        return parts.join(" ");
     }
 
     Shape {
