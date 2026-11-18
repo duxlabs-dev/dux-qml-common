@@ -8,16 +8,22 @@ import qs.DCommon.Widgets
 Popup {
     id: root
 
-    property Rectangle anchorItem: null
+    property DTextField anchorItem: null
     property var rows: []
     property string errorText: ""
+    property var shownRows: []
+    property string shownError: ""
     property int highlightIndex: -1
+    property real reveal: 1
+    property real attachment: 0
+    readonly property bool motionEnabled: FileBrowserMetrics.animationsEnabled
     readonly property real rowHeight: Style.menuRowHeight
     readonly property color containerColor: Style.surfaceContainerHigh
-    readonly property real cornerRadius: anchorItem?.radius ?? Style.cornerRadiusL
+    readonly property real cornerRadius: Math.min(anchorItem?.radius ?? Style.cornerRadiusL, height / 2)
     readonly property real borderWidth: anchorItem?.border.width ?? 0
-    readonly property real seam: Math.ceil(borderWidth)
+    readonly property real seam: Math.ceil(anchorItem?.focusedBorderWidth ?? 0)
     readonly property real overhangRadius: width > (anchorItem?.width ?? 0) ? cornerRadius : 0
+    readonly property real foldedHeight: topPadding + bottomPadding
 
     signal chosen(var row)
 
@@ -43,10 +49,19 @@ Popup {
         return highlightIndex >= 0 && highlightIndex < rows.length ? rows[highlightIndex] : null;
     }
 
+    function hold() {
+        if (rows.length === 0 && errorText === "")
+            return;
+        shownRows = rows;
+        shownError = errorText;
+        list.resetScroll();
+    }
+
     parent: anchorItem
     x: I18n.isRtl ? (anchorItem?.width ?? 0) - width : 0
     y: (anchorItem?.height ?? 0) - seam
     width: Math.max(anchorItem?.width ?? 0, FileBrowserMetrics.suggestionMinWidth)
+    height: foldedHeight + (implicitHeight - foldedHeight) * reveal
     margins: 0
     padding: Style.spacingXS
     modal: false
@@ -56,11 +71,54 @@ Popup {
     onRowsChanged: {
         if (highlightIndex >= rows.length)
             highlightIndex = -1;
-        list.resetScroll();
+        hold();
     }
+    onErrorTextChanged: hold()
+    onAboutToShow: {
+        detach.stop();
+        reveal = 1;
+        attachment = 1;
+    }
+    onClosed: detach.restart()
     onHighlightIndexChanged: {
         if (highlightIndex >= 0)
             list.revealIndex(highlightIndex);
+    }
+
+    enter: Transition {
+        enabled: root.motionEnabled
+
+        DAnim {
+            target: root
+            property: "reveal"
+            from: 0
+            to: 1
+            duration: Style.expressiveDurations.expressiveEffects
+            easing.bezierCurve: Style.expressiveCurves.expressiveEffects
+        }
+    }
+
+    exit: Transition {
+        enabled: root.motionEnabled
+
+        DAnim {
+            target: root
+            property: "reveal"
+            from: 1
+            to: 0
+            duration: Style.shorterDuration
+            easing.bezierCurve: Style.expressiveCurves.emphasizedAccel
+        }
+    }
+
+    DAnim {
+        id: detach
+
+        target: root
+        property: "attachment"
+        to: 0
+        duration: root.motionEnabled ? Style.expressiveDurations.expressiveEffects : 0
+        easing.bezierCurve: Style.expressiveCurves.expressiveEffects
     }
 
     background: Item {
@@ -108,11 +166,12 @@ Popup {
         LayoutMirroring.enabled: I18n.isRtl
         LayoutMirroring.childrenInherit: true
         spacing: 0
+        clip: true
 
         Item {
             width: parent.width
             height: root.rowHeight
-            visible: root.errorText !== ""
+            visible: root.shownError !== ""
 
             DIcon {
                 id: errorIcon
@@ -131,7 +190,7 @@ Popup {
                 anchors.right: parent.right
                 anchors.rightMargin: Style.spacingM
                 anchors.verticalCenter: parent.verticalCenter
-                text: root.errorText
+                text: root.shownError
                 color: Style.error
                 font.pixelSize: Style.fontSizeMedium
                 horizontalAlignment: Text.AlignLeft
@@ -144,10 +203,10 @@ Popup {
             id: list
 
             width: parent.width
-            height: Math.min(root.rows.length, FileBrowserMetrics.suggestionRows) * root.rowHeight
-            visible: root.rows.length > 0
+            height: Math.min(root.shownRows.length, FileBrowserMetrics.suggestionRows) * root.rowHeight
+            visible: root.shownRows.length > 0
             clip: true
-            model: root.rows
+            model: root.shownRows
 
             delegate: StyledButton {
                 id: entry

@@ -353,6 +353,7 @@ FocusScope {
         rows: bar.rows
         errorText: bar.errorText
         visible: bar.editing && !bar.connecting && (bar.rows.length > 0 || bar.errorText !== "")
+        exit: null
         onChosen: row => bar.openRow(row)
     }
 
@@ -474,9 +475,10 @@ FocusScope {
         visible: bar.editing || bar.connecting
         readOnly: bar.connecting
         cornerRadius: bar.frameRadius
-        bottomLeftRadius: suggestionPopup.visible ? 0 : radius
+        bottomLeftRadius: radius * (1 - suggestionPopup.attachment)
         bottomRightRadius: bottomLeftRadius
-        color: suggestionPopup.visible ? suggestionPopup.containerColor : Style.foregroundColor(backgroundColor, !usePopupTransparency)
+        color: Style._blend(Style.foregroundColor(backgroundColor, !usePopupTransparency), suggestionPopup.containerColor, suggestionPopup.attachment)
+        border.pixelAligned: false
         controlHeight: bar.height
         backgroundColor: bar.chipColor
         leftIconName: bar.jumpMode ? "history" : "edit_location"
