@@ -6,6 +6,7 @@ import "Shape.js" as Shape
 import "Surface.js" as Surface
 import "Contrast.js" as Contrast
 import "Accents.js" as Accents
+import "Tonal.js" as Tonal
 import Quickshell
 
 Singleton {
@@ -63,10 +64,12 @@ Singleton {
     readonly property color surfaceContainerHighest: theme?.surfaceContainerHighest ?? "#36343b"
     readonly property color surfaceBright: theme?.surfaceBright ?? "#3b383e"
     readonly property color surfaceDim: theme?.surfaceDim ?? "#141218"
-    readonly property color hostSurface: theme?.hostSurface ?? (isLightMode ? surfaceContainerHighest : surface)
-    readonly property color cardSurface: theme?.cardSurface ?? surfaceContainer
-    readonly property color chipSurface: theme?.chipSurface ?? (isLightMode ? surface : surfaceContainerHigh)
-    readonly property color chipSurfaceNested: theme?.chipSurfaceNested ?? surfaceContainerHighest
+    readonly property var surfaceLadder: Tonal.surfaceLadder(surface, surfaceContainerLow, surfaceContainer, surfaceContainerHigh, surfaceContainerHighest)
+    readonly property color hostSurface: theme?.hostSurface ?? surfaceLadder.host
+    readonly property color cardSurface: theme?.cardSurface ?? surfaceLadder.card
+    readonly property color chipSurface: theme?.chipSurface ?? surfaceLadder.chip
+    readonly property color chipSurfaceNested: theme?.chipSurfaceNested ?? surfaceLadder.nested
+    readonly property color hostChipSurface: theme?.hostChipSurface ?? (Tonal.isLight(surface) ? cardSurface : chipSurface)
     readonly property color tooltipSurface: theme?.tooltipSurface ?? inverseSurface
     readonly property color tooltipText: theme?.tooltipText ?? Contrast.readableOn(tooltipSurface, [inverseOnSurface, surfaceText, contrastLight, contrastDark])
     readonly property color outlineVariant: theme?.outlineVariant ?? "#49454f"
@@ -149,10 +152,10 @@ Singleton {
     readonly property color primaryPressed: theme?.primaryPressed ?? withAlpha(primary, 0.16)
     readonly property color primarySelected: theme?.primarySelected ?? withAlpha(primary, 0.3)
 
-    readonly property color surfaceHover: theme?.surfaceHover ?? withAlpha(surfaceVariant, 0.08)
-    readonly property color surfacePressed: theme?.surfacePressed ?? withAlpha(surfaceVariant, 0.12)
-    readonly property color surfaceLight: theme?.surfaceLight ?? withAlpha(surfaceVariant, 0.1)
-    readonly property color surfaceVariantAlpha: theme?.surfaceVariantAlpha ?? withAlpha(surfaceVariant, 0.2)
+    readonly property color surfaceHover: theme?.surfaceHover ?? withAlpha(surfaceText, stateLayerHover)
+    readonly property color surfacePressed: theme?.surfacePressed ?? withAlpha(surfaceText, stateLayerPressed)
+    readonly property color surfaceLight: theme?.surfaceLight ?? withAlpha(surfaceText, 0.03)
+    readonly property color surfaceVariantAlpha: theme?.surfaceVariantAlpha ?? withAlpha(surfaceText, 0.06)
 
     readonly property color surfaceTextHover: theme?.surfaceTextHover ?? withAlpha(surfaceText, 0.08)
     readonly property color surfaceTextSecondary: theme?.surfaceTextSecondary ?? withAlpha(surfaceText, 0.6)

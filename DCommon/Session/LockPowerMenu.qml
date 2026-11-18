@@ -619,7 +619,7 @@ Rectangle {
                                         return Style.primaryHover;
                                     if (mouseArea.containsMouse)
                                         return Style.primaryHoverLight;
-                                    return Style.surfaceHover;
+                                    return Style.surfaceLight;
                                 }
                                 border.color: isSelected ? Style.primary : Style.withAlpha(Style.primary, 0)
                                 border.width: isSelected ? 2 : 0
@@ -739,7 +739,7 @@ Rectangle {
                                         return Style.primaryHover;
                                     if (listMouseArea.containsMouse)
                                         return Style.primaryHoverLight;
-                                    return Style.surfaceHover;
+                                    return Style.surfaceLight;
                                 }
                                 border.color: isSelected ? Style.primary : Style.withAlpha(Style.primary, 0)
                                 border.width: isSelected ? 2 : 0

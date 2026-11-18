@@ -11,7 +11,14 @@ Item {
     property real bottomLeftRadius: cornerRadius
     property real bottomRightRadius: cornerRadius
     property bool enableRipple: Style.enableRippleEffects
-    property int animationDuration: Style.expressiveDurations.expressiveDefaultSpatial
+    property int animationDuration: Style.motionMs(225)
+
+    // values of Compose material-ripple RippleAnimation, which material3 draws its press ripple with
+    readonly property int fadeInDuration: Style.motionMs(75)
+    readonly property int fadeOutDuration: Style.motionMs(150)
+    readonly property var growCurve: [0.4, 0, 0.2, 1, 1, 1]
+    readonly property real startRadiusRatio: 0.3
+    readonly property real endRadiusPadding: 10
 
     property Item fxItem: null
     readonly property bool animating: fxItem?.animating ?? false
@@ -38,87 +45,74 @@ Item {
             id: fx
             anchors.fill: parent
 
-            property real rippleX: 0
-            property real rippleY: 0
-            property real rippleMaxRadius: 0
+            property real pressX: 0
+            property real pressY: 0
             property bool held: false
-            readonly property bool animating: held || growAnim.running || autoFade.running || releaseFade.running
+            readonly property real startRadius: Math.max(width, height) * root.startRadiusRatio
+            readonly property real endRadius: Math.hypot(width, height) / 2 + root.endRadiusPadding
+            readonly property bool animating: held || enter.running || fade.running
 
             function trigger(x, y, hold) {
-                rippleX = x;
-                rippleY = y;
-                const dist = (ox, oy) => ox * ox + oy * oy;
-                rippleMaxRadius = Math.sqrt(Math.max(dist(x, y), dist(x, height - y), dist(width - x, y), dist(width - x, height - y)));
+                pressX = x;
+                pressY = y;
                 held = hold;
-                releaseFade.stop();
-                autoFade.stop();
-                growAnim.restart();
-                if (!hold)
-                    autoFade.restart();
+                fade.stop();
+                enter.restart();
             }
 
             function release() {
                 if (!held)
                     return;
                 held = false;
-                releaseFade.restart();
+                if (enter.running)
+                    return;
+                fade.restart();
             }
 
-            SequentialAnimation {
-                id: growAnim
+            ParallelAnimation {
+                id: enter
 
-                PropertyAction {
+                onFinished: {
+                    if (!fx.held)
+                        fade.restart();
+                }
+
+                NumberAnimation {
+                    target: rippleFx
+                    property: "rippleOpacity"
+                    to: Style.stateLayerPressed
+                    duration: root.fadeInDuration
+                }
+                DAnim {
+                    target: rippleFx
+                    property: "rippleRadius"
+                    from: fx.startRadius
+                    to: fx.endRadius
+                    duration: root.animationDuration
+                    easing.bezierCurve: root.growCurve
+                }
+                NumberAnimation {
                     target: rippleFx
                     property: "rippleCenterX"
-                    value: fx.rippleX
+                    from: fx.pressX
+                    to: fx.width / 2
+                    duration: root.animationDuration
                 }
-                PropertyAction {
+                NumberAnimation {
                     target: rippleFx
                     property: "rippleCenterY"
-                    value: fx.rippleY
-                }
-                PropertyAction {
-                    target: rippleFx
-                    property: "rippleRadius"
-                    value: 0
-                }
-                PropertyAction {
-                    target: rippleFx
-                    property: "rippleOpacity"
-                    value: Style.stateLayerPressed
-                }
-                DAnim {
-                    target: rippleFx
-                    property: "rippleRadius"
-                    from: 0
-                    to: fx.rippleMaxRadius
+                    from: fx.pressY
+                    to: fx.height / 2
                     duration: root.animationDuration
-                    easing.bezierCurve: Style.expressiveCurves.expressiveDefaultSpatial
                 }
             }
 
-            SequentialAnimation {
-                id: autoFade
-
-                PauseAnimation {
-                    duration: Math.round(root.animationDuration * 0.6)
-                }
-                DAnim {
-                    target: rippleFx
-                    property: "rippleOpacity"
-                    to: 0
-                    duration: Style.expressiveDurations.expressiveSlowEffects
-                    easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
-                }
-            }
-
-            DAnim {
-                id: releaseFade
+            NumberAnimation {
+                id: fade
                 target: rippleFx
                 property: "rippleOpacity"
                 to: 0
-                duration: Style.expressiveDurations.expressiveEffects
-                easing.bezierCurve: Style.expressiveCurves.expressiveEffects
+                duration: root.fadeOutDuration
             }
 
             ShaderEffect {

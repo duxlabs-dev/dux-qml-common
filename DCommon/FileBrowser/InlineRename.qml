@@ -53,7 +53,7 @@ DTextField {
         anchors.fill: parent
         z: -1
         radius: field.cornerRadius
-        color: Style.surfaceContainerHigh
+        color: Style.chipSurface
     }
 
     DTooltipHost {

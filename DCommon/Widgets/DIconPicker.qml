@@ -22,7 +22,7 @@ Rectangle {
     width: Math.min(240, windowWidth - Style.spacingL * 2)
     height: Style.buttonHeightS
     radius: Style.pillControls ? Style.fullRadius(width, height) : Style.cornerRadiusL
-    color: triggerArea.containsMouse ? Style.surfaceHover : Style.chipSurface
+    color: triggerArea.containsMouse ? Style._blend(Style.chipSurface, Style.onSurface, Style.stateLayerHover) : Style.chipSurface
     border.color: iconPopup.visible ? Style.primary : Style.outlineVariant
     border.width: Style.outlineWidth
 
@@ -112,7 +112,7 @@ Rectangle {
         width: root.height - inset * 2
         height: width
         radius: width / 2
-        color: root.currentIcon ? Style.primaryContainer : Style.surfaceContainerHighest
+        color: root.currentIcon ? Style.primaryContainer : Style.chipSurfaceNested
 
         DIcon {
             anchors.centerIn: parent

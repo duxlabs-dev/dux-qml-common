@@ -15,7 +15,7 @@ Item {
     property int tickInterval: 16
     property bool isPlaying: false
     property real currentAmp: isPlaying ? amp : 0
-    property color trackColor: Style.withAlpha(Style.surfaceVariant, 0.40)
+    property color trackColor: Style.onSurface_12
     property color fillColor: Style.primary
     property color playheadColor: Style.primary
     property color actualProgressColor: Style.onSurface_38

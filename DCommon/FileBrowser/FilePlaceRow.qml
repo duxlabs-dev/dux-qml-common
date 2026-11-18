@@ -138,7 +138,7 @@ StyledButton {
             value: row.ringValue
             strokeWidth: Style.spinnerStrokeWidth
             ringColor: row.ringValue >= FileBrowserMetrics.usageWarnRatio ? Style.error : Style.primary
-            trackColor: Style.surfaceContainerHighest
+            trackColor: Style.onSurface_12
 
             Rectangle {
                 anchors.fill: parent

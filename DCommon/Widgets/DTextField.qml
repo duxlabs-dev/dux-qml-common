@@ -44,7 +44,7 @@ StyledRect {
     readonly property bool inputFocused: textInput.activeFocus || imeSink.activeFocus
     readonly property bool composing: textInput.inputMethodComposing || imeSink.inputMethodComposing
     property bool usePopupTransparency: !Style.isFloatingWindow(root)
-    property color backgroundColor: expressive ? Style.surfaceContainerHigh : Style.chipSurface
+    property color backgroundColor: Style.chipSurface
     property color focusedBorderColor: expressive ? Style.focusRingColor : Style.primary
     property color normalBorderColor: expressive ? Style.outlineMedium : outlined ? Style.outline : Style.outlineVariant
     property color placeholderColor: Style.onSurfaceVariant

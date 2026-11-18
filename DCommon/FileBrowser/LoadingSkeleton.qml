@@ -39,7 +39,7 @@ Column {
             width: skeleton.width
             height: skeleton.rowHeight
             radius: Style.groupedListInnerRadius
-            color: Style.surfaceContainerHigh
+            color: Style.chipSurface
 
             Rectangle {
                 anchors.left: parent.left
@@ -48,7 +48,7 @@ Column {
                 width: Style.iconSize
                 height: Style.iconSize
                 radius: Style.cornerRadiusXS
-                color: Style.surfaceContainerHighest
+                color: Style.chipSurfaceNested
             }
 
             Rectangle {
@@ -58,7 +58,7 @@ Column {
                 width: Math.min(parent.width / 2, Style.spacingXL * (6 + index % 4))
                 height: Style.fontSizeMedium
                 radius: Style.cornerRadiusXS
-                color: Style.surfaceContainerHighest
+                color: Style.chipSurfaceNested
             }
         }
     }

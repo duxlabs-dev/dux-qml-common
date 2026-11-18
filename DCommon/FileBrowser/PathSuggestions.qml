@@ -18,7 +18,7 @@ Popup {
     property real attachment: 0
     readonly property bool motionEnabled: FileBrowserMetrics.animationsEnabled
     readonly property real rowHeight: Style.menuRowHeight
-    readonly property color containerColor: Style.surfaceContainerHigh
+    readonly property color containerColor: Style.chipSurface
     readonly property real cornerRadius: Math.min(anchorItem?.radius ?? Style.cornerRadiusL, height / 2)
     readonly property real borderWidth: anchorItem?.border.width ?? 0
     readonly property real seam: Math.ceil(anchorItem?.focusedBorderWidth ?? 0)
