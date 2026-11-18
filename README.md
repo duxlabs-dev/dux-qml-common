@@ -58,7 +58,7 @@ The repo root is a runnable quickshell config with the stubs and a widget galler
 qs -p /path/to/dank-qml-common
 ```
 
-For qmlls, `touch .qmlls.ini` once at the repo root. Quickshell fills it in on the next launch.
+For qmlls, run `dms qs tooling -p .` at the repo root (again after a reboot). With a dux-qt-base that predates the `tooling` command, `rm -f .qmlls.ini && touch .qmlls.ini` once and Quickshell fills it in on the next launch.
 
 Run `node tests/run.mjs` for the tests. CI runs them through prek.
 
