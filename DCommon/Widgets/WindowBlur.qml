@@ -95,7 +95,7 @@ Item {
 
     Timer {
         id: settleRepeatTimer
-        interval: Timing.blurSettleRepeatDelay
+        interval: Timing.settleShort
         onTriggered: {
             if (!root.targetWindow?.visible)
                 return;

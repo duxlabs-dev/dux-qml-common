@@ -62,7 +62,7 @@ Row {
 
     Timer {
         id: animationTimer
-        interval: Style.shortDuration
+        interval: Style.reduceMotion ? 0 : Style.expressiveDurations.expressiveFastSpatial
         onTriggered: {
             root.userInteracted = false;
             root.animationCompleted();

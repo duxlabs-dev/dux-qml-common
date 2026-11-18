@@ -68,7 +68,7 @@ Item {
     Timer {
         id: locationSearchTimer
 
-        interval: Timing.locationSearchDebounce
+        interval: Timing.debounceSlow
         running: false
         repeat: false
         onTriggered: {
@@ -123,7 +123,7 @@ Item {
     Timer {
         id: dropdownHideTimer
 
-        interval: Timing.locationDropdownHideDelay
+        interval: Timing.settle
         running: false
         repeat: false
         onTriggered: {

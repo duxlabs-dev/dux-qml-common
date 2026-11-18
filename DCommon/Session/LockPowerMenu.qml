@@ -470,7 +470,7 @@ Rectangle {
 
     Timer {
         id: hintTimer
-        interval: Timing.holdHintTimeout
+        interval: Timing.hold
         onTriggered: root.showHoldHint = false
     }
 

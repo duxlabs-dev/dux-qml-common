@@ -17,12 +17,9 @@ Item {
     property int _shownWeight: weight
     property bool _ready: false
     property Loader _incoming: null
-    property Timer _rotationTimer: null
 
     implicitWidth: Math.round(size)
     implicitHeight: Math.round(size)
-
-    signal rotationCompleted
 
     onFillChanged: retarget()
     onWeightChanged: retarget()
@@ -134,20 +131,5 @@ Item {
                 onFinished: root.settle()
             }
         }
-    }
-
-    Component {
-        id: rotationTimerComponent
-
-        Timer {
-            interval: Timing.frame
-            onTriggered: root.rotationCompleted()
-        }
-    }
-
-    onRotationChanged: {
-        if (!_rotationTimer)
-            _rotationTimer = rotationTimerComponent.createObject(root);
-        _rotationTimer.restart();
     }
 }
