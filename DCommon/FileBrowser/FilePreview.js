@@ -42,6 +42,18 @@ function thumbnailSizeFor(pixels) {
     return (fit ?? thumbnailSizes[thumbnailSizes.length - 1])[0];
 }
 
+function thumbnailBound(name) {
+    return (thumbnailSizes.find(size => size[0] === name) ?? [name, 0])[1];
+}
+
+function thumbnailCovers(path, size) {
+    if (path === "")
+        return false;
+    const cached = thumbnailBound(path.split("/").slice(-2)[0]);
+    // a path outside the size folders can never be upgraded
+    return cached === 0 || cached >= thumbnailBound(size);
+}
+
 function chunkEnd(line, start, chunk) {
     const end = Math.min(line.length, start + chunk);
     if (end >= line.length)

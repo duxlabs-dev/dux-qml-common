@@ -372,6 +372,14 @@ Item {
             }
 
             Connections {
+                target: columns.body
+
+                function onThumbnailSizeChanged() {
+                    settle.restart();
+                }
+            }
+
+            Connections {
                 target: column.model
 
                 function onGone() {

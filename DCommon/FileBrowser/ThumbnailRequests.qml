@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import "FilePreview.js" as FilePreview
 
 QtObject {
     property var backend: null
@@ -10,7 +11,7 @@ QtObject {
     property var _inFlight: ({})
 
     function wanted(entry) {
-        if (!entry.thumbnailable || entry.thumbnail !== "" || _inFlight[entry.path] === true)
+        if (!entry.thumbnailable || _inFlight[entry.path] === true || FilePreview.thumbnailCovers(entry.thumbnail, size))
             return false;
         return sizeLimit < 0 || entry.size <= sizeLimit || !(entry.mime ?? "").startsWith("image/");
     }

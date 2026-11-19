@@ -270,6 +270,7 @@ FocusScope {
         hiddenLast: root.hiddenLast
         nameFilter: root.nameFilter
         thumbnailsEnabled: root.thumbnailsEnabled
+        thumbnailSize: viewBody.thumbnailSize
         thumbnailSizeLimit: root.thumbnailSizeLimit
         networkThumbnails: root.networkThumbnails
     }

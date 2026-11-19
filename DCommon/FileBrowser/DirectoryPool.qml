@@ -17,6 +17,7 @@ QtObject {
     property bool hiddenLast: true
     property string nameFilter: ""
     property bool thumbnailsEnabled: true
+    property string thumbnailSize: "normal"
     property real thumbnailSizeLimit: -1
     property bool networkThumbnails: true
 
@@ -38,6 +39,7 @@ QtObject {
             hiddenLast: pool.hiddenLast
             nameFilter: path === pool.activePath ? pool.nameFilter : ""
             thumbnailsEnabled: pool.thumbnailsEnabled
+            thumbnailSize: pool.thumbnailSize
             thumbnailSizeLimit: pool.thumbnailSizeLimit
             networkThumbnails: pool.networkThumbnails
             onGone: pool.forget(path)

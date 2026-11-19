@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.DCommon.Common
 import qs.DCommon.Widgets
+import "FilePreview.js" as FilePreview
 import "TypeAhead.js" as TypeAhead
 
 FocusScope {
@@ -58,6 +59,8 @@ FocusScope {
     readonly property real columnZoomFactor: FileBrowserMetrics.columnZoomFactor(columnZoom)
     readonly property var iconSizes: FileBrowserMetrics.iconSizesFor(viewMode)
     readonly property real iconSize: iconSizes[Math.max(0, Math.min(iconSizes.length - 1, zoom))]
+    readonly property real devicePixelRatio: Window.window?.devicePixelRatio ?? Screen.devicePixelRatio
+    readonly property string thumbnailSize: FilePreview.thumbnailSizeFor(Style.iconRasterSize(iconSize * devicePixelRatio))
     readonly property real listNameReserve: iconSize + FileBrowserMetrics.listRowPadding * 2 + FileBrowserMetrics.listRowGap + FileBrowserMetrics.nameColumnMinWidth
     readonly property var listWidths: {
         const widths = {};
@@ -496,6 +499,7 @@ FocusScope {
     }
 
     onViewModeChanged: renamingPath = ""
+    onThumbnailSizeChanged: settle.restart()
     onDirectoryChanged: {
         selection.clear();
         renamingPath = "";

@@ -240,6 +240,7 @@ QtObject {
             "dirsFirst": dirsFirst,
             "hiddenLast": hiddenLast,
             "limit": pageSize,
+            "thumbnailSize": thumbnailSize,
             "cursor": cursorValue || ""
         };
     }
@@ -444,7 +445,7 @@ QtObject {
             const index = at.shown.get(entry.path);
             if (index !== undefined)
                 entries.set(index, entry);
-            awaitsThumbnail = awaitsThumbnail || (entry.thumbnailable && entry.thumbnail === "");
+            awaitsThumbnail = awaitsThumbnail || _thumbnails.wanted(entry);
         }
         if (awaitsThumbnail)
             _thumbnailRetry.restart();
