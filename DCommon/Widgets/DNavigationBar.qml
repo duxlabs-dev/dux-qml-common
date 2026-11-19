@@ -260,7 +260,7 @@ T.Control {
 
                         DIcon {
                             anchors.centerIn: parent
-                            name: "edit"
+                            name: "dashboard_2_edit"
                             size: Style.iconSize
                             color: Style.onSelectedContainer
                             visible: editButton.revealed
