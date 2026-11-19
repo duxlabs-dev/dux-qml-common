@@ -7,7 +7,7 @@ import Quickshell
 Singleton {
     readonly property string sans: googleSansFont.name || "Google Sans Flex"
     readonly property string mono: firaCodeFont.name || "Fira Code"
-    readonly property string icons: materialSymbolsFont.name || "Material Symbols Rounded"
+    readonly property string icons: materialSymbolsFont.name || "DCommon Material Symbols Rounded"
     readonly property string nerd: firaCodeFont.name || "FiraCode Nerd Font"
     readonly property string display: dmSerifDisplayFont.name || "DM Serif Display"
     readonly property string notable: notableFont.name || "Notable"
