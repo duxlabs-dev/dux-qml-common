@@ -25,6 +25,17 @@ Item {
     property real handleHeight: 0
     property color handleColor: "transparent"
     property real handleGap: 0
+    // Below 1 the track ends at the limit and the rest is drawn in the pastLimit style ("dim" or "hatch"); a value at or past it draws unlimited.
+    property real limit: 1
+    property string pastLimit: "dim"
+    property color hatchColor: Style.onSurface_12
+    property real hatchPeriod: 0
+    property real trackGap: 0
+    property bool roundEnds: false
+    property bool showPlayhead: true
+    property bool showStopDot: false
+    property color stopDotColor: fillColor
+    property bool mirrored: false
 
     Behavior on currentAmp {
         enabled: !Style.reduceMotion
@@ -57,6 +68,17 @@ Item {
         readonly property real handleHeightPx: root.handleHeight
         readonly property color handleColor: root.handleColor
         readonly property real handleGapPx: root.handleGap
+        readonly property real limit: root.value >= root.limit ? 1 : Math.max(0, Math.min(1, root.limit))
+        readonly property real pastHatch: root.pastLimit === "hatch" ? 1.0 : 0.0
+        readonly property real dimOpacity: 0.5
+        readonly property vector4d hatchColor: Qt.vector4d(root.hatchColor.r, root.hatchColor.g, root.hatchColor.b, root.hatchColor.a)
+        readonly property real hatchPeriodPx: root.hatchPeriod > 0 ? root.hatchPeriod : 2 * root.lineWidth
+        readonly property real trackGapPx: root.trackGap
+        readonly property real roundEnds: root.roundEnds ? 1.0 : 0.0
+        readonly property real showPlayhead: root.showPlayhead ? 1.0 : 0.0
+        readonly property real showStopDot: root.showStopDot ? 1.0 : 0.0
+        readonly property vector4d stopDotColor: Qt.vector4d(root.stopDotColor.r, root.stopDotColor.g, root.stopDotColor.b, root.stopDotColor.a)
+        readonly property real mirrored: root.mirrored ? 1.0 : 0.0
 
         fragmentShader: Qt.resolvedUrl("../Shaders/qsb/wave_progress.frag.qsb")
     }
