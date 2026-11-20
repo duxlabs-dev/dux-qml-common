@@ -14,7 +14,7 @@ FocusScope {
     property color descriptionColor: Style.surfaceVariantText
     property bool hideText: false
     property string checkedIcon: "check"
-    property string uncheckedIcon: ""
+    property string uncheckedIcon: Style.switchStateIcons ? "close" : ""
     readonly property string thumbIcon: checked ? checkedIcon : uncheckedIcon
 
     signal clicked

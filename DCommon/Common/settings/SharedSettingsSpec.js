@@ -139,6 +139,9 @@ var SPEC = {
     scrollShadowsEnabled: {
         def: true
     },
+    switchStateIcons: {
+        def: false
+    },
     blurBorderEnabled: {
         def: false
     },
