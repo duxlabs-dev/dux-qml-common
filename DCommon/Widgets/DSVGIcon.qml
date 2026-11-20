@@ -50,6 +50,7 @@ Item {
         backer.sourceSize.width: root.rasterSize
         backer.sourceSize.height: root.rasterSize
         backer.cache: true
+        backer.retainWhileLoading: true
         layer.enabled: root.hasColorEffect
         layer.smooth: true
         layer.mipmap: true

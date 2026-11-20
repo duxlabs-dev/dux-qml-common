@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Effects
-import Quickshell
 import Quickshell.Widgets
 import qs.DCommon.Common
 import qs.DCommon.Widgets
@@ -16,11 +15,13 @@ Item {
 
     property bool useNerdFont: false
     property string nerdFontIcon: ""
+    property string themeLogo: ""
 
     IconImage {
         id: iconImage
         anchors.fill: parent
         visible: !root.useNerdFont
+        source: Paths.themeIconUrl(root.themeLogo)
 
         smooth: true
         asynchronous: true
@@ -77,7 +78,7 @@ Item {
                     iconImage.source = "file:///usr/share/zirconium/pixmaps/logo-z.svg";
                     return;
                 }
-                iconImage.source = Quickshell.iconPath(logo, true);
+                root.themeLogo = logo;
             }, 0);
         }, 0);
     }
