@@ -33,6 +33,20 @@ Row {
     property bool usePopupTransparency: !Style.isFloatingWindow(root)
     property real maximumWidth: -1
     property bool fillWidth: false
+    // With fillWidth: width shares of the selected button and of a pressed unselected one; the others take 1
+    property real selectedWidthShare: 1
+    property real pressedWidthShare: 1
+    property int optionIconSize: Style.iconSize
+    readonly property bool sharesWidth: fillWidth && (selectedWidthShare !== 1 || pressedWidthShare !== 1)
+    readonly property real totalWidthShares: {
+        if (!sharesWidth)
+            return 0;
+        _segmentRevision;
+        let total = 0;
+        for (let i = 0; i < repeater.count; i++)
+            total += repeater.itemAt(i)?.widthShare ?? 1;
+        return total;
+    }
     property int _segmentRevision: 0
     // Width before maximumWidth applies, so a caller can derive the cap from it without a layout loop
     readonly property real naturalWidth: {
@@ -184,7 +198,21 @@ Row {
             // Reading Text.implicitWidth lays the label out on the spot and notifies mid-binding, so the exported width measures it instead
             readonly property real naturalWidth: Math.max(iconsNaturalWidth + (showsLabel ? Math.ceil(labelMetrics.advanceWidth) : 0) + root.buttonPadding * 2, root.minButtonWidth)
 
+            readonly property real widthShare: selected ? root.selectedWidthShare : (pressed ? root.pressedWidthShare : 1)
+            readonly property bool revealsLabel: root.labelOnlySelected && hasOptionIcon
+            property real labelReveal: showsLabel ? 1 : 0
+
+            Behavior on labelReveal {
+                enabled: segment.revealsLabel && root.userInteracted && !Style.reduceMotion
+                DAnim {
+                    duration: Style.expressiveDurations.expressiveEffects
+                    easing.bezierCurve: Style.expressiveCurves.expressiveEffects
+                }
+            }
+
             readonly property real baseWidth: {
+                if (root.sharesWidth)
+                    return Math.max(0, root.width - root.spacing * (repeater.count - 1)) * widthShare / Math.max(widthShare, root.totalWidthShares);
                 if (root.fillWidth)
                     return Math.max(0, (root.width - root.spacing * (repeater.count - 1)) / Math.max(1, repeater.count));
                 const natural = Math.max(contentNaturalWidth + root.buttonPadding * 2, root.minButtonWidth);
@@ -199,6 +227,14 @@ Row {
 
             width: baseWidth
             height: root.buttonHeight
+
+            Behavior on width {
+                enabled: root.sharesWidth && root.interactionStarted && !Style.reduceMotion
+                DAnim {
+                    duration: Style.expressiveDurations.expressiveFastSpatial
+                    easing.bezierCurve: Style.expressiveCurves.expressiveFastSpatial
+                }
+            }
 
             color: !root.enabled ? Style.onSurface_10 : (selected ? root.selectedColor : root.unselectedColor)
             border.color: "transparent"
@@ -269,11 +305,14 @@ Row {
             Item {
                 id: contentItem
                 anchors.centerIn: parent
-                implicitWidth: contentRow.implicitWidth
+                // A revealed label widens the content as it fades in, so the icon slides over instead of jumping
+                implicitWidth: segment.revealsLabel ? Math.min(segment.width - root.buttonPadding * 2, (segment.showsCheck ? checkIcon.width + contentRow.spacing : 0) + optionIcon.width + (contentRow.spacing + buttonText.width) * segment.labelReveal) : contentRow.implicitWidth
                 implicitHeight: contentRow.implicitHeight
+                clip: segment.revealsLabel
 
                 Row {
                     id: contentRow
+                    anchors.left: parent.left
                     spacing: Style.spacingS
 
                     DIcon {
@@ -306,16 +345,16 @@ Row {
                     DIcon {
                         id: optionIcon
                         name: typeof modelData === "object" ? modelData.icon || "" : ""
-                        size: Style.iconSize
+                        size: root.optionIconSize
                         color: segment.contentColor
-                        filled: segment.selected
+                        filled: segment.selected && modelData.filled !== false
                         visible: segment.hasOptionIcon
                         anchors.verticalCenter: parent.verticalCenter
                     }
 
                     StyledText {
                         id: buttonText
-                        visible: segment.showsLabel
+                        visible: segment.showsLabel || segment.labelReveal > 0
 
                         readonly property real capAvailable: {
                             if (root._segmentCap <= 0)
@@ -327,9 +366,11 @@ Row {
                         text: typeof modelData === "string" ? modelData : modelData.text || ""
                         font.pixelSize: root.textSize
                         font.weight: Style.fontWeightMedium
-                        color: segment.contentColor
+                        color: segment.revealsLabel ? Style.withAlpha(segment.contentColor, segment.contentColor.a * segment.labelReveal) : segment.contentColor
                         anchors.verticalCenter: parent.verticalCenter
-                        width: capAvailable < 0 ? implicitWidth : Math.min(implicitWidth, capAvailable)
+                        // A revealed label fits the button's final width share, so it elides instead of being clipped
+                        readonly property real shareAvailable: segment.revealsLabel ? Math.max(0, segment.baseWidth - root.buttonPadding * 2 - optionIcon.width - contentRow.spacing - (segment.showsCheck ? checkIcon.width + contentRow.spacing : 0)) : -1
+                        width: Math.min(implicitWidth, capAvailable < 0 ? implicitWidth : capAvailable, shareAvailable < 0 ? implicitWidth : shareAvailable)
                         wrapMode: Text.NoWrap
                     }
                 }

@@ -22,6 +22,13 @@ layout(std140, binding = 0) uniform buf {
     float showProgress;
     vec4 fillColor;      // straight alpha
     vec4 trackColor;     // straight alpha
+    float pastStart;     // past-limit arc, radians relative to theta0
+    float pastStop;
+    float showPast;      // dimmed track past the limit
+    float dimOpacity;
+    float markerAngle;   // limit marker, radians relative to theta0
+    float markerOn;
+    float markerReachPx; // marker half length, radial
 } ubuf;
 
 const float TAU = 6.28318530718;
@@ -66,6 +73,18 @@ void main() {
         col = blendOver(col, ubuf.trackColor.rgb, ubuf.trackColor.a * m);
     }
 
+    // Past the limit: the track dimmed, round caps at both ends.
+    if (ubuf.showPast > 0.5) {
+        float halfT = ubuf.trackWidthPx * 0.5;
+        float stroke = 1.0 - smoothstep(halfT - AA, halfT + AA, abs(rad - ubuf.radiusPx));
+        float m = stroke * step(ubuf.pastStart, rel) * step(rel, ubuf.pastStop);
+        float a0 = ubuf.theta0 + ubuf.pastStart;
+        float a1 = ubuf.theta0 + ubuf.pastStop;
+        m = max(m, disc(p, ubuf.radiusPx * vec2(cos(a0), sin(a0)), halfT));
+        m = max(m, disc(p, ubuf.radiusPx * vec2(cos(a1), sin(a1)), halfT));
+        col = blendOver(col, ubuf.trackColor.rgb, ubuf.trackColor.a * ubuf.dimOpacity * m);
+    }
+
     // 2. Progress: wavy arc r(t) = R - a + a*cos(n*t - phase), t in [0, sweep].
     //    Exact stroke: min distance from the pixel to the curve (sampled as a short polyline
     //    around the pixel's own angle). Clamping t to [0, sweep] gives round caps for free.
@@ -106,6 +125,15 @@ void main() {
             m = 1.0 - smoothstep(halfW - AA, halfW + AA, dMin);
         }
 
+        col = blendOver(col, ubuf.fillColor.rgb, ubuf.fillColor.a * m);
+    }
+
+    // 3. Limit marker: a radial tick with round ends.
+    if (ubuf.markerOn > 0.5) {
+        float a = ubuf.theta0 + ubuf.markerAngle;
+        vec2 dir = vec2(cos(a), sin(a));
+        float r = clamp(dot(p, dir), ubuf.radiusPx - ubuf.markerReachPx, ubuf.radiusPx + ubuf.markerReachPx);
+        float m = disc(p, r * dir, ubuf.lineWidthPx * 0.5);
         col = blendOver(col, ubuf.fillColor.rgb, ubuf.fillColor.a * m);
     }
 

@@ -25,7 +25,7 @@ Item {
     onWeightChanged: retarget()
 
     function retarget() {
-        if (!_ready || !visible) {
+        if (!_ready || !visible || Style.reduceMotion) {
             settle();
             return;
         }
@@ -106,7 +106,8 @@ Item {
                 }
             }
 
-            SequentialAnimation {
+            // In parallel: an outlined glyph under a fully faded-in filled one fills its cut-outs.
+            ParallelAnimation {
                 id: crossfade
 
                 NumberAnimation {
@@ -114,7 +115,7 @@ Item {
                     property: "opacity"
                     from: 0
                     to: 1
-                    duration: Style.expressiveDurations.expressiveFastEffects / 2
+                    duration: Style.expressiveDurations.expressiveFastEffects
                     easing.type: Easing.BezierSpline
                     easing.bezierCurve: Style.expressiveCurves.expressiveFastEffects
                 }
@@ -123,7 +124,7 @@ Item {
                     property: "opacity"
                     from: 1
                     to: 0
-                    duration: Style.expressiveDurations.expressiveFastEffects / 2
+                    duration: Style.expressiveDurations.expressiveFastEffects
                     easing.type: Easing.BezierSpline
                     easing.bezierCurve: Style.expressiveCurves.expressiveFastEffects
                 }

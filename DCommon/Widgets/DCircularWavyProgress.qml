@@ -25,6 +25,12 @@ Item {
     property real spinDegreesPerCycle: Style.circularWavyProgressGlobalRotationTarget
     property int rotationStepDuration: Style.circularWavyProgressRotationStepDuration
     property int rotationStepInterval: Style.circularWavyProgressRotationStepDelay
+    // Below 360 the ring is an open arc.
+    property real spanAngle: 360
+    // Below 1 (a fraction of the span) the track ends at the limit and the rest is dimmed; progress at or past it draws unlimited.
+    property real limit: 1
+    property bool showLimitMarker: false
+    property bool wavy: true
 
     property real currentAmplitude: 0
     property real waveOffset: 0
@@ -37,6 +43,8 @@ Item {
         return isNaN(v) ? 0 : Math.max(0, Math.min(1, v));
     }
     readonly property real targetAmplitude: {
+        if (!wavy)
+            return 0;
         const v = indeterminate ? indeterminateAmplitude : amplitudeFunction(clampedProgress);
         return Math.max(0, Math.min(1, v));
     }
@@ -48,7 +56,20 @@ Item {
     readonly property bool waveAnimating: visible && currentAmplitude > 0 && waveSpeed > 0 && wavelength > 0 && width > 0 && height > 0
     readonly property real fullTurn: 2 * Math.PI
     readonly property real ringRadius: Math.max(0, (Math.min(width, height) - strokeWidth) / 2)
-    readonly property real sweepAngle: (indeterminate ? indeterminateSweep : clampedProgress) * fullTurn
+    readonly property bool closed: spanAngle >= 360
+    readonly property real spanRad: closed ? fullTurn : Math.max(0, spanAngle) * Math.PI / 180
+    readonly property bool limited: !indeterminate && limit < 1 && clampedProgress < limit
+    readonly property real limitAngle: Math.max(0, limit) * spanRad
+    readonly property real markerHalf: showLimitMarker ? strokeWidth / 2 : 0
+    // Angles kept clear on each side of the limit so neither neighbor touches it (or the marker).
+    readonly property real limitTrackClearance: ringRadius > 0 ? (trackStrokeWidth / 2 + gapSize + markerHalf) / ringRadius : 0
+    readonly property real limitFillClearance: ringRadius > 0 ? (strokeWidth / 2 + gapSize + markerHalf) / ringRadius : 0
+    readonly property real sweepAngle: {
+        if (indeterminate)
+            return indeterminateSweep * fullTurn;
+        const sweep = clampedProgress * spanRad;
+        return limited ? Math.min(sweep, Math.max(0, limitAngle - limitFillClearance)) : sweep;
+    }
     // Pixels cleared between the progress arc and the track (gap + both round-cap insets).
     readonly property real trackClearance: {
         if (sweepAngle <= 0)
@@ -57,7 +78,9 @@ Item {
         return 2 * Math.min(arcLength, strokeWidth / 2) + Math.min(arcLength, gapSize);
     }
     readonly property real trackStartAngle: sweepAngle + (ringRadius > 0 ? trackClearance / ringRadius : 0)
-    readonly property real trackStopAngle: fullTurn - (ringRadius > 0 ? trackClearance / ringRadius : 0)
+    readonly property real tailAngle: closed ? fullTurn - (ringRadius > 0 ? trackClearance / ringRadius : 0) : spanRad
+    readonly property real trackStopAngle: limited ? limitAngle - limitTrackClearance : tailAngle
+    readonly property real pastStartAngle: limitAngle + limitTrackClearance
 
     implicitWidth: Style.circularWavyProgressSize
     implicitHeight: Style.circularWavyProgressSize
@@ -97,7 +120,7 @@ Item {
         from: 0
         to: 1
         loops: Animation.Infinite
-        running: root.waveAnimating
+        running: root.waveAnimating && !Style.reduceMotion
         duration: Math.max(50, Math.round(root.wavelength / Math.max(root.waveSpeed, 0.0001) * 1000 * root.waveCount))
     }
 
@@ -207,6 +230,13 @@ Item {
         property real showProgress: (root.color.a > 0 && root.sweepAngle > 0) ? 1 : 0
         property vector4d fillColor: Qt.vector4d(root.color.r, root.color.g, root.color.b, root.color.a)
         property vector4d trackColor: Qt.vector4d(root.trackColor.r, root.trackColor.g, root.trackColor.b, root.trackColor.a)
+        property real pastStart: root.pastStartAngle
+        property real pastStop: root.tailAngle
+        property real showPast: (root.limited && root.trackColor.a > 0 && root.tailAngle > root.pastStartAngle) ? 1 : 0
+        property real dimOpacity: 0.5
+        property real markerAngle: root.limitAngle
+        property real markerOn: root.limited && root.showLimitMarker ? 1 : 0
+        property real markerReachPx: root.strokeWidth * 1.5
 
         anchors.fill: parent
         visible: root.ringRadius > 0
