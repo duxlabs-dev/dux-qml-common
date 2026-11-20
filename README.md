@@ -50,7 +50,7 @@ The stubs in `Common/` and `Services/` are the full list of what the library rea
 
 A `Paths` backend builds the URL of a theme icon with `DC.Paths.themeIconUrl(name)`, or `themeIconUrl(name, fallbackName)`, instead of calling `Quickshell.iconPath` itself. On a dux-qt-base that has `Quickshell.iconThemeRevision` the URL carries that revision, so every binding that resolves an icon loads it again when the icon theme changes; on an older one it is the plain `image://icon/<name>`. A backend that memoizes what it resolved drops the memo when `DC.Paths.iconThemeRevision` changes.
 
-The theme's `shapeMorph` and `pillControls` bools are false in the shell's Classic interface style; a theme without them reads as true. `Style.buttonRadius` follows both: no press morph, and one `cornerRadiusL` for every control instead of pills. `DButtonGroup` without pills spaces its segments by `spacingXS` and rounds every corner, so they read as separate buttons.
+The theme's `shapeMorph` and `pillControls` bools are false in the shell's Classic interface style; a theme without them reads as true. `Style.buttonRadius` follows both: no press morph, and one `cornerRadiusL` for every control instead of pills. `DButtonGroup` without pills spaces its segments by `spacingXS` and rounds every corner, so they read as separate buttons. `DButtonGroupSegment` is one of those segments on its own, for connected rows with custom content.
 
 ## Development
 
