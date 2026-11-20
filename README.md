@@ -57,7 +57,7 @@ The theme's `shapeMorph` and `pillControls` bools are false in the shell's Class
 The repo root is a runnable quickshell config with the stubs and a widget gallery:
 
 ```sh
-qs -p /path/to/dank-qml-common
+dms qs -p /path/to/dank-qml-common
 ```
 
 For qmlls, run `dms qs tooling -p .` at the repo root (again after a reboot). With a dux-qt-base that predates the `tooling` command, `rm -f .qmlls.ini && touch .qmlls.ini` once and Quickshell fills it in on the next launch.
