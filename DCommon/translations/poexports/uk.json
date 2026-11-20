@@ -3,16 +3,16 @@
     "%1 items": "%1 елементів"
   },
   "%1 of %2": {
-    "%1 of %2": ""
+    "%1 of %2": "%1 з %2"
   },
   "%1 selected": {
     "%1 selected": "%1 вибрано"
   },
   "%1 × %2": {
-    "%1 × %2": ""
+    "%1 × %2": "%1 × %2"
   },
   "%1, %2": {
-    "%1, %2": ""
+    "%1, %2": "%1, %2"
   },
   "1 item": {
     "1 item": "1 елемент"
@@ -87,7 +87,7 @@
     "Decrease": "Зменшити"
   },
   "Deleted": {
-    "Deleted": ""
+    "Deleted": "Видалено"
   },
   "Descending": {
     "Descending": "За спаданням"
@@ -96,7 +96,7 @@
     "Development": "Розробка"
   },
   "Dimensions": {
-    "Dimensions": ""
+    "Dimensions": "Розміри"
   },
   "Drag to reorder": {
     "Drag to reorder": "Перетягніть для зміни порядку"
@@ -156,7 +156,7 @@
     "Hide password": "Приховати пароль"
   },
   "Hide preview": {
-    "Hide preview": ""
+    "Hide preview": "Приховати попередній перегляд"
   },
   "Hold longer to confirm": {
     "Hold longer to confirm": "Утримуйте довше для підтвердження"
@@ -177,10 +177,10 @@
     "Increase": "Збільшити"
   },
   "Jump to a folder you visited": {
-    "Jump to a folder you visited": ""
+    "Jump to a folder you visited": "Перейти до теки, яку ви відвідували"
   },
   "Last used": {
-    "Last used": ""
+    "Last used": "Останній використаний"
   },
   "List view": {
     "List view": "Вигляд списком"
@@ -225,7 +225,7 @@
     "No locations found": "Локацій не знайдено"
   },
   "Nothing is at this location": {
-    "Nothing is at this location": ""
+    "Nothing is at this location": "За цією адресою нічого немає"
   },
   "Numbers": {
     "Numbers": "Цифри"
@@ -237,7 +237,7 @@
     "Open": "Відкрити"
   },
   "Original location": {
-    "Original location": ""
+    "Original location": "Початкове розташування"
   },
   "Overwrite": {
     "Overwrite": "Перезаписати"
@@ -354,16 +354,16 @@
     "This item no longer exists": "Цього елемента більше не існує"
   },
   "This kind of location is not supported": {
-    "This kind of location is not supported": ""
+    "This kind of location is not supported": "Цей тип розташування не підтримується"
   },
   "Today, %1": {
-    "Today, %1": ""
+    "Today, %1": "Сьогодні, %1"
   },
   "Type": {
     "Type": "Тип"
   },
   "Type a path, ~ or an address such as sftp://host": {
-    "Type a path, ~ or an address such as sftp://host": ""
+    "Type a path, ~ or an address such as sftp://host": "Введіть шлях, ~ або адресу, наприклад sftp://host"
   },
   "Unknown": {
     "Unknown": "Невідомо"
@@ -372,13 +372,13 @@
     "Use this folder": "Використовувати цю теку"
   },
   "Use ~ for your own home folder or type the full path": {
-    "Use ~ for your own home folder or type the full path": ""
+    "Use ~ for your own home folder or type the full path": "Використовуйте ~ для своєї домашньої теки або введіть повний шлях"
   },
   "Workspace": {
     "Workspace": "Робочий простір"
   },
   "Yesterday, %1": {
-    "Yesterday, %1": ""
+    "Yesterday, %1": "Вчора, %1"
   },
   "You do not have permission to do this": {
     "You do not have permission to do this": "У вас немає прав для цього"

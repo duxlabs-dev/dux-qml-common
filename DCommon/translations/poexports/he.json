@@ -3,16 +3,16 @@
     "%1 items": "%1 פריטים"
   },
   "%1 of %2": {
-    "%1 of %2": ""
+    "%1 of %2": "%1 מתוך %2"
   },
   "%1 selected": {
     "%1 selected": "נבחרו %1"
   },
   "%1 × %2": {
-    "%1 × %2": ""
+    "%1 × %2": "%1 × %2"
   },
   "%1, %2": {
-    "%1, %2": ""
+    "%1, %2": "%1, %2"
   },
   "1 item": {
     "1 item": "פריט אחד"
@@ -87,7 +87,7 @@
     "Decrease": "הפחת/י"
   },
   "Deleted": {
-    "Deleted": ""
+    "Deleted": "נמחק"
   },
   "Descending": {
     "Descending": "סדר יורד"
@@ -96,7 +96,7 @@
     "Development": "פיתוח"
   },
   "Dimensions": {
-    "Dimensions": ""
+    "Dimensions": "מימדים"
   },
   "Drag to reorder": {
     "Drag to reorder": "גרירה בכדי לסדר מחדש"
@@ -156,7 +156,7 @@
     "Hide password": "הסתר/י סיסמה"
   },
   "Hide preview": {
-    "Hide preview": ""
+    "Hide preview": "הסתר/י תצוגה מקדימה"
   },
   "Hold longer to confirm": {
     "Hold longer to confirm": "החזק/י לחוץ זמן רב יותר כדי לאשר"
@@ -177,10 +177,10 @@
     "Increase": "הגדל/י"
   },
   "Jump to a folder you visited": {
-    "Jump to a folder you visited": ""
+    "Jump to a folder you visited": "מעבר לתיקייה שביקרת בה"
   },
   "Last used": {
-    "Last used": ""
+    "Last used": "נפתח לאחרונה"
   },
   "List view": {
     "List view": "תצוגת רשימה"
@@ -225,7 +225,7 @@
     "No locations found": "לא נמצאו מיקומים"
   },
   "Nothing is at this location": {
-    "Nothing is at this location": ""
+    "Nothing is at this location": "המיקום המבוקש לא נמצא"
   },
   "Numbers": {
     "Numbers": "מספרים"
@@ -237,7 +237,7 @@
     "Open": "פתח/י"
   },
   "Original location": {
-    "Original location": ""
+    "Original location": "המיקום המקורי"
   },
   "Overwrite": {
     "Overwrite": "החלפה"
@@ -354,16 +354,16 @@
     "This item no longer exists": "הפריט הזה אינו קיים עוד"
   },
   "This kind of location is not supported": {
-    "This kind of location is not supported": ""
+    "This kind of location is not supported": "סוג מיקום זה אינו נתמך"
   },
   "Today, %1": {
-    "Today, %1": ""
+    "Today, %1": "היום, %1"
   },
   "Type": {
     "Type": "סוג"
   },
   "Type a path, ~ or an address such as sftp://host": {
-    "Type a path, ~ or an address such as sftp://host": ""
+    "Type a path, ~ or an address such as sftp://host": "הקלד/י נתיב, ~ או כתובת כגון sftp://host"
   },
   "Unknown": {
     "Unknown": "לא ידוע"
@@ -372,13 +372,13 @@
     "Use this folder": "השתמש/י בתיקייה זו"
   },
   "Use ~ for your own home folder or type the full path": {
-    "Use ~ for your own home folder or type the full path": ""
+    "Use ~ for your own home folder or type the full path": "השתמש/י ב~ עבור תיקיית הבית שלך או הקלד/י את הנתיב המלא"
   },
   "Workspace": {
     "Workspace": "סביבת עבודה"
   },
   "Yesterday, %1": {
-    "Yesterday, %1": ""
+    "Yesterday, %1": "אתמול, בשעה %1"
   },
   "You do not have permission to do this": {
     "You do not have permission to do this": "אין לך הרשאה לבצע את הפעולה הזו"

@@ -27,13 +27,13 @@
     "A name cannot be empty or contain a slash": ""
   },
   "AM": {
-    "AM": ""
+    "AM": "AM"
   },
   "Actions": {
     "Actions": "Acciones"
   },
   "Ascending": {
-    "Ascending": ""
+    "Ascending": "Ascendente"
   },
   "B": {
     "B": "B"
@@ -84,13 +84,13 @@
     "Created": "Creado"
   },
   "Decrease": {
-    "Decrease": ""
+    "Decrease": "Reducir"
   },
   "Deleted": {
     "Deleted": ""
   },
   "Descending": {
-    "Descending": ""
+    "Descending": "Descendente"
   },
   "Development": {
     "Development": "Desarrollo"
@@ -99,7 +99,7 @@
     "Dimensions": ""
   },
   "Drag to reorder": {
-    "Drag to reorder": ""
+    "Drag to reorder": "Arrastrar para reordenar"
   },
   "Edit": {
     "Edit": "Editar"
@@ -114,13 +114,13 @@
     "File": "Archivo"
   },
   "File Already Exists": {
-    "File Already Exists": ""
+    "File Already Exists": "El archivo ya existe"
   },
   "File System": {
     "File System": ""
   },
   "Files - %1": {
-    "Files - %1": ""
+    "Files - %1": "Archivos - %1"
   },
   "Files are unavailable because the file service is not running": {
     "Files are unavailable because the file service is not running": ""
@@ -132,13 +132,13 @@
     "Folder": "Carpeta"
   },
   "Folder name": {
-    "Folder name": "N"
+    "Folder name": "Nombre de carpeta"
   },
   "Forward": {
     "Forward": ""
   },
   "Fun": {
-    "Fun": ""
+    "Fun": "Divertido"
   },
   "GB": {
     "GB": "GB"
@@ -153,7 +153,7 @@
     "Hide keyboard": ""
   },
   "Hide password": {
-    "Hide password": ""
+    "Hide password": "Ocultar contraseña"
   },
   "Hide preview": {
     "Hide preview": ""
@@ -174,7 +174,7 @@
     "Hour": ""
   },
   "Increase": {
-    "Increase": ""
+    "Increase": "Incrementar"
   },
   "Jump to a folder you visited": {
     "Jump to a folder you visited": ""
@@ -201,7 +201,7 @@
     "Media": "Multimedia"
   },
   "Minimize": {
-    "Minimize": ""
+    "Minimize": "Minimizar"
   },
   "Minute": {
     "Minute": ""
@@ -216,7 +216,7 @@
     "Name": "Nombre"
   },
   "Navigation": {
-    "Navigation": ""
+    "Navigation": "Navegación"
   },
   "New folder": {
     "New folder": "Nueva carpeta"
@@ -228,7 +228,7 @@
     "Nothing is at this location": ""
   },
   "Numbers": {
-    "Numbers": ""
+    "Numbers": "Números"
   },
   "OK": {
     "OK": "Ok"
@@ -240,13 +240,13 @@
     "Original location": ""
   },
   "Overwrite": {
-    "Overwrite": ""
+    "Overwrite": "Reemplazar"
   },
   "Owner": {
     "Owner": "Dueño"
   },
   "PM": {
-    "PM": ""
+    "PM": "PM"
   },
   "Permissions": {
     "Permissions": "Permisos"
@@ -258,7 +258,7 @@
     "Power Options": ""
   },
   "Quick Access": {
-    "Quick Access": ""
+    "Quick Access": "Acceso rápido"
   },
   "Reboot": {
     "Reboot": "Reiniciar"
@@ -270,7 +270,7 @@
     "Rename": "Renombrar"
   },
   "Restore": {
-    "Restore": ""
+    "Restore": "Restaurar"
   },
   "Review changes": {
     "Review changes": "Revisar cambios"

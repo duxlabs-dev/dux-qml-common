@@ -1,66 +1,66 @@
 {
   "%1 items": {
-    "%1 items": ""
+    "%1 items": "%1 öge"
   },
   "%1 of %2": {
-    "%1 of %2": ""
+    "%1 of %2": "%1 / %2"
   },
   "%1 selected": {
-    "%1 selected": ""
+    "%1 selected": "%1 seçili"
   },
   "%1 × %2": {
-    "%1 × %2": ""
+    "%1 × %2": "%1 × %2"
   },
   "%1, %2": {
-    "%1, %2": ""
+    "%1, %2": "%1, %2"
   },
   "1 item": {
-    "1 item": ""
+    "1 item": "1 öge"
   },
   "1 selected": {
-    "1 selected": ""
+    "1 selected": "1 seçili"
   },
   "A file with this name already exists. Do you want to overwrite it?": {
-    "A file with this name already exists. Do you want to overwrite it?": ""
+    "A file with this name already exists. Do you want to overwrite it?": "Bu isimde bir dosya zaten var. Üzerine yazmak istiyor musun?"
   },
   "A name cannot be empty or contain a slash": {
-    "A name cannot be empty or contain a slash": ""
+    "A name cannot be empty or contain a slash": "Ad boş olamaz veya eğik çizgi içeremez"
   },
   "AM": {
-    "AM": ""
+    "AM": "ÖÖ"
   },
   "Actions": {
     "Actions": "Eylemler"
   },
   "Ascending": {
-    "Ascending": ""
+    "Ascending": "Artan"
   },
   "B": {
-    "B": ""
+    "B": "B"
   },
   "Back": {
     "Back": "Geri"
   },
   "Backspace": {
-    "Backspace": ""
+    "Backspace": "Backspace"
   },
   "Binary file": {
-    "Binary file": ""
+    "Binary file": "İkili dosya"
   },
   "Broken link": {
-    "Broken link": ""
+    "Broken link": "Bozuk bağlantı"
   },
   "Cancel": {
     "Cancel": "İptal"
   },
   "Choose icon": {
-    "Choose icon": ""
+    "Choose icon": "Simge seç"
   },
   "Clear": {
     "Clear": "Temizle"
   },
   "Clear the selection": {
-    "Clear the selection": ""
+    "Clear the selection": "Seçimi temizle"
   },
   "Close": {
     "Close": "Kapat"
@@ -81,34 +81,34 @@
     "Create": "Yap"
   },
   "Created": {
-    "Created": ""
+    "Created": "Oluşturuldu"
   },
   "Decrease": {
     "Decrease": "Azalt"
   },
   "Deleted": {
-    "Deleted": ""
+    "Deleted": "Silinme"
   },
   "Descending": {
-    "Descending": ""
+    "Descending": "Azalan"
   },
   "Development": {
     "Development": "Geliştirme"
   },
   "Dimensions": {
-    "Dimensions": ""
+    "Dimensions": "Boyutlar"
   },
   "Drag to reorder": {
-    "Drag to reorder": ""
+    "Drag to reorder": "Sıralamak için sürükle"
   },
   "Edit": {
     "Edit": "Düzenle"
   },
   "Enter": {
-    "Enter": ""
+    "Enter": "Enter"
   },
   "Enter filename...": {
-    "Enter filename...": ""
+    "Enter filename...": "Dosya adı gir..."
   },
   "File": {
     "File": "Dosya"
@@ -117,46 +117,46 @@
     "File Already Exists": "Dosya Zaten Mevcut"
   },
   "File System": {
-    "File System": ""
+    "File System": "Dosya Sistemi"
   },
   "Files - %1": {
     "Files - %1": "Dosyalar - %1"
   },
   "Files are unavailable because the file service is not running": {
-    "Files are unavailable because the file service is not running": ""
+    "Files are unavailable because the file service is not running": "Dosya hizmeti çalışmadığı için dosyalar kullanılamıyor"
   },
   "First %1 of %2": {
-    "First %1 of %2": ""
+    "First %1 of %2": "%2 içinden ilk %1"
   },
   "Folder": {
     "Folder": "Klasör"
   },
   "Folder name": {
-    "Folder name": ""
+    "Folder name": "Klasör adı"
   },
   "Forward": {
-    "Forward": ""
+    "Forward": "İleri"
   },
   "Fun": {
-    "Fun": ""
+    "Fun": "Eğlence"
   },
   "GB": {
-    "GB": ""
+    "GB": "GB"
   },
   "Grid view": {
-    "Grid view": ""
+    "Grid view": "Izgara görünümü"
   },
   "Hibernate": {
     "Hibernate": "Hazırda Beklet"
   },
   "Hide keyboard": {
-    "Hide keyboard": ""
+    "Hide keyboard": "Klavyeyi gizle"
   },
   "Hide password": {
-    "Hide password": ""
+    "Hide password": "Şifreyi gizle"
   },
   "Hide preview": {
-    "Hide preview": ""
+    "Hide preview": "Önizlemeyi gizle"
   },
   "Hold longer to confirm": {
     "Hold longer to confirm": "Onaylamak için daha uzun süre basılı tutun"
@@ -171,19 +171,19 @@
     "Home": "Ev"
   },
   "Hour": {
-    "Hour": ""
+    "Hour": "Saat"
   },
   "Increase": {
-    "Increase": ""
+    "Increase": "Artır"
   },
   "Jump to a folder you visited": {
-    "Jump to a folder you visited": ""
+    "Jump to a folder you visited": "Ziyaret ettiğin bir klasöre atla"
   },
   "Last used": {
-    "Last used": ""
+    "Last used": "Son kullanım"
   },
   "List view": {
-    "List view": ""
+    "List view": "Liste görünümü"
   },
   "Location": {
     "Location": "Konum"
@@ -192,7 +192,7 @@
     "Log Out": "Çıkış"
   },
   "MB": {
-    "MB": ""
+    "MB": "MB"
   },
   "Maximize": {
     "Maximize": "Maksimize et"
@@ -201,10 +201,10 @@
     "Media": "Medya"
   },
   "Minimize": {
-    "Minimize": ""
+    "Minimize": "Küçült"
   },
   "Minute": {
-    "Minute": ""
+    "Minute": "Dakika"
   },
   "Modified": {
     "Modified": "Değiştirilmiş"
@@ -216,19 +216,19 @@
     "Name": "İsim"
   },
   "Navigation": {
-    "Navigation": ""
+    "Navigation": "Gezinme"
   },
   "New folder": {
-    "New folder": ""
+    "New folder": "Yeni klasör"
   },
   "No locations found": {
-    "No locations found": ""
+    "No locations found": "Konum bulunamadı"
   },
   "Nothing is at this location": {
-    "Nothing is at this location": ""
+    "Nothing is at this location": "Bu konumda bir şey yok"
   },
   "Numbers": {
-    "Numbers": ""
+    "Numbers": "Sayılar"
   },
   "OK": {
     "OK": "Tamam"
@@ -237,19 +237,19 @@
     "Open": "Aç"
   },
   "Original location": {
-    "Original location": ""
+    "Original location": "Özgün konum"
   },
   "Overwrite": {
-    "Overwrite": ""
+    "Overwrite": "Üzerine yaz"
   },
   "Owner": {
-    "Owner": ""
+    "Owner": "Sahip"
   },
   "PM": {
-    "PM": ""
+    "PM": "ÖS"
   },
   "Permissions": {
-    "Permissions": ""
+    "Permissions": "İzinler"
   },
   "Power Off": {
     "Power Off": "Kapat"
@@ -258,7 +258,7 @@
     "Power Options": "Güç Ayarları"
   },
   "Quick Access": {
-    "Quick Access": ""
+    "Quick Access": "Hızlı Erişim"
   },
   "Reboot": {
     "Reboot": "Yeniden Başlat"
@@ -270,37 +270,37 @@
     "Rename": "Yeniden Adlandır"
   },
   "Restore": {
-    "Restore": ""
+    "Restore": "Geri yükle"
   },
   "Review changes": {
-    "Review changes": ""
+    "Review changes": "Değişiklikleri incele"
   },
   "Saturation %1%, brightness %2%": {
-    "Saturation %1%, brightness %2%": ""
+    "Saturation %1%, brightness %2%": "Doygunluk %1%, parlaklık %2%"
   },
   "Save": {
     "Save": "Kaydet"
   },
   "Search for a location...": {
-    "Search for a location...": ""
+    "Search for a location...": "Konum ara..."
   },
   "Search...": {
     "Search...": "Ara..."
   },
   "Searching...": {
-    "Searching...": ""
+    "Searching...": "Aranıyor..."
   },
   "Select File": {
     "Select File": "Dosya Seç"
   },
   "Select time": {
-    "Select time": ""
+    "Select time": "Saat seç"
   },
   "Shift": {
-    "Shift": ""
+    "Shift": "Shift"
   },
   "Show hidden files": {
-    "Show hidden files": ""
+    "Show hidden files": "Gizli dosyaları göster"
   },
   "Show password": {
     "Show password": "Şifreyi göster"
@@ -312,7 +312,7 @@
     "Sort By": "Şuna Göre Sırala"
   },
   "Space": {
-    "Space": ""
+    "Space": "Boşluk"
   },
   "Status": {
     "Status": "Durum"
@@ -327,66 +327,66 @@
     "System": "Sistem"
   },
   "TB": {
-    "TB": ""
+    "TB": "TB"
   },
   "This folder could not be opened": {
-    "This folder could not be opened": ""
+    "This folder could not be opened": "Bu klasör açılamadı"
   },
   "This folder is empty": {
-    "This folder is empty": ""
+    "This folder is empty": "Bu klasör boş"
   },
   "This folder no longer exists": {
-    "This folder no longer exists": ""
+    "This folder no longer exists": "Bu klasör artık yok"
   },
   "This item already exists": {
-    "This item already exists": ""
+    "This item already exists": "Bu öge zaten var"
   },
   "This item cannot be moved here directly": {
-    "This item cannot be moved here directly": ""
+    "This item cannot be moved here directly": "Bu öge buraya doğrudan taşınamaz"
   },
   "This item could not be handled": {
-    "This item could not be handled": ""
+    "This item could not be handled": "Bu öge işlenemedi"
   },
   "This item is in use": {
-    "This item is in use": ""
+    "This item is in use": "Bu öge kullanımda"
   },
   "This item no longer exists": {
-    "This item no longer exists": ""
+    "This item no longer exists": "Bu öge artık yok"
   },
   "This kind of location is not supported": {
-    "This kind of location is not supported": ""
+    "This kind of location is not supported": "Bu tür bir konum desteklenmiyor"
   },
   "Today, %1": {
-    "Today, %1": ""
+    "Today, %1": "Bugün, %1"
   },
   "Type": {
     "Type": "Tip"
   },
   "Type a path, ~ or an address such as sftp://host": {
-    "Type a path, ~ or an address such as sftp://host": ""
+    "Type a path, ~ or an address such as sftp://host": "Bir yol, ~ veya sftp://sunucu gibi bir adres yaz"
   },
   "Unknown": {
     "Unknown": "Bilinmeyen"
   },
   "Use this folder": {
-    "Use this folder": ""
+    "Use this folder": "Bu klasörü kullan"
   },
   "Use ~ for your own home folder or type the full path": {
-    "Use ~ for your own home folder or type the full path": ""
+    "Use ~ for your own home folder or type the full path": "Kendi ev klasörün için ~ kullan veya tam yolu yaz"
   },
   "Workspace": {
     "Workspace": "Çalışma Alanı"
   },
   "Yesterday, %1": {
-    "Yesterday, %1": ""
+    "Yesterday, %1": "Dün, %1"
   },
   "You do not have permission to do this": {
-    "You do not have permission to do this": ""
+    "You do not have permission to do this": "Bunu yapma iznin yok"
   },
   "You do not have permission to view this folder": {
-    "You do not have permission to view this folder": ""
+    "You do not have permission to view this folder": "Bu klasörü görüntüleme iznin yok"
   },
   "kB": {
-    "kB": ""
+    "kB": "kB"
   }
 }

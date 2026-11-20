@@ -3,16 +3,16 @@
     "%1 items": "%1 عناصر"
   },
   "%1 of %2": {
-    "%1 of %2": ""
+    "%1 of %2": "%1 من %2"
   },
   "%1 selected": {
     "%1 selected": "تم تحديد %1"
   },
   "%1 × %2": {
-    "%1 × %2": ""
+    "%1 × %2": "%1 × %2"
   },
   "%1, %2": {
-    "%1, %2": ""
+    "%1, %2": "%1، %2"
   },
   "1 item": {
     "1 item": "عنصر واحد"
@@ -87,7 +87,7 @@
     "Decrease": "إنقاص"
   },
   "Deleted": {
-    "Deleted": ""
+    "Deleted": "محذوف"
   },
   "Descending": {
     "Descending": "تنازلي"
@@ -96,7 +96,7 @@
     "Development": "البرمجة"
   },
   "Dimensions": {
-    "Dimensions": ""
+    "Dimensions": "الأبعاد"
   },
   "Drag to reorder": {
     "Drag to reorder": "اسحب لإعادة الترتيب"
@@ -156,7 +156,7 @@
     "Hide password": "إخفاء كلمة المرور"
   },
   "Hide preview": {
-    "Hide preview": ""
+    "Hide preview": "إخفاء المعاينة"
   },
   "Hold longer to confirm": {
     "Hold longer to confirm": "اضغط لفترة أطول للتأكيد"
@@ -177,10 +177,10 @@
     "Increase": "زيادة"
   },
   "Jump to a folder you visited": {
-    "Jump to a folder you visited": ""
+    "Jump to a folder you visited": "الانتقال إلى مجلد قمت بزيارته"
   },
   "Last used": {
-    "Last used": ""
+    "Last used": "آخر استخدام"
   },
   "List view": {
     "List view": "عرض القائمة"
@@ -225,7 +225,7 @@
     "No locations found": "لم يتم العثور على مواقع"
   },
   "Nothing is at this location": {
-    "Nothing is at this location": ""
+    "Nothing is at this location": "لا يوجد شيء في هذا الموقع"
   },
   "Numbers": {
     "Numbers": "أرقام"
@@ -237,7 +237,7 @@
     "Open": "فتح"
   },
   "Original location": {
-    "Original location": ""
+    "Original location": "الموقع الأصلي"
   },
   "Overwrite": {
     "Overwrite": "استبدال"
@@ -354,16 +354,16 @@
     "This item no longer exists": "هذا العنصر لم يعد موجوداً"
   },
   "This kind of location is not supported": {
-    "This kind of location is not supported": ""
+    "This kind of location is not supported": "هذا النوع من المواقع غير مدعوم"
   },
   "Today, %1": {
-    "Today, %1": ""
+    "Today, %1": "اليوم، %1"
   },
   "Type": {
     "Type": "نوع"
   },
   "Type a path, ~ or an address such as sftp://host": {
-    "Type a path, ~ or an address such as sftp://host": ""
+    "Type a path, ~ or an address such as sftp://host": "اكتب مساراً أو ~ أو عنواناً مثل sftp://host"
   },
   "Unknown": {
     "Unknown": "غير معروف"
@@ -372,13 +372,13 @@
     "Use this folder": "استخدام هذا المجلد"
   },
   "Use ~ for your own home folder or type the full path": {
-    "Use ~ for your own home folder or type the full path": ""
+    "Use ~ for your own home folder or type the full path": "استخدم ~ لمجلدك الرئيسي أو اكتب المسار الكامل"
   },
   "Workspace": {
     "Workspace": "سطح المكتب"
   },
   "Yesterday, %1": {
-    "Yesterday, %1": ""
+    "Yesterday, %1": "أمس، %1"
   },
   "You do not have permission to do this": {
     "You do not have permission to do this": "ليس لديك إذن للقيام بذلك"

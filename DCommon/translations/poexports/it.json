@@ -3,16 +3,16 @@
     "%1 items": "%1 elementi"
   },
   "%1 of %2": {
-    "%1 of %2": ""
+    "%1 of %2": "%1 di %2"
   },
   "%1 selected": {
     "%1 selected": "%1 selezionati"
   },
   "%1 × %2": {
-    "%1 × %2": ""
+    "%1 × %2": "%1 × %2"
   },
   "%1, %2": {
-    "%1, %2": ""
+    "%1, %2": "%1, %2"
   },
   "1 item": {
     "1 item": "1 elemento"
@@ -87,7 +87,7 @@
     "Decrease": "Diminuisci"
   },
   "Deleted": {
-    "Deleted": ""
+    "Deleted": "Eliminato"
   },
   "Descending": {
     "Descending": "Decrescente"
@@ -96,7 +96,7 @@
     "Development": "Sviluppo"
   },
   "Dimensions": {
-    "Dimensions": ""
+    "Dimensions": "Dimensioni"
   },
   "Drag to reorder": {
     "Drag to reorder": "Trascina per riposizionare"
@@ -156,7 +156,7 @@
     "Hide password": "Nascondi password"
   },
   "Hide preview": {
-    "Hide preview": ""
+    "Hide preview": "Nascondi anteprima"
   },
   "Hold longer to confirm": {
     "Hold longer to confirm": "Tieni premuto più a lungo per confermare"
@@ -177,10 +177,10 @@
     "Increase": "Aumenta"
   },
   "Jump to a folder you visited": {
-    "Jump to a folder you visited": ""
+    "Jump to a folder you visited": "Vai a una cartella visitata"
   },
   "Last used": {
-    "Last used": ""
+    "Last used": "Ultimo utilizzo"
   },
   "List view": {
     "List view": "Vista a elenco"
@@ -225,7 +225,7 @@
     "No locations found": "Nessuna posizione trovata"
   },
   "Nothing is at this location": {
-    "Nothing is at this location": ""
+    "Nothing is at this location": "Non c'è nulla in questa posizione"
   },
   "Numbers": {
     "Numbers": "Numeri"
@@ -237,7 +237,7 @@
     "Open": "Apri"
   },
   "Original location": {
-    "Original location": ""
+    "Original location": "Posizione originale"
   },
   "Overwrite": {
     "Overwrite": "Sovrascrivi"
@@ -354,16 +354,16 @@
     "This item no longer exists": "Questo elemento non esiste più"
   },
   "This kind of location is not supported": {
-    "This kind of location is not supported": ""
+    "This kind of location is not supported": "Questo tipo di posizione non è supportato"
   },
   "Today, %1": {
-    "Today, %1": ""
+    "Today, %1": "Oggi, %1"
   },
   "Type": {
     "Type": "Tipo"
   },
   "Type a path, ~ or an address such as sftp://host": {
-    "Type a path, ~ or an address such as sftp://host": ""
+    "Type a path, ~ or an address such as sftp://host": "Digita un percorso, ~ o un indirizzo come sftp://host"
   },
   "Unknown": {
     "Unknown": "Sconosciuto"
@@ -372,13 +372,13 @@
     "Use this folder": "Usa questa cartella"
   },
   "Use ~ for your own home folder or type the full path": {
-    "Use ~ for your own home folder or type the full path": ""
+    "Use ~ for your own home folder or type the full path": "Usa ~ per la tua cartella home o digita il percorso completo"
   },
   "Workspace": {
     "Workspace": "Spazio di Lavoro"
   },
   "Yesterday, %1": {
-    "Yesterday, %1": ""
+    "Yesterday, %1": "Ieri, %1"
   },
   "You do not have permission to do this": {
     "You do not have permission to do this": "Non hai il permesso per farlo"

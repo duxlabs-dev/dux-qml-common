@@ -3,16 +3,16 @@
     "%1 items": "%1 items"
   },
   "%1 of %2": {
-    "%1 of %2": ""
+    "%1 of %2": "%1 van %2"
   },
   "%1 selected": {
     "%1 selected": "%1 geselecteerd"
   },
   "%1 × %2": {
-    "%1 × %2": ""
+    "%1 × %2": "%1 × %2"
   },
   "%1, %2": {
-    "%1, %2": ""
+    "%1, %2": "%1, %2"
   },
   "1 item": {
     "1 item": "1 item"
@@ -87,7 +87,7 @@
     "Decrease": "Verlagen"
   },
   "Deleted": {
-    "Deleted": ""
+    "Deleted": "Verwijderd"
   },
   "Descending": {
     "Descending": "Aflopend"
@@ -96,7 +96,7 @@
     "Development": "Ontwikkeling"
   },
   "Dimensions": {
-    "Dimensions": ""
+    "Dimensions": "Afmetingen"
   },
   "Drag to reorder": {
     "Drag to reorder": "Sleep om de volgorde te wijzigen"
@@ -156,7 +156,7 @@
     "Hide password": "Wachtwoord verbergen"
   },
   "Hide preview": {
-    "Hide preview": ""
+    "Hide preview": "Voorbeeld verbergen"
   },
   "Hold longer to confirm": {
     "Hold longer to confirm": "Langer ingedrukt houden om te bevestigen"
@@ -177,10 +177,10 @@
     "Increase": "Verhogen"
   },
   "Jump to a folder you visited": {
-    "Jump to a folder you visited": ""
+    "Jump to a folder you visited": "Ga naar een bezochte map"
   },
   "Last used": {
-    "Last used": ""
+    "Last used": "Laatst gebruikt"
   },
   "List view": {
     "List view": "Lijstweergave"
@@ -225,7 +225,7 @@
     "No locations found": "Geen locaties gevonden"
   },
   "Nothing is at this location": {
-    "Nothing is at this location": ""
+    "Nothing is at this location": "Er is niets op deze locatie"
   },
   "Numbers": {
     "Numbers": "Cijfers"
@@ -237,7 +237,7 @@
     "Open": "Openen"
   },
   "Original location": {
-    "Original location": ""
+    "Original location": "Oorspronkelijke locatie"
   },
   "Overwrite": {
     "Overwrite": "Overschrijven"
@@ -354,16 +354,16 @@
     "This item no longer exists": "Dit item bestaat niet meer"
   },
   "This kind of location is not supported": {
-    "This kind of location is not supported": ""
+    "This kind of location is not supported": "Dit soort locatie wordt niet ondersteund"
   },
   "Today, %1": {
-    "Today, %1": ""
+    "Today, %1": "Vandaag, %1"
   },
   "Type": {
     "Type": "Type"
   },
   "Type a path, ~ or an address such as sftp://host": {
-    "Type a path, ~ or an address such as sftp://host": ""
+    "Type a path, ~ or an address such as sftp://host": "Typ een pad, ~ of een adres zoals sftp://host"
   },
   "Unknown": {
     "Unknown": "Onbekend"
@@ -372,13 +372,13 @@
     "Use this folder": "Deze map gebruiken"
   },
   "Use ~ for your own home folder or type the full path": {
-    "Use ~ for your own home folder or type the full path": ""
+    "Use ~ for your own home folder or type the full path": "Gebruik ~ voor je eigen persoonlijke map of typ het volledige pad"
   },
   "Workspace": {
     "Workspace": "Werkblad"
   },
   "Yesterday, %1": {
-    "Yesterday, %1": ""
+    "Yesterday, %1": "Gisteren, %1"
   },
   "You do not have permission to do this": {
     "You do not have permission to do this": "Je hebt geen toestemming om dit te doen"

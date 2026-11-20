@@ -1,66 +1,66 @@
 {
   "%1 items": {
-    "%1 items": ""
+    "%1 items": "%1 itens"
   },
   "%1 of %2": {
-    "%1 of %2": ""
+    "%1 of %2": "%1 de %2"
   },
   "%1 selected": {
-    "%1 selected": ""
+    "%1 selected": "%1 selecionados"
   },
   "%1 × %2": {
-    "%1 × %2": ""
+    "%1 × %2": "%1 × %2"
   },
   "%1, %2": {
-    "%1, %2": ""
+    "%1, %2": "%1, %2"
   },
   "1 item": {
-    "1 item": ""
+    "1 item": "1 item"
   },
   "1 selected": {
-    "1 selected": ""
+    "1 selected": "1 selecionado"
   },
   "A file with this name already exists. Do you want to overwrite it?": {
-    "A file with this name already exists. Do you want to overwrite it?": ""
+    "A file with this name already exists. Do you want to overwrite it?": "Já existe um arquivo com este nome. Deseja sobrescrevê-lo?"
   },
   "A name cannot be empty or contain a slash": {
-    "A name cannot be empty or contain a slash": ""
+    "A name cannot be empty or contain a slash": "Um nome não pode estar vazio nem conter uma barra"
   },
   "AM": {
-    "AM": ""
+    "AM": "AM"
   },
   "Actions": {
     "Actions": "Ações"
   },
   "Ascending": {
-    "Ascending": ""
+    "Ascending": "Crescente"
   },
   "B": {
-    "B": ""
+    "B": "B"
   },
   "Back": {
     "Back": "Voltar"
   },
   "Backspace": {
-    "Backspace": ""
+    "Backspace": "Backspace"
   },
   "Binary file": {
-    "Binary file": ""
+    "Binary file": "Arquivo binário"
   },
   "Broken link": {
-    "Broken link": ""
+    "Broken link": "Link quebrado"
   },
   "Cancel": {
     "Cancel": "Cancelar"
   },
   "Choose icon": {
-    "Choose icon": ""
+    "Choose icon": "Escolher ícone"
   },
   "Clear": {
     "Clear": "Limpar"
   },
   "Clear the selection": {
-    "Clear the selection": ""
+    "Clear the selection": "Limpar a seleção"
   },
   "Close": {
     "Close": "Fechar"
@@ -69,7 +69,7 @@
     "Color": "Cor"
   },
   "Communication": {
-    "Communication": ""
+    "Communication": "Comunicação"
   },
   "Confirm": {
     "Confirm": "Confirmar"
@@ -81,82 +81,82 @@
     "Create": "Criar"
   },
   "Created": {
-    "Created": ""
+    "Created": "Criado"
   },
   "Decrease": {
-    "Decrease": ""
+    "Decrease": "Diminuir"
   },
   "Deleted": {
-    "Deleted": ""
+    "Deleted": "Excluído"
   },
   "Descending": {
-    "Descending": ""
+    "Descending": "Decrescente"
   },
   "Development": {
     "Development": "Desenvolvimento"
   },
   "Dimensions": {
-    "Dimensions": ""
+    "Dimensions": "Dimensões"
   },
   "Drag to reorder": {
-    "Drag to reorder": ""
+    "Drag to reorder": "Arraste para reordenar"
   },
   "Edit": {
     "Edit": "Editar"
   },
   "Enter": {
-    "Enter": ""
+    "Enter": "Enter"
   },
   "Enter filename...": {
-    "Enter filename...": ""
+    "Enter filename...": "Digite o nome do arquivo..."
   },
   "File": {
     "File": "Arquivo"
   },
   "File Already Exists": {
-    "File Already Exists": ""
+    "File Already Exists": "Arquivo Já Existe"
   },
   "File System": {
-    "File System": ""
+    "File System": "Sistema de Arquivos"
   },
   "Files - %1": {
-    "Files - %1": ""
+    "Files - %1": "Arquivos - %1"
   },
   "Files are unavailable because the file service is not running": {
-    "Files are unavailable because the file service is not running": ""
+    "Files are unavailable because the file service is not running": "Os arquivos estão indisponíveis porque o serviço de arquivos não está em execução"
   },
   "First %1 of %2": {
-    "First %1 of %2": ""
+    "First %1 of %2": "Primeiros %1 de %2"
   },
   "Folder": {
     "Folder": "Pasta"
   },
   "Folder name": {
-    "Folder name": ""
+    "Folder name": "Nome da pasta"
   },
   "Forward": {
-    "Forward": ""
+    "Forward": "Avançar"
   },
   "Fun": {
-    "Fun": ""
+    "Fun": "Diversão"
   },
   "GB": {
-    "GB": ""
+    "GB": "GB"
   },
   "Grid view": {
-    "Grid view": ""
+    "Grid view": "Visualização em grade"
   },
   "Hibernate": {
     "Hibernate": "Hibernar"
   },
   "Hide keyboard": {
-    "Hide keyboard": ""
+    "Hide keyboard": "Ocultar teclado"
   },
   "Hide password": {
-    "Hide password": ""
+    "Hide password": "Ocultar senha"
   },
   "Hide preview": {
-    "Hide preview": ""
+    "Hide preview": "Ocultar pré-visualização"
   },
   "Hold longer to confirm": {
     "Hold longer to confirm": "Mantenha pressionado por mais tempo para confirmar"
@@ -168,22 +168,22 @@
     "Hold to confirm (%1s)": "Manter pressionado para confirmar (%1s)"
   },
   "Home": {
-    "Home": ""
+    "Home": "Início"
   },
   "Hour": {
-    "Hour": ""
+    "Hour": "Hora"
   },
   "Increase": {
-    "Increase": ""
+    "Increase": "Aumentar"
   },
   "Jump to a folder you visited": {
-    "Jump to a folder you visited": ""
+    "Jump to a folder you visited": "Ir para uma pasta que você visitou"
   },
   "Last used": {
-    "Last used": ""
+    "Last used": "Último uso"
   },
   "List view": {
-    "List view": ""
+    "List view": "Visualização em lista"
   },
   "Location": {
     "Location": "Localização"
@@ -192,7 +192,7 @@
     "Log Out": "Sair"
   },
   "MB": {
-    "MB": ""
+    "MB": "MB"
   },
   "Maximize": {
     "Maximize": "Maximizar"
@@ -204,31 +204,31 @@
     "Minimize": "Minimizar"
   },
   "Minute": {
-    "Minute": ""
+    "Minute": "Minuto"
   },
   "Modified": {
     "Modified": "Modificado"
   },
   "Move to Trash": {
-    "Move to Trash": ""
+    "Move to Trash": "Mover para a Lixeira"
   },
   "Name": {
     "Name": "Nome"
   },
   "Navigation": {
-    "Navigation": ""
+    "Navigation": "Navegação"
   },
   "New folder": {
-    "New folder": ""
+    "New folder": "Nova pasta"
   },
   "No locations found": {
-    "No locations found": ""
+    "No locations found": "Nenhum local encontrado"
   },
   "Nothing is at this location": {
-    "Nothing is at this location": ""
+    "Nothing is at this location": "Não há nada neste local"
   },
   "Numbers": {
-    "Numbers": ""
+    "Numbers": "Números"
   },
   "OK": {
     "OK": "OK"
@@ -237,28 +237,28 @@
     "Open": "Aberto"
   },
   "Original location": {
-    "Original location": ""
+    "Original location": "Local original"
   },
   "Overwrite": {
-    "Overwrite": ""
+    "Overwrite": "Sobrescrever"
   },
   "Owner": {
-    "Owner": ""
+    "Owner": "Proprietário"
   },
   "PM": {
-    "PM": ""
+    "PM": "PM"
   },
   "Permissions": {
-    "Permissions": ""
+    "Permissions": "Permissões"
   },
   "Power Off": {
     "Power Off": "Desligar"
   },
   "Power Options": {
-    "Power Options": ""
+    "Power Options": "Opções de Energia"
   },
   "Quick Access": {
-    "Quick Access": ""
+    "Quick Access": "Acesso Rápido"
   },
   "Reboot": {
     "Reboot": "Reiniciar"
@@ -273,37 +273,37 @@
     "Restore": "Restaurar"
   },
   "Review changes": {
-    "Review changes": ""
+    "Review changes": "Revisar alterações"
   },
   "Saturation %1%, brightness %2%": {
-    "Saturation %1%, brightness %2%": ""
+    "Saturation %1%, brightness %2%": "Saturação %1%, brilho %2%"
   },
   "Save": {
     "Save": "Salvar"
   },
   "Search for a location...": {
-    "Search for a location...": ""
+    "Search for a location...": "Pesquisar um local..."
   },
   "Search...": {
     "Search...": "Buscar..."
   },
   "Searching...": {
-    "Searching...": ""
+    "Searching...": "Pesquisando..."
   },
   "Select File": {
     "Select File": "Selecionar Arquivo"
   },
   "Select time": {
-    "Select time": ""
+    "Select time": "Selecionar hora"
   },
   "Shift": {
-    "Shift": ""
+    "Shift": "Shift"
   },
   "Show hidden files": {
-    "Show hidden files": ""
+    "Show hidden files": "Mostrar arquivos ocultos"
   },
   "Show password": {
-    "Show password": ""
+    "Show password": "Mostrar senha"
   },
   "Size": {
     "Size": "Tamanho"
@@ -312,7 +312,7 @@
     "Sort By": "Ordenar Por"
   },
   "Space": {
-    "Space": ""
+    "Space": "Espaço"
   },
   "Status": {
     "Status": "Status"
@@ -327,66 +327,66 @@
     "System": "Sistema"
   },
   "TB": {
-    "TB": ""
+    "TB": "TB"
   },
   "This folder could not be opened": {
-    "This folder could not be opened": ""
+    "This folder could not be opened": "Não foi possível abrir esta pasta"
   },
   "This folder is empty": {
-    "This folder is empty": ""
+    "This folder is empty": "Esta pasta está vazia"
   },
   "This folder no longer exists": {
-    "This folder no longer exists": ""
+    "This folder no longer exists": "Esta pasta não existe mais"
   },
   "This item already exists": {
-    "This item already exists": ""
+    "This item already exists": "Este item já existe"
   },
   "This item cannot be moved here directly": {
-    "This item cannot be moved here directly": ""
+    "This item cannot be moved here directly": "Este item não pode ser movido para cá diretamente"
   },
   "This item could not be handled": {
-    "This item could not be handled": ""
+    "This item could not be handled": "Não foi possível processar este item"
   },
   "This item is in use": {
-    "This item is in use": ""
+    "This item is in use": "Este item está em uso"
   },
   "This item no longer exists": {
-    "This item no longer exists": ""
+    "This item no longer exists": "Este item não existe mais"
   },
   "This kind of location is not supported": {
-    "This kind of location is not supported": ""
+    "This kind of location is not supported": "Este tipo de local não é suportado"
   },
   "Today, %1": {
-    "Today, %1": ""
+    "Today, %1": "Hoje, %1"
   },
   "Type": {
     "Type": "Tipo"
   },
   "Type a path, ~ or an address such as sftp://host": {
-    "Type a path, ~ or an address such as sftp://host": ""
+    "Type a path, ~ or an address such as sftp://host": "Digite um caminho, ~ ou um endereço como sftp://host"
   },
   "Unknown": {
     "Unknown": "Desconhecido"
   },
   "Use this folder": {
-    "Use this folder": ""
+    "Use this folder": "Usar esta pasta"
   },
   "Use ~ for your own home folder or type the full path": {
-    "Use ~ for your own home folder or type the full path": ""
+    "Use ~ for your own home folder or type the full path": "Use ~ para a sua própria pasta home ou digite o caminho completo"
   },
   "Workspace": {
     "Workspace": "Área de Trabalho"
   },
   "Yesterday, %1": {
-    "Yesterday, %1": ""
+    "Yesterday, %1": "Ontem, %1"
   },
   "You do not have permission to do this": {
-    "You do not have permission to do this": ""
+    "You do not have permission to do this": "Você não tem permissão para fazer isso"
   },
   "You do not have permission to view this folder": {
-    "You do not have permission to view this folder": ""
+    "You do not have permission to view this folder": "Você não tem permissão para ver esta pasta"
   },
   "kB": {
-    "kB": ""
+    "kB": "kB"
   }
 }

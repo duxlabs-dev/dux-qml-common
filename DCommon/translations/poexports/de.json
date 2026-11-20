@@ -3,16 +3,16 @@
     "%1 items": "%1 Elemente"
   },
   "%1 of %2": {
-    "%1 of %2": ""
+    "%1 of %2": "%1 von %2"
   },
   "%1 selected": {
     "%1 selected": "%1 ausgewählt"
   },
   "%1 × %2": {
-    "%1 × %2": ""
+    "%1 × %2": "%1 × %2"
   },
   "%1, %2": {
-    "%1, %2": ""
+    "%1, %2": "%1, %2"
   },
   "1 item": {
     "1 item": "1 Element"
@@ -21,7 +21,7 @@
     "1 selected": "1 ausgewählt"
   },
   "A file with this name already exists. Do you want to overwrite it?": {
-    "A file with this name already exists. Do you want to overwrite it?": "Eine Datei mit diesem Namen existiert bereits. Möchten Sie sie überschreiben?"
+    "A file with this name already exists. Do you want to overwrite it?": "Eine Datei mit diesem Name existiert bereits. Möchten Sie sie überschreiben?"
   },
   "A name cannot be empty or contain a slash": {
     "A name cannot be empty or contain a slash": "Ein Name darf nicht leer sein oder einen Schrägstrich enthalten"
@@ -87,7 +87,7 @@
     "Decrease": "Verringern"
   },
   "Deleted": {
-    "Deleted": ""
+    "Deleted": "Gelöscht"
   },
   "Descending": {
     "Descending": "Absteigend"
@@ -96,7 +96,7 @@
     "Development": "Entwicklung"
   },
   "Dimensions": {
-    "Dimensions": ""
+    "Dimensions": "Dimensionen"
   },
   "Drag to reorder": {
     "Drag to reorder": "Zum Neuordnen ziehen"
@@ -153,19 +153,19 @@
     "Hide keyboard": "Tastatur ausblenden"
   },
   "Hide password": {
-    "Hide password": "Passwort verbergen"
+    "Hide password": "Passwort ausblenden"
   },
   "Hide preview": {
-    "Hide preview": ""
+    "Hide preview": "Vorschau ausblenden"
   },
   "Hold longer to confirm": {
-    "Hold longer to confirm": "Zum Bestätigen länger halten"
+    "Hold longer to confirm": "Zum Bestätigen länger gedrückt halten"
   },
   "Hold to confirm (%1 ms)": {
-    "Hold to confirm (%1 ms)": "Gedrückt halten zum Bestätigen (%1 ms)"
+    "Hold to confirm (%1 ms)": "Zum Bestätigen gedrückt halten (%1 ms)"
   },
   "Hold to confirm (%1s)": {
-    "Hold to confirm (%1s)": "Zum Bestätigen halten (%1s)"
+    "Hold to confirm (%1s)": "Zum Bestätigen gedrückt halten (%1 Sek.)"
   },
   "Home": {
     "Home": "Home"
@@ -177,10 +177,10 @@
     "Increase": "Erhöhen"
   },
   "Jump to a folder you visited": {
-    "Jump to a folder you visited": ""
+    "Jump to a folder you visited": "Zu einem von Ihnen besuchten Ordner springen"
   },
   "Last used": {
-    "Last used": ""
+    "Last used": "Zuletzt verwendet"
   },
   "List view": {
     "List view": "Listenansicht"
@@ -189,7 +189,7 @@
     "Location": "Ort"
   },
   "Log Out": {
-    "Log Out": "Ausloggen"
+    "Log Out": "Abmelden"
   },
   "MB": {
     "MB": "MB"
@@ -207,7 +207,7 @@
     "Minute": "Minute"
   },
   "Modified": {
-    "Modified": "Geändert"
+    "Modified": "Modifiziert"
   },
   "Move to Trash": {
     "Move to Trash": "In Papierkorb verschieben"
@@ -225,7 +225,7 @@
     "No locations found": "Keine Orte gefunden"
   },
   "Nothing is at this location": {
-    "Nothing is at this location": ""
+    "Nothing is at this location": "An diesem Ort befindet sich nichts"
   },
   "Numbers": {
     "Numbers": "Zahlen"
@@ -237,7 +237,7 @@
     "Open": "Öffnen"
   },
   "Original location": {
-    "Original location": ""
+    "Original location": "Ursprünglicher Ort"
   },
   "Overwrite": {
     "Overwrite": "Überschreiben"
@@ -318,7 +318,7 @@
     "Status": "Status"
   },
   "Suspend": {
-    "Suspend": "Ruhemodus"
+    "Suspend": "Bereitschaft"
   },
   "Switch User": {
     "Switch User": "Benutzer wechseln"
@@ -348,22 +348,22 @@
     "This item could not be handled": "Dieses Element konnte nicht gehandhabt werden"
   },
   "This item is in use": {
-    "This item is in use": "Dieses Element wird gerade verwendet"
+    "This item is in use": "Dieses Element ist in Verwendung"
   },
   "This item no longer exists": {
     "This item no longer exists": "Dieses Element existiert nicht mehr"
   },
   "This kind of location is not supported": {
-    "This kind of location is not supported": ""
+    "This kind of location is not supported": "Diese Art von Ort wird nicht unterstützt"
   },
   "Today, %1": {
-    "Today, %1": ""
+    "Today, %1": "Heute, %1"
   },
   "Type": {
     "Type": "Typ"
   },
   "Type a path, ~ or an address such as sftp://host": {
-    "Type a path, ~ or an address such as sftp://host": ""
+    "Type a path, ~ or an address such as sftp://host": "Einen Pfad, ~ oder eine Adresse eintippen, wie etwa sftp://host"
   },
   "Unknown": {
     "Unknown": "Unbekannt"
@@ -372,13 +372,13 @@
     "Use this folder": "Diesen Ordner verwenden"
   },
   "Use ~ for your own home folder or type the full path": {
-    "Use ~ for your own home folder or type the full path": ""
+    "Use ~ for your own home folder or type the full path": "Verwenden Sie ~ für Ihren Home-Ordner oder tippen Sie den vollständigen Pfad ein"
   },
   "Workspace": {
     "Workspace": "Arbeitsbereich"
   },
   "Yesterday, %1": {
-    "Yesterday, %1": ""
+    "Yesterday, %1": "Gestern, %1"
   },
   "You do not have permission to do this": {
     "You do not have permission to do this": "Sie haben keine Berechtigung, dies zu tun"

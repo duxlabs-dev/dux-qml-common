@@ -3,16 +3,16 @@
     "%1 items": "%1 elem"
   },
   "%1 of %2": {
-    "%1 of %2": ""
+    "%1 of %2": "%1 / %2"
   },
   "%1 selected": {
     "%1 selected": "%1 kiválasztva"
   },
   "%1 × %2": {
-    "%1 × %2": ""
+    "%1 × %2": "%1 × %2"
   },
   "%1, %2": {
-    "%1, %2": ""
+    "%1, %2": "%1, %2"
   },
   "1 item": {
     "1 item": "1 elem"
@@ -27,7 +27,7 @@
     "A name cannot be empty or contain a slash": "A név nem lehet üres, és nem tartalmazhat perjelet"
   },
   "AM": {
-    "AM": "DE"
+    "AM": "de."
   },
   "Actions": {
     "Actions": "Műveletek"
@@ -87,7 +87,7 @@
     "Decrease": "Csökkentés"
   },
   "Deleted": {
-    "Deleted": ""
+    "Deleted": "Törölve"
   },
   "Descending": {
     "Descending": "Csökkenő"
@@ -96,7 +96,7 @@
     "Development": "Fejlesztés"
   },
   "Dimensions": {
-    "Dimensions": ""
+    "Dimensions": "Méretek"
   },
   "Drag to reorder": {
     "Drag to reorder": "Húzd az átrendezéshez"
@@ -156,7 +156,7 @@
     "Hide password": "Jelszó elrejtése"
   },
   "Hide preview": {
-    "Hide preview": ""
+    "Hide preview": "Előnézet elrejtése"
   },
   "Hold longer to confirm": {
     "Hold longer to confirm": "Tartsd lenyomva a megerősítéshez"
@@ -177,10 +177,10 @@
     "Increase": "Növelés"
   },
   "Jump to a folder you visited": {
-    "Jump to a folder you visited": ""
+    "Jump to a folder you visited": "Ugrás egy korábban meglátogatott mappába"
   },
   "Last used": {
-    "Last used": ""
+    "Last used": "Legutóbb használt"
   },
   "List view": {
     "List view": "Listanézet"
@@ -225,7 +225,7 @@
     "No locations found": "Nem találhatók helyek"
   },
   "Nothing is at this location": {
-    "Nothing is at this location": ""
+    "Nothing is at this location": "Ezen a helyen semmi sincs"
   },
   "Numbers": {
     "Numbers": "Számok"
@@ -237,7 +237,7 @@
     "Open": "Megnyitás"
   },
   "Original location": {
-    "Original location": ""
+    "Original location": "Eredeti hely"
   },
   "Overwrite": {
     "Overwrite": "Felülírás"
@@ -246,7 +246,7 @@
     "Owner": "Tulajdonos"
   },
   "PM": {
-    "PM": "DÉ"
+    "PM": "du."
   },
   "Permissions": {
     "Permissions": "Engedélyek"
@@ -354,16 +354,16 @@
     "This item no longer exists": "Ez az elem már nem létezik"
   },
   "This kind of location is not supported": {
-    "This kind of location is not supported": ""
+    "This kind of location is not supported": "Ez a helytípus nem támogatott"
   },
   "Today, %1": {
-    "Today, %1": ""
+    "Today, %1": "Ma, %1"
   },
   "Type": {
     "Type": "Típus"
   },
   "Type a path, ~ or an address such as sftp://host": {
-    "Type a path, ~ or an address such as sftp://host": ""
+    "Type a path, ~ or an address such as sftp://host": "Írj be egy útvonalat, „~” jelet vagy egy címet, például: sftp://kiszolgalo"
   },
   "Unknown": {
     "Unknown": "Ismeretlen"
@@ -372,13 +372,13 @@
     "Use this folder": "Mappa használata"
   },
   "Use ~ for your own home folder or type the full path": {
-    "Use ~ for your own home folder or type the full path": ""
+    "Use ~ for your own home folder or type the full path": "Használd a „~” jelet a saját mappádhoz, vagy írd be a teljes útvonalat"
   },
   "Workspace": {
     "Workspace": "Munkaterület"
   },
   "Yesterday, %1": {
-    "Yesterday, %1": ""
+    "Yesterday, %1": "Tegnap, %1"
   },
   "You do not have permission to do this": {
     "You do not have permission to do this": "Nincs jogosultságod a művelet végrehajtásához"
