@@ -643,15 +643,22 @@ FocusScope {
         }
     }
 
-    TapHandler {
-        acceptedButtons: Qt.BackButton | Qt.ForwardButton
-        onTapped: (point, button) => {
-            root.focusRequested();
-            if (button === Qt.BackButton) {
-                root.back();
-                return;
+    // Overlay so child Controls (FileItemSurface, PathPill, etc.) cannot swallow Back/Forward presses first
+    Item {
+        anchors.fill: parent
+        z: 1000
+
+        TapHandler {
+            acceptedButtons: Qt.BackButton | Qt.ForwardButton
+            gesturePolicy: TapHandler.WithinBounds
+            onTapped: (point, button) => {
+                root.focusRequested();
+                if (button === Qt.BackButton) {
+                    root.back();
+                    return;
+                }
+                root.forward();
             }
-            root.forward();
         }
     }
 }
