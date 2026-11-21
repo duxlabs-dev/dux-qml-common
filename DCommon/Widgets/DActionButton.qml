@@ -31,7 +31,7 @@ StyledButton {
 
     implicitWidth: buttonSize
     implicitHeight: buttonSize
-    radius: Style.buttonRadius(width, height, buttonSize, pressed, circular)
+    radius: Style.buttonRadius(width - 2 * stateLayerInset, height - 2 * stateLayerInset, buttonSize, pressed, circular) + stateLayerInset
     color: enabled || backgroundColor.a === 0 ? backgroundColor : Style.onSurface_10
     Accessible.role: Accessible.Button
     Accessible.name: tooltipText || iconName
