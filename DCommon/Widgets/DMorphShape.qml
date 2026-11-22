@@ -13,6 +13,10 @@ Item {
     property color color: Style.primary
     // Share of the item's box the shapes fill
     property real fill: 1
+    // Radians
+    property real angle: 0
+    // Draw a square when the theme corner radius is 0, like DMaterialShape
+    property bool respectThemeShape: true
 
     readonly property int samples: 256
     readonly property var profiles: shapes.map(kind => Shapes.polarProfile(kind, samples))
@@ -20,6 +24,7 @@ Item {
         const bounds = Shapes.polarBounds(radii);
         return Qt.point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
     })
+    readonly property bool square: respectThemeShape && Style.shapeScale === 0
     readonly property real shapeScale: Shapes.morphScale(profiles) * fill
 
     implicitWidth: Style.iconButtonSize
@@ -31,6 +36,8 @@ Item {
         width: root.samples
         height: root.shapes.length
         visible: false
+        // Blended edges between texels would corrupt the packed radii at fractional scales
+        antialiasing: false
         onPaint: {
             const context = getContext("2d");
             root.profiles.forEach((radii, row) => radii.forEach((radius, column) => {
@@ -39,6 +46,17 @@ Item {
                     context.fillRect(column, row, 1, 1);
                 }));
         }
+    }
+
+    onProfilesChanged: profileTexture.requestPaint()
+
+    Rectangle {
+        anchors.centerIn: parent
+        width: Math.min(root.width, root.height) * root.fill
+        height: width
+        radius: Style.cornerRadius
+        color: root.color
+        visible: root.square
     }
 
     ShaderEffect {
@@ -55,13 +73,14 @@ Item {
         property real fromRow: fromShape
         property real toRow: toShape
         property real progress: Math.max(0, Math.min(1, root.progress))
-        property real angle: 0
+        property real angle: root.angle
         property real rows: root.shapes.length
         property real samples: root.samples
 
         anchors.centerIn: parent
         width: Math.min(root.width, root.height)
         height: width
+        visible: !root.square
         fragmentShader: Qt.resolvedUrl("../Shaders/qsb/loading_indicator.frag.qsb")
     }
 }
