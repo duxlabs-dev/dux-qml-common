@@ -8,10 +8,13 @@ StyledButton {
     id: root
 
     property string iconName: ""
+    property string appIcon: ""
     property bool submenu: false
     property bool danger: false
     property bool highlighted: false
     property string shortcutText: ""
+
+    readonly property bool hasLeadingIcon: appIcon !== "" || iconName !== ""
 
     readonly property color contentColor: {
         if (!enabled)
@@ -48,9 +51,20 @@ StyledButton {
         anchors.rightMargin: Style.spacingM
         spacing: Style.spacingM
 
+        Loader {
+            anchors.verticalCenter: parent.verticalCenter
+            active: root.appIcon !== ""
+            visible: active
+            sourceComponent: FileIcon {
+                iconName: root.appIcon
+                size: Style.menuItemIconSize
+                color: root.iconColor
+            }
+        }
+
         DIcon {
             anchors.verticalCenter: parent.verticalCenter
-            visible: root.iconName !== ""
+            visible: root.appIcon === "" && root.iconName !== ""
             name: root.iconName
             size: Style.menuItemIconSize
             color: root.iconColor
@@ -58,7 +72,7 @@ StyledButton {
 
         StyledText {
             anchors.verticalCenter: parent.verticalCenter
-            width: parent.width - (root.iconName !== "" ? Style.menuItemIconSize + parent.spacing : 0) - (root.submenu || root.checked ? Style.menuItemIconSize + Style.spacingM : 0) - (hint.visible ? hint.implicitWidth + Style.spacingM : 0)
+            width: parent.width - (root.hasLeadingIcon ? Style.menuItemIconSize + parent.spacing : 0) - (root.submenu || root.checked ? Style.menuItemIconSize + Style.spacingM : 0) - (hint.visible ? hint.implicitWidth + Style.spacingM : 0)
             text: root.text
             color: root.contentColor
             font.pixelSize: Style.fontSizeMedium
