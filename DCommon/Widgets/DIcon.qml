@@ -21,6 +21,11 @@ Item {
     implicitWidth: Math.round(size)
     implicitHeight: Math.round(size)
 
+    // Qt rendering keeps the font's fractional baseline, which leaves the glyph off its em center by this much
+    function emCenterShift() {
+        return height / 2 + size / 2 - icon.baselineOffset;
+    }
+
     onFillChanged: retarget()
     onWeightChanged: retarget()
 

@@ -14,7 +14,7 @@ FocusScope {
     property color descriptionColor: Style.surfaceVariantText
     property bool hideText: false
     property string checkedIcon: "check"
-    property string uncheckedIcon: ""
+    property string uncheckedIcon: Style.switchStateIcons ? "close" : ""
     readonly property string thumbIcon: checked ? checkedIcon : uncheckedIcon
 
     signal clicked
@@ -198,6 +198,8 @@ FocusScope {
             radius: Style.fullRadius(width, height)
             x: input.mirrored ? toggleTrack.width - centerX - width / 2 : centerX - width / 2
             anchors.verticalCenter: parent.verticalCenter
+            // Whole-pixel centering steps the thumb and its icon apart while the size springs
+            anchors.alignWhenCentered: false
 
             color: {
                 if (!toggle.enabled)
@@ -209,6 +211,9 @@ FocusScope {
 
             DIcon {
                 anchors.centerIn: parent
+                anchors.alignWhenCentered: false
+                anchors.verticalCenterOffset: emCenterShift()
+                smoothTransform: true
                 name: toggle.thumbIcon
                 size: Style.iconSizeSmall
                 visible: name !== ""

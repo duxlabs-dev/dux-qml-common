@@ -562,6 +562,7 @@ Singleton {
     readonly property bool popoutElevationEnabled: settings?.popoutElevationEnabled ?? true
     readonly property bool scrollbarsEnabled: settings?.scrollbarsEnabled ?? true
     readonly property bool scrollShadowsEnabled: settings?.scrollShadowsEnabled ?? true
+    readonly property bool switchStateIcons: settings?.switchStateIcons ?? false
     readonly property int textRenderType: settings?.textRenderType ?? Style.TextRenderType.Qt
     readonly property int textRenderQuality: settings?.textRenderQuality ?? Style.TextRenderQuality.Default
     readonly property bool powerActionConfirm: settings?.powerActionConfirm ?? true
