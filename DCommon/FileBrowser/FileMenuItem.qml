@@ -53,12 +53,15 @@ StyledButton {
 
         Loader {
             anchors.verticalCenter: parent.verticalCenter
+            width: Style.menuItemIconSize
+            height: Style.menuItemIconSize
             active: root.appIcon !== ""
             visible: active
-            sourceComponent: FileIcon {
-                iconName: root.appIcon
-                size: Style.menuItemIconSize
-                color: root.iconColor
+            sourceComponent: AppIconRenderer {
+                iconValue: root.appIcon
+                iconSize: Style.menuItemIconSize
+                iconColor: root.iconColor
+                fallbackText: root.text.charAt(0).toUpperCase()
             }
         }
 
