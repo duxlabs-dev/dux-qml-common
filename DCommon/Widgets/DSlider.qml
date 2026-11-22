@@ -515,7 +515,7 @@ Controls.Control {
                 preventStealing: true
                 acceptedButtons: Qt.LeftButton
                 onWheel: wheelEvent => {
-                    if (!slider.wheelEnabled || wheelEvent.angleDelta.y === 0) {
+                    if (!slider.wheelEnabled || (wheelEvent.modifiers & Qt.ShiftModifier) || wheelEvent.angleDelta.y === 0) {
                         wheelEvent.accepted = false;
                         return;
                     }
