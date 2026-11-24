@@ -176,9 +176,15 @@ Popup {
     padding: Style.spacingXS
     margins: 0
     modal: parentMenu === null
-    dim: false
+    dim: modal
     focus: true
     closePolicy: parentMenu ? Popup.NoAutoClose : Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+    Overlay.modal: Item {
+        HoverHandler {
+            blocking: true
+        }
+    }
     onAboutToShow: {
         highlight(null);
         pointedRow = null;
