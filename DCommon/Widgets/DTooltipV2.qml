@@ -42,35 +42,36 @@ Item {
         tooltip.parent = windowContentItem;
         tooltip.text = text;
 
-        const itemPos = item.mapToItem(windowContentItem, 0, 0);
+        // Mapped box, so rotated or scaled targets get the tooltip beside them.
+        const box = item.mapToItem(windowContentItem, Qt.rect(0, 0, item.width, item.height));
         const parentWidth = windowContentItem.width;
         const parentHeight = windowContentItem.height;
         const tooltipWidth = tooltip.implicitWidth;
         const tooltipHeight = tooltip.implicitHeight;
         const gap = Style.spacingS;
 
-        const side = preferredSide || _determineBestSide(itemPos, item, parentWidth, parentHeight, tooltipWidth, tooltipHeight);
+        const side = preferredSide || _determineBestSide(box, parentWidth, parentHeight, tooltipWidth, tooltipHeight);
 
         let targetX = 0;
         let targetY = 0;
 
         switch (side) {
         case "left":
-            targetX = itemPos.x - tooltipWidth - gap;
-            targetY = itemPos.y + (item.height - tooltipHeight) / 2;
+            targetX = box.x - tooltipWidth - gap;
+            targetY = box.y + (box.height - tooltipHeight) / 2;
             break;
         case "right":
-            targetX = itemPos.x + item.width + gap;
-            targetY = itemPos.y + (item.height - tooltipHeight) / 2;
+            targetX = box.x + box.width + gap;
+            targetY = box.y + (box.height - tooltipHeight) / 2;
             break;
         case "top":
-            targetX = itemPos.x + (item.width - tooltipWidth) / 2;
-            targetY = itemPos.y - tooltipHeight - gap;
+            targetX = box.x + (box.width - tooltipWidth) / 2;
+            targetY = box.y - tooltipHeight - gap;
             break;
         case "bottom":
         default:
-            targetX = itemPos.x + (item.width - tooltipWidth) / 2;
-            targetY = itemPos.y + item.height + gap;
+            targetX = box.x + (box.width - tooltipWidth) / 2;
+            targetY = box.y + box.height + gap;
             break;
         }
 
@@ -84,14 +85,14 @@ Item {
         tooltip.open();
     }
 
-    function _determineBestSide(itemPos, item, parentWidth, parentHeight, tooltipWidth, tooltipHeight) {
-        const itemCenterX = itemPos.x + item.width / 2;
+    function _determineBestSide(box, parentWidth, parentHeight, tooltipWidth, tooltipHeight) {
+        const itemCenterX = box.x + box.width / 2;
         const margin = Style.spacingL;
 
-        const spaceLeft = itemPos.x;
-        const spaceRight = parentWidth - (itemPos.x + item.width);
-        const spaceTop = itemPos.y;
-        const spaceBottom = parentHeight - (itemPos.y + item.height);
+        const spaceLeft = box.x;
+        const spaceRight = parentWidth - (box.x + box.width);
+        const spaceTop = box.y;
+        const spaceBottom = parentHeight - (box.y + box.height);
 
         if (spaceRight >= tooltipWidth + margin)
             return "right";

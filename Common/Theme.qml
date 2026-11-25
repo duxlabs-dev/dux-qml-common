@@ -226,6 +226,7 @@ Singleton {
     }
 
     property bool shapeMorph: true
+    property bool buttonPressExpand: true
     property bool pillControls: true
 
     function buttonRadius(width, height, sizeHeight, pressed, round) {

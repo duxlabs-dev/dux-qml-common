@@ -236,6 +236,7 @@ Singleton {
     readonly property real cornerRadiusLarge: cornerRadiusL
     readonly property real windowRadius: theme?.windowRadius ?? cornerRadiusL
     readonly property bool shapeMorph: theme?.shapeMorph ?? true
+    readonly property bool buttonPressExpand: theme?.buttonPressExpand ?? true
     readonly property bool pillControls: theme?.pillControls ?? true
 
     // Steps of 4 keep a raster within a few pixels of the size it is drawn at, and bound how often

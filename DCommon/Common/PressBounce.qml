@@ -14,12 +14,18 @@ QtObject {
     // Optional (index) => width an item never narrows below.
     property var minimumWidth: null
     property var spring: Style.springPreset("fastSpatial")
-    property bool enabled: Style.shapeMorph
+    property bool enabled: Style.shapeMorph && Style.buttonPressExpand
     property bool animated: true
     property int index: -1
     // At rest nothing reads the slots, so layout changes cost nothing.
     readonly property bool active: index >= 0 && (motion.value !== 0 || motion.target !== 0)
     readonly property var shifts: active ? Bounce.shifts(slots, index, ratio, unit, minimumWidth) : []
+
+    // Turned off mid-press, the held item settles now instead of on release.
+    onEnabledChanged: {
+        if (!enabled)
+            motion.retarget(0);
+    }
 
     function press(item: int, pressed: bool) {
         if (pressed && enabled) {
