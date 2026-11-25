@@ -33,6 +33,7 @@ Item {
 
     function stop() {
         request++;
+        scroll.stopMomentum();
         previewText = "";
         binary = false;
         truncated = false;
@@ -57,8 +58,10 @@ Item {
             viewer.truncated = result.truncated === true;
             viewer.fileSize = result.size ?? 0;
             viewer.previewText = result.text ?? "";
-            if (viewer.loadedPath !== target)
+            if (viewer.loadedPath !== target) {
+                scroll.stopMomentum();
                 scroll.contentY = 0;
+            }
             viewer.loadedPath = target;
         });
     }
@@ -102,6 +105,7 @@ Item {
                 text: viewer.previewText
                 readOnly: true
                 selectByMouse: true
+                persistentSelection: true
                 textFormat: TextEdit.PlainText
                 wrapMode: TextEdit.WrapAtWordBoundaryOrAnywhere
                 font.family: Style.fontFor("mono")
