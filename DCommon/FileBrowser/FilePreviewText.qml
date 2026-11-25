@@ -148,7 +148,6 @@ Item {
         FileMenuItem {
             text: I18n.tr("Copy", "context menu action copying selected preview text")
             iconName: "content_copy"
-            shortcutText: "Ctrl+C"
             enabled: editor.selectedText !== ""
             onClicked: {
                 contextMenu.close();
@@ -159,7 +158,6 @@ Item {
         FileMenuItem {
             text: I18n.tr("Select all", "context menu action selecting all preview text")
             iconName: "select_all"
-            shortcutText: "Ctrl+A"
             enabled: editor.text !== ""
             onClicked: {
                 contextMenu.close();
