@@ -3,21 +3,21 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.DCommon.Common
 import qs.DCommon.Widgets
-import "FilePreview.js" as FilePreview
 
 Item {
     id: viewer
 
     property var pane: null
     property int request: 0
-    property var lines: []
+    property string previewText: ""
     property bool binary: false
     property bool truncated: false
     property real fileSize: 0
     property string loadedPath: ""
 
     readonly property var entry: pane?.settledEntries[0] ?? null
-    readonly property bool showsContent: lines.length > 1 || (lines[0] ?? "") !== ""
+    readonly property var lines: previewText === "" ? [] : previewText.replace(/\r\n/g, "\n").replace(/\n$/, "").split("\n")
+    readonly property bool showsContent: previewText !== ""
     readonly property var rows: []
     readonly property string note: {
         if (binary)
@@ -28,12 +28,12 @@ Item {
     }
 
     function scrollPage(direction) {
-        list.contentY = Math.max(list.originY, Math.min(list.originY + list.contentHeight - list.height, list.contentY + direction * list.height));
+        scroll.contentY = Math.max(scroll.originY, Math.min(scroll.originY + scroll.contentHeight - scroll.height, scroll.contentY + direction * scroll.height));
     }
 
     function stop() {
         request++;
-        lines = [];
+        previewText = "";
         binary = false;
         truncated = false;
         loadedPath = "";
@@ -56,9 +56,9 @@ Item {
             viewer.binary = result.binary === true;
             viewer.truncated = result.truncated === true;
             viewer.fileSize = result.size ?? 0;
-            viewer.lines = FilePreview.textLines(result.text ?? "", FileBrowserMetrics.previewLineChunk);
+            viewer.previewText = result.text ?? "";
             if (viewer.loadedPath !== target)
-                list.positionViewAtBeginning();
+                scroll.contentY = 0;
             viewer.loadedPath = target;
         });
     }
@@ -82,25 +82,85 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        height: Math.min(parent.height, list.contentHeight)
+        height: Math.min(parent.height, scroll.contentHeight)
         visible: viewer.showsContent
 
-        DListView {
-            id: list
+        DFlickable {
+            id: scroll
 
             anchors.fill: parent
             clip: true
-            model: viewer.lines.length
-            delegate: StyledText {
-                required property int index
+            contentWidth: width
+            contentHeight: editor.contentHeight
+            interactive: contentHeight > height
 
-                width: ListView.view.width
-                text: viewer.lines[index] ?? ""
-                isMonospace: true
-                color: Style.surfaceText
+            TextEdit {
+                id: editor
+
+                width: scroll.width
+                height: Math.max(scroll.height, contentHeight)
+                text: viewer.previewText
+                readOnly: true
+                selectByMouse: true
+                textFormat: TextEdit.PlainText
+                wrapMode: TextEdit.WrapAtWordBoundaryOrAnywhere
+                font.family: Style.fontFor("mono")
                 font.pixelSize: Style.fontSizeSmall
-                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                textFormat: Text.PlainText
+                color: Style.surfaceText
+                selectionColor: Style.primary
+                selectedTextColor: Style.onPrimary
+                renderType: Text.NativeRendering
+
+                Keys.onEscapePressed: event => {
+                    if (selectedText !== "") {
+                        deselect();
+                        return;
+                    }
+                    focus = false;
+                    event.accepted = false;
+                }
+
+                MouseArea {
+                    id: pointerArea
+
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.IBeamCursor
+                    acceptedButtons: Qt.RightButton
+                    onClicked: mouse => {
+                        if (!editor.activeFocus)
+                            editor.forceActiveFocus();
+                        const point = pointerArea.mapToItem(viewer, mouse.x, mouse.y);
+                        contextMenu.openAt(point.x, point.y);
+                    }
+                }
+            }
+        }
+    }
+
+    FileMenu {
+        id: contextMenu
+
+        FileMenuItem {
+            text: I18n.tr("Copy", "context menu action copying selected preview text")
+            iconName: "content_copy"
+            shortcutText: "Ctrl+C"
+            enabled: editor.selectedText !== ""
+            onClicked: {
+                contextMenu.close();
+                editor.copy();
+            }
+        }
+
+        FileMenuItem {
+            text: I18n.tr("Select all", "context menu action selecting all preview text")
+            iconName: "select_all"
+            shortcutText: "Ctrl+A"
+            enabled: editor.text !== ""
+            onClicked: {
+                contextMenu.close();
+                editor.forceActiveFocus();
+                editor.selectAll();
             }
         }
     }
