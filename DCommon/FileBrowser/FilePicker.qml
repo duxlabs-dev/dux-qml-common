@@ -35,9 +35,25 @@ FocusScope {
     readonly property bool saving: mode === "save"
     readonly property string currentPath: browser.path
     readonly property alias browser: browser
-    readonly property alias sortControl: sortButton
     property alias fileName: nameField.text
     readonly property var capabilities: backend?.capabilities ?? ({})
+    readonly property bool compact: width < FileBrowserMetrics.sidebarBreakpoint
+    readonly property bool sidebarDocked: showSidebar && !compact
+    readonly property bool floating: Style.isFloatingWindow(root)
+    readonly property color cardColor: Style.foregroundColor(Style.cardSurface, floating)
+    readonly property color selectedLayer: Style.selectedColor(floating)
+    readonly property var viewModes: [
+        {
+            "value": "grid",
+            "icon": "grid_view",
+            "label": I18n.tr("Grid view", "file browser toolbar button switching to the grid")
+        },
+        {
+            "value": "list",
+            "icon": "view_list",
+            "label": I18n.tr("List view", "file browser toolbar button switching to the list")
+        }
+    ]
     readonly property string typedTarget: {
         const typed = nameField.text.trim();
         if (typed.startsWith("/") || typed.startsWith("~"))
@@ -53,6 +69,15 @@ FocusScope {
         default:
             return browser.selectedEntries.length > 0;
         }
+    }
+    readonly property string statusText: {
+        const entries = browser.selectedEntries;
+        if (entries.length !== 1)
+            return browser.directory.total > 0 ? FileFormat.count(browser.directory.total) : "";
+        const entry = entries[0];
+        const name = FileFormat.shownName(entry.displayName ?? "", entry.name, entry.isDir ?? false);
+        const detail = FileColumns.value("size", entry, -1);
+        return detail === "" ? name : `${name} · ${detail}`;
     }
 
     property string _error: ""
@@ -77,6 +102,7 @@ FocusScope {
         _overwriteTarget = "";
         _rememberedPath = "";
         nameField.text = defaultName;
+        searchField.text = "";
         browser.restoreState({
             "path": ""
         });
@@ -205,6 +231,22 @@ FocusScope {
         });
     }
 
+    function focusSearch() {
+        searchField.forceActiveFocus();
+        searchField.cursorPosition = searchField.text.length;
+    }
+
+    function _typeIntoSearch(text) {
+        searchField.text += text;
+        focusSearch();
+    }
+
+    function _focusFirstMatch() {
+        browser.focusBody();
+        if (browser.directory.count > 0)
+            browser.body.jumpTo(0, Qt.NoModifier);
+    }
+
     function _save(target) {
         if (!backend?.connected) {
             _finish([target]);
@@ -286,8 +328,8 @@ FocusScope {
         const alt = (event.modifiers & Qt.AltModifier) !== 0;
         switch (event.key) {
         case Qt.Key_Escape:
-            if (browser.nameFilter !== "") {
-                browser.clearFilter();
+            if (searchField.text !== "") {
+                searchField.clear();
                 break;
             }
             root.rejected();
@@ -309,6 +351,11 @@ FocusScope {
             if (!control || !root.multiple)
                 return;
             browser.selection.selectAll(browser.directory.entries);
+            break;
+        case Qt.Key_F:
+            if (!control)
+                return;
+            root.focusSearch();
             break;
         case Qt.Key_L:
             if (!control)
@@ -357,14 +404,6 @@ FocusScope {
     onRejected: _rememberPath()
 
     Connections {
-        target: browser
-
-        function onPathChanged() {
-            root._error = "";
-        }
-    }
-
-    Connections {
         target: browser.selection
         enabled: root.saving
 
@@ -374,6 +413,30 @@ FocusScope {
                 return;
             nameField.text = selected[0].name;
         }
+    }
+
+    component CardSegment: Rectangle {
+        property bool first: false
+        property bool last: false
+
+        readonly property real topRadius: first ? FileBrowserMetrics.paneRadius : Style.groupedListInnerRadius
+        readonly property real bottomRadius: last ? FileBrowserMetrics.paneRadius : Style.groupedListInnerRadius
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        color: root.cardColor
+        topLeftRadius: topRadius
+        topRightRadius: topRadius
+        bottomLeftRadius: bottomRadius
+        bottomRightRadius: bottomRadius
+    }
+
+    component FlatButton: DActionButton {
+        anchors.verticalCenter: parent.verticalCenter
+        focusPolicy: Qt.TabFocus
+        buttonSize: FileBrowserMetrics.controlSize
+        iconSize: Style.iconSizeMedium
+        iconColor: Style.surfaceText
     }
 
     DWindowHeader {
@@ -389,180 +452,387 @@ FocusScope {
         onCloseRequested: root.rejected()
     }
 
-    component ToolbarButton: DIconButton {
-        width: FileBrowserMetrics.controlSize
-        buttonSize: FileBrowserMetrics.controlSize
-        iconSize: Style.iconSizeMedium
-        variant: "tonal"
-        containerColor: checked ? Style.primary : Style.chipSurface
-        contentColor: checked ? Style.onPrimary : Style.surfaceText
-    }
-
-    FileBrowserView {
-        id: browser
+    Item {
+        id: sidebarSlot
 
         anchors.top: header.bottom
-        anchors.bottom: footer.top
+        anchors.bottom: parent.bottom
         anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.margins: FileBrowserMetrics.contentMargin
-        anchors.bottomMargin: FileBrowserMetrics.contentSpacing
-        focus: !root.saving
-        backend: root.backend
-        showSidebar: root.showSidebar
-        sidebarBreakpoint: Style.smallBreakpoint + FileBrowserMetrics.sidebarWidth
-        showHidden: root.showHidden
-        filters: root.filters
-        sortKey: root.sortKey
-        sortDescending: root.sortDescending
-        viewMode: root.viewMode
-        gridZoom: root.gridZoom
-        listZoom: root.listZoom
-        listColumns: ["size", "modified"]
-        multiSelect: root.multiple
-        showFilter: true
-        typeAheadMode: "filter"
-        emptyText: nameFilter !== "" ? I18n.tr("No matches") : I18n.tr("This folder is empty", "empty directory placeholder")
-        escapeClearsSelection: false
-        paneColor: Style.isFloatingWindow(root) ? Style.floatingWindowNestedSurface : Style.nestedSurface
-        chipColor: Style.chipSurfaceNested
-        onActivateRequested: entry => root.activate(entry)
-        onFocusRequested: browser.focusBody()
-        onSortRequested: key => root.setSort(key, key === root.sortKey ? !root.sortDescending : false)
-        onZoomRequested: (forMode, level) => root.setZoom(forMode, level)
-        onRenameRequested: (target, name) => root.renameItem(target, name)
-        onItemMenuRequested: (index, pointX, pointY) => {
-            const entry = browser.body.entryAt(index);
-            if (!entry)
-                return;
-            itemMenu.entry = entry;
-            const point = browser.mapToItem(root, pointX, pointY);
-            itemMenu.openAt(point.x, point.y);
-        }
-        onBackgroundMenuRequested: (pointX, pointY) => {
-            const point = browser.mapToItem(root, pointX, pointY);
-            backgroundMenu.openAt(point.x, point.y);
+        width: root.sidebarDocked ? FileBrowserMetrics.sidebarWidth : 0
+        clip: true
+
+        Behavior on width {
+            DAnim {
+                duration: Style.expressiveDurations.expressiveSlowEffects
+                easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
+            }
         }
 
-        ToolbarButton {
-            iconName: "menu"
-            tooltipText: I18n.tr("Quick Access", "file browser sidebar section header")
-            onClicked: root.setShowSidebar(!root.showSidebar)
-        }
-
-        ToolbarButton {
-            visible: root.capabilities.mkdir === true
-            iconName: "create_new_folder"
-            tooltipText: I18n.tr("New folder", "file browser toolbar button creating a folder")
-            onClicked: newFolderDialog.show()
-        }
-
-        ToolbarButton {
-            checkable: true
-            checked: root.showHidden
-            iconName: root.showHidden ? "visibility" : "visibility_off"
-            tooltipText: I18n.tr("Show hidden files", "file browser toolbar toggle")
-            onClicked: root.setShowHidden(!root.showHidden)
-        }
-
-        ToolbarButton {
-            iconName: root.viewMode === "grid" ? "view_list" : "grid_view"
-            tooltipText: root.viewMode === "grid" ? I18n.tr("List view", "file browser toolbar button switching to the list") : I18n.tr("Grid view", "file browser toolbar button switching to the grid")
-            onClicked: root.setViewMode(root.viewMode === "grid" ? "list" : "grid")
-        }
-
-        FileSortButton {
-            id: sortButton
-
-            sortKey: root.sortKey
-            descending: root.sortDescending
-            onSortKeySelected: key => root.setSort(key, root.sortDescending)
-            onDirectionToggled: root.setSort(root.sortKey, !root.sortDescending)
+        FileBrowserSidebar {
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            width: FileBrowserMetrics.sidebarWidth
+            visible: parent.width > 0
+            places: root.backend?.userDirs ?? []
+            currentPath: browser.path
+            onPlaceSelected: target => {
+                browser.focusBody();
+                browser.navigate(target);
+            }
         }
     }
 
     Item {
-        id: footer
+        id: content
 
+        anchors.top: header.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.margins: FileBrowserMetrics.contentMargin
-        height: Style.buttonHeightS
+        anchors.topMargin: root.showHeader ? 0 : FileBrowserMetrics.contentMargin
+        anchors.bottomMargin: FileBrowserMetrics.contentMargin
+        anchors.leftMargin: Math.max(FileBrowserMetrics.contentMargin, sidebarSlot.width)
+        anchors.rightMargin: FileBrowserMetrics.contentMargin
 
-        DTextField {
-            id: nameField
+        CardSegment {
+            id: topSegment
 
-            anchors.left: parent.left
-            anchors.right: buttons.left
-            anchors.rightMargin: Style.spacingM
-            anchors.verticalCenter: parent.verticalCenter
-            visible: root.saving
-            controlHeight: Style.buttonHeightS
-            placeholderText: I18n.tr("Enter filename...", "file browser save filename input placeholder")
-            isError: text.trim() !== "" && !root.canAccept
-            onAccepted: root.acceptCurrent()
-            Keys.onReturnPressed: event => event.accepted = true
-            Keys.onEnterPressed: event => event.accepted = true
-            Keys.onEscapePressed: event => {
-                event.accepted = true;
-                root.rejected();
-            }
+            first: true
+            anchors.top: parent.top
+            height: topbar.height + FileBrowserMetrics.pickerCardPadding * 2
         }
 
-        StyledText {
+        Item {
+            id: topbar
+
+            readonly property real centerWidth: width - leftActions.width - rightActions.width - FileBrowserMetrics.controlSpacing * 2
+            readonly property bool searchNarrow: centerWidth < FileBrowserMetrics.pickerSearchCollapseBelow
+            readonly property bool searchTakesAll: searchNarrow && (searchField.activeFocus || searchField.text !== "")
+            readonly property bool searchCollapsed: searchNarrow && !searchTakesAll
+
+            anchors.top: parent.top
             anchors.left: parent.left
-            anchors.right: buttons.left
-            anchors.rightMargin: Style.spacingM
-            anchors.verticalCenter: parent.verticalCenter
-            visible: !root.saving
-            text: root._error
-            color: Style.error
-            font.pixelSize: Style.fontSizeSmall
-            elide: Text.ElideRight
-        }
-
-        Row {
-            id: buttons
-
             anchors.right: parent.right
-            anchors.verticalCenter: parent.verticalCenter
-            spacing: Style.spacingS
-            LayoutMirroring.enabled: I18n.isRtl
+            anchors.margins: FileBrowserMetrics.pickerCardPadding
+            height: FileBrowserMetrics.controlSize
 
-            DButton {
-                text: I18n.tr("Cancel", "file browser overwrite dialog cancel button")
-                variant: "text"
-                onClicked: root.rejected()
+            Row {
+                id: leftActions
+
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: Style.spacingXS
+
+                FlatButton {
+                    visible: !root.compact
+                    iconName: "menu"
+                    tooltipText: I18n.tr("Quick Access", "file browser sidebar section header")
+                    onClicked: root.setShowSidebar(!root.showSidebar)
+                }
+
+                FlatButton {
+                    enabled: browser.canGoBack
+                    iconName: I18n.isRtl ? "arrow_forward" : "arrow_back"
+                    tooltipText: I18n.tr("Back", "tooltip on the button going to the previous location")
+                    onClicked: browser.back()
+                }
+
+                FlatButton {
+                    enabled: browser.canGoForward
+                    iconName: I18n.isRtl ? "arrow_back" : "arrow_forward"
+                    tooltipText: I18n.tr("Forward", "tooltip on the button going to the next location")
+                    onClicked: browser.forward()
+                }
+
+                FlatButton {
+                    visible: root.capabilities.mkdir === true
+                    enabled: browser.path !== ""
+                    iconName: "create_new_folder"
+                    tooltipText: I18n.tr("New folder", "file browser toolbar button creating a folder")
+                    onClicked: newFolderDialog.show()
+                }
             }
 
-            DButton {
-                enabled: root.canAccept
-                text: {
-                    switch (root.mode) {
-                    case "save":
-                        return I18n.tr("Save", "file browser save button");
-                    case "openFolder":
-                        return I18n.tr("Use this folder", "file browser folder selection confirm button");
-                    default:
-                        return I18n.tr("Open", "file browser open button");
+            Item {
+                id: pathSlot
+
+                anchors.left: leftActions.right
+                anchors.right: searchField.visible ? searchField.left : rightActions.left
+                anchors.leftMargin: FileBrowserMetrics.controlSpacing
+                anchors.rightMargin: FileBrowserMetrics.controlSpacing
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                visible: !topbar.searchTakesAll
+            }
+
+            DSearchField {
+                id: searchField
+
+                anchors.right: rightActions.left
+                anchors.rightMargin: FileBrowserMetrics.controlSpacing
+                anchors.verticalCenter: parent.verticalCenter
+                visible: !topbar.searchCollapsed
+                width: topbar.searchTakesAll ? topbar.centerWidth : Math.max(FileBrowserMetrics.pickerSearchMinWidth, Math.min(FileBrowserMetrics.pickerSearchMaxWidth, topbar.centerWidth * FileBrowserMetrics.pickerSearchShare))
+                fieldHeight: FileBrowserMetrics.controlSize
+                leftIconSize: Style.iconSizeMedium
+                backgroundColor: Style.surfaceContainerLowest
+                borderWidth: 0
+                focusedBorderWidth: Math.max(Style.outlineWidthFocused, Style.focusRingWidth)
+                placeholderText: I18n.tr("Search...")
+                onAccepted: root._focusFirstMatch()
+                Keys.onReturnPressed: event => event.accepted = true
+                Keys.onEnterPressed: event => event.accepted = true
+                Keys.onDownPressed: root._focusFirstMatch()
+                Keys.onEscapePressed: event => {
+                    if (text === "") {
+                        event.accepted = false;
+                        return;
+                    }
+                    clear();
+                    browser.focusBody();
+                }
+            }
+
+            Row {
+                id: rightActions
+
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: FileBrowserMetrics.controlSpacing
+
+                FlatButton {
+                    visible: topbar.searchCollapsed
+                    iconName: "search"
+                    tooltipText: I18n.tr("Search...")
+                    onClicked: root.focusSearch()
+                }
+
+                FlatButton {
+                    iconName: root.showHidden ? "visibility" : "visibility_off"
+                    iconColor: root.showHidden ? Style.onSelectedContainer : Style.surfaceText
+                    backgroundColor: root.showHidden ? root.selectedLayer : "transparent"
+                    tooltipText: I18n.tr("Show hidden files", "file browser toolbar toggle")
+                    Accessible.checked: root.showHidden
+                    onClicked: root.setShowHidden(!root.showHidden)
+                }
+            }
+        }
+
+        CardSegment {
+            id: listSegment
+
+            anchors.top: topSegment.bottom
+            anchors.bottom: statusSegment.top
+            anchors.topMargin: Style.groupedListGap
+            anchors.bottomMargin: Style.groupedListGap
+
+            FileBrowserView {
+                id: browser
+
+                anchors.fill: parent
+                focus: !root.saving
+                backend: root.backend
+                showSidebar: false
+                showNavigation: false
+                pathBarHost: pathSlot
+                pathBarColor: Style.surfaceContainerLowest
+                showHidden: root.showHidden
+                filters: root.filters
+                sortKey: root.sortKey
+                sortDescending: root.sortDescending
+                viewMode: root.viewMode
+                gridZoom: root.gridZoom
+                listZoom: root.listZoom
+                listColumns: ["size", "modified"]
+                multiSelect: root.multiple
+                nameFilter: searchField.text
+                typeAheadMode: "filter"
+                emptyText: nameFilter !== "" ? I18n.tr("No matches") : I18n.tr("This folder is empty", "empty directory placeholder")
+                escapeClearsSelection: false
+                onPathChanged: {
+                    root._error = "";
+                    searchField.text = "";
+                }
+                onActivateRequested: entry => root.activate(entry)
+                onFocusRequested: browser.focusBody()
+                onFilterRequested: text => root._typeIntoSearch(text)
+                onFilterFocusRequested: root.focusSearch()
+                onSortRequested: key => root.setSort(key, key === root.sortKey ? !root.sortDescending : false)
+                onZoomRequested: (forMode, level) => root.setZoom(forMode, level)
+                onRenameRequested: (target, name) => root.renameItem(target, name)
+                onItemMenuRequested: (index, pointX, pointY) => {
+                    const entry = browser.body.entryAt(index);
+                    if (!entry)
+                        return;
+                    itemMenu.entry = entry;
+                    const point = browser.mapToItem(root, pointX, pointY);
+                    itemMenu.openAt(point.x, point.y);
+                }
+                onBackgroundMenuRequested: (pointX, pointY) => {
+                    const point = browser.mapToItem(root, pointX, pointY);
+                    backgroundMenu.openAt(point.x, point.y);
+                }
+            }
+        }
+
+        CardSegment {
+            id: statusSegment
+
+            anchors.bottom: actionSegment.top
+            anchors.bottomMargin: Style.groupedListGap
+            height: FileBrowserMetrics.controlSize + FileBrowserMetrics.pickerCardPadding * 2
+        }
+
+        Item {
+            id: statusBar
+
+            anchors.fill: statusSegment
+            anchors.margins: FileBrowserMetrics.pickerCardPadding
+
+            StyledText {
+                anchors.left: parent.left
+                anchors.right: statusControls.left
+                anchors.leftMargin: Style.spacingS
+                anchors.rightMargin: Style.spacingS
+                anchors.verticalCenter: parent.verticalCenter
+                text: root.statusText
+                color: Style.surfaceVariantText
+                font.pixelSize: Style.fontSizeSmall
+                wrapMode: Text.NoWrap
+                elide: Text.ElideMiddle
+            }
+
+            Row {
+                id: statusControls
+
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: FileBrowserMetrics.controlSpacing
+
+                FileSortButton {
+                    anchors.verticalCenter: parent.verticalCenter
+                    sortKey: root.sortKey
+                    descending: root.sortDescending
+                    showLabel: statusBar.width >= Style.smallBreakpoint
+                    tooltipSide: "top"
+                    onSortKeySelected: key => root.setSort(key, root.sortDescending)
+                    onDirectionToggled: root.setSort(root.sortKey, !root.sortDescending)
+                }
+
+                Row {
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: FileBrowserMetrics.navPairGap
+
+                    Repeater {
+                        model: root.viewModes
+
+                        ControlSegment {
+                            required property var modelData
+                            required property int index
+
+                            readonly property bool active: root.viewMode === modelData.value
+
+                            joinStart: !active && index > 0
+                            joinEnd: !active && index < root.viewModes.length - 1
+                            color: active ? root.selectedLayer : Style.foregroundColor(Style.chipSurface, root.floating)
+                            iconName: modelData.icon
+                            iconColor: active ? Style.onSelectedContainer : Style.surfaceText
+                            tooltipText: modelData.label
+                            tooltipSide: "top"
+                            Accessible.checked: active
+                            onClicked: root.setViewMode(modelData.value)
+                        }
                     }
                 }
-                onClicked: root.acceptCurrent()
             }
         }
-    }
 
-    StyledText {
-        anchors.bottom: footer.top
-        anchors.left: footer.left
-        anchors.right: footer.right
-        anchors.bottomMargin: Style.spacingXS
-        visible: root.saving && root._error !== ""
-        text: root._error
-        color: Style.error
-        font.pixelSize: Style.fontSizeSmall
-        elide: Text.ElideRight
+        CardSegment {
+            id: actionSegment
+
+            last: true
+            anchors.bottom: parent.bottom
+            height: footer.height + FileBrowserMetrics.pickerCardPadding * 2
+        }
+
+        Column {
+            id: footer
+
+            anchors.bottom: actionSegment.bottom
+            anchors.left: actionSegment.left
+            anchors.right: actionSegment.right
+            anchors.margins: FileBrowserMetrics.pickerCardPadding
+            spacing: Style.spacingS
+
+            StyledText {
+                width: parent.width
+                visible: root._error !== ""
+                text: root._error
+                color: Style.error
+                font.pixelSize: Style.fontSizeSmall
+                elide: Text.ElideRight
+            }
+
+            Item {
+                width: parent.width
+                height: FileBrowserMetrics.controlSize
+
+                DTextField {
+                    id: nameField
+
+                    anchors.left: parent.left
+                    anchors.right: buttons.left
+                    anchors.rightMargin: Style.spacingM
+                    anchors.verticalCenter: parent.verticalCenter
+                    visible: root.saving
+                    fieldHeight: FileBrowserMetrics.controlSize
+                    cornerRadius: Style.fullRadius(width, height)
+                    backgroundColor: Style.surfaceContainerLowest
+                    borderWidth: 0
+                    focusedBorderWidth: Math.max(Style.outlineWidthFocused, Style.focusRingWidth)
+                    placeholderText: I18n.tr("Enter filename...", "file browser save filename input placeholder")
+                    isError: text.trim() !== "" && !root.canAccept
+                    onAccepted: root.acceptCurrent()
+                    Keys.onReturnPressed: event => event.accepted = true
+                    Keys.onEnterPressed: event => event.accepted = true
+                    Keys.onEscapePressed: event => {
+                        event.accepted = true;
+                        root.rejected();
+                    }
+                }
+
+                Row {
+                    id: buttons
+
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: Style.spacingS
+                    LayoutMirroring.enabled: I18n.isRtl
+
+                    DButton {
+                        text: I18n.tr("Cancel", "file browser overwrite dialog cancel button")
+                        variant: "text"
+                        onClicked: root.rejected()
+                    }
+
+                    DButton {
+                        enabled: root.canAccept
+                        text: {
+                            switch (root.mode) {
+                            case "save":
+                                return I18n.tr("Save", "file browser save button");
+                            case "openFolder":
+                                return I18n.tr("Use this folder", "file browser folder selection confirm button");
+                            default:
+                                return I18n.tr("Open", "file browser open button");
+                            }
+                        }
+                        onClicked: root.acceptCurrent()
+                    }
+                }
+            }
+        }
     }
 
     FileMenu {

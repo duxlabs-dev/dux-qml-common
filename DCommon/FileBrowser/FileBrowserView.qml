@@ -41,8 +41,6 @@ FocusScope {
     property Item pathBarHost: null
     property var cutSet: ({})
     property string nameFilter: ""
-    // The built-in field writes nameFilter, so hosts that bind nameFilter leave this off.
-    property bool showFilter: false
     property bool singleClickActivates: false
     property bool typeAheadEnabled: true
     property string typeAheadMode: "jump"
@@ -187,22 +185,6 @@ FocusScope {
         viewBody.focusBody();
     }
 
-    function clearFilter() {
-        filterField.clear();
-    }
-
-    function _typeIntoFilter(text) {
-        filterField.text += text;
-        filterField.forceActiveFocus();
-        filterField.cursorPosition = filterField.text.length;
-    }
-
-    function _focusFirstMatch() {
-        viewBody.focusBody();
-        if (directory.count > 0)
-            viewBody.jumpTo(0, Qt.NoModifier);
-    }
-
     function beginRename(target) {
         viewBody.beginRename(target);
     }
@@ -298,10 +280,7 @@ FocusScope {
     NavigationHistory {
         id: history
 
-        onEntering: target => {
-            filterField.text = "";
-            root.navigating(target);
-        }
+        onEntering: target => root.navigating(target)
         onRestored: saved => {
             if (!saved)
                 return;
@@ -339,7 +318,7 @@ FocusScope {
         Item {
             id: topbar
 
-            readonly property bool shown: root.showNavigation || root.showFilter || toolbarExtras.children.length > 0
+            readonly property bool shown: root.showNavigation || toolbarExtras.children.length > 0
 
             anchors.top: parent.top
             anchors.left: parent.left
@@ -357,37 +336,6 @@ FocusScope {
                 forwardEnabled: root.canGoForward
                 onBackRequested: root.back()
                 onForwardRequested: root.forward()
-            }
-
-            DSearchField {
-                id: filterField
-
-                anchors.left: navPair.visible ? navPair.right : parent.left
-                anchors.right: toolbarExtras.left
-                anchors.leftMargin: navPair.visible ? FileBrowserMetrics.controlSpacing : 0
-                anchors.rightMargin: toolbarExtras.width > 0 ? FileBrowserMetrics.controlSpacing : 0
-                anchors.verticalCenter: parent.verticalCenter
-                visible: root.showFilter
-                fieldHeight: FileBrowserMetrics.controlSize
-                backgroundColor: Style.chipSurface
-                borderWidth: 0
-                placeholderText: I18n.tr("Search...")
-                onTextChanged: {
-                    if (root.showFilter)
-                        root.nameFilter = text;
-                }
-                onAccepted: root._focusFirstMatch()
-                Keys.onReturnPressed: event => event.accepted = true
-                Keys.onEnterPressed: event => event.accepted = true
-                Keys.onDownPressed: root._focusFirstMatch()
-                Keys.onEscapePressed: event => {
-                    if (text === "") {
-                        event.accepted = false;
-                        return;
-                    }
-                    clear();
-                    root.focusBody();
-                }
             }
 
             Row {
@@ -555,20 +503,8 @@ FocusScope {
                 homePath: root.homePath
                 nameHighlight: NameFilter.needle(root.nameFilter)
                 filtering: root.nameFilter !== ""
-                onFilterRequested: text => {
-                    if (root.showFilter) {
-                        root._typeIntoFilter(text);
-                        return;
-                    }
-                    root.filterRequested(text);
-                }
-                onFilterFocusRequested: {
-                    if (root.showFilter) {
-                        filterField.forceActiveFocus();
-                        return;
-                    }
-                    root.filterFocusRequested();
-                }
+                onFilterRequested: text => root.filterRequested(text)
+                onFilterFocusRequested: root.filterFocusRequested()
                 onActivateRequested: entry => root.activateRequested(entry)
                 onItemMenuRequested: (index, pointX, pointY, modifiers) => {
                     root.focusRequested();

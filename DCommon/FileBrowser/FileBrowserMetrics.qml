@@ -136,6 +136,11 @@ Singleton {
     readonly property real pickerMinWidth: Style.launcherWidthMicro
     readonly property real pickerMinHeight: Style.smallBreakpoint
     readonly property real pickerScreenFraction: 0.9
+    readonly property real pickerCardPadding: Style.spacingS
+    readonly property real pickerSearchMinWidth: Style.sidebarWidth * 0.75
+    readonly property real pickerSearchMaxWidth: Style.sidebarWidth * 1.6
+    readonly property real pickerSearchShare: 0.36
+    readonly property real pickerSearchCollapseBelow: Style.sidebarWidth * 1.8
     readonly property int settleInterval: 150
     readonly property int submenuDelay: 200
     readonly property int countPrefetchScreens: 3
