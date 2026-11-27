@@ -8,7 +8,9 @@ FocusScope {
     property int hour: 7
     property int minute: 0
     property bool is24Hour: false
+    property bool inputMode: false
     property string title: I18n.tr("Select time")
+    property string inputTitle: I18n.tr("Enter time")
     property real faceSize: Math.min(Style.clockFaceSize, height - chromeHeight)
 
     signal accepted(int hour, int minute)
@@ -19,6 +21,7 @@ FocusScope {
     property int _hour: 7
     property int _minute: 0
     property bool _minuteMode: false
+    property bool _inputMode: false
     property bool _dragging: false
     property string _digitBuffer: ""
 
@@ -51,10 +54,16 @@ FocusScope {
         _hour = Math.max(0, Math.min(23, hour));
         _minute = Math.max(0, Math.min(59, minute));
         _minuteMode = false;
+        _inputMode = inputMode;
         _digitBuffer = "";
         digitBufferTimer.stop();
         _opened = true;
         hourDigit.forceActiveFocus();
+    }
+
+    function toggleInputMode() {
+        _inputMode = !_inputMode;
+        (_minuteMode ? minuteDigit : hourDigit).forceActiveFocus(Qt.TabFocusReason);
     }
 
     function close() {
@@ -340,7 +349,7 @@ FocusScope {
 
             StyledText {
                 id: titleText
-                text: root.title
+                text: root._inputMode ? root.inputTitle : root.title
                 font.pixelSize: Style.fontSizeMedium
                 font.weight: Style.fontWeightMedium
                 color: Style.onSurfaceVariant
@@ -350,6 +359,7 @@ FocusScope {
                 id: digitRow
                 Layout.alignment: Qt.AlignHCenter
                 Layout.topMargin: Style.spacingL + Style.spacingXS
+                Layout.bottomMargin: root._inputMode ? hourCaption.implicitHeight + Style.spacingXS : 0
                 spacing: 0
 
                 StyledButton {
@@ -364,6 +374,8 @@ FocusScope {
                     Layout.preferredHeight: root.digitHeight
                     radius: Style.cornerRadiusS
                     color: root._minuteMode ? Style.chipSurface : Style.primaryContainer
+                    border.width: root._inputMode && !root._minuteMode ? Style.outlineWidthFocused : 0
+                    border.color: Style.primary
                     KeyNavigation.backtab: okButton
                     onActiveFocusChanged: {
                         if (!activeFocus)
@@ -393,6 +405,17 @@ FocusScope {
                         stateColor: Style.primary
                     }
 
+                    StyledText {
+                        id: hourCaption
+                        anchors.top: parent.bottom
+                        anchors.topMargin: Style.spacingXS
+                        anchors.left: parent.left
+                        visible: root._inputMode
+                        text: I18n.tr("Hour")
+                        font.pixelSize: Style.fontSizeSmall
+                        color: Style.onSurfaceVariant
+                    }
+
                     FocusRing {
                         visible: hourDigit.visualFocus
                     }
@@ -420,6 +443,8 @@ FocusScope {
                     Layout.preferredHeight: root.digitHeight
                     radius: Style.cornerRadiusS
                     color: root._minuteMode ? Style.primaryContainer : Style.chipSurface
+                    border.width: root._inputMode && root._minuteMode ? Style.outlineWidthFocused : 0
+                    border.color: Style.primary
                     onActiveFocusChanged: {
                         if (!activeFocus)
                             return;
@@ -446,6 +471,16 @@ FocusScope {
                     StateLayer {
                         control: minuteDigit
                         stateColor: Style.primary
+                    }
+
+                    StyledText {
+                        anchors.top: parent.bottom
+                        anchors.topMargin: Style.spacingXS
+                        anchors.left: parent.left
+                        visible: root._inputMode
+                        text: I18n.tr("Minute")
+                        font.pixelSize: Style.fontSizeSmall
+                        color: Style.onSurfaceVariant
                     }
 
                     FocusRing {
@@ -559,6 +594,7 @@ FocusScope {
                 Layout.topMargin: Style.spacingXL + Style.spacingM
                 Layout.preferredWidth: root.faceSize
                 Layout.preferredHeight: root.faceSize
+                visible: !root._inputMode
                 radius: width / 2
                 color: Style.chipSurface
 
@@ -572,6 +608,7 @@ FocusScope {
 
                 Item {
                     id: hand
+                    z: 1
                     x: root.faceSize / 2 - 1
                     y: root.faceSize / 2
                     width: Style.clockHandWidth
@@ -627,6 +664,7 @@ FocusScope {
                 Rectangle {
                     width: Style.clockCenterSize
                     height: Style.clockCenterSize
+                    z: 1
                     radius: width / 2
                     anchors.centerIn: parent
                     color: Style.primary
@@ -643,6 +681,18 @@ FocusScope {
                         readonly property bool selected: root._minuteMode ? (root._minute === value) : (root.is24Hour ? root._hour === value : (root._hour % 12) === (value % 12))
                         readonly property real ringRadius: innerRing ? root.innerRingRadius : root.outerRingRadius
                         readonly property real angle: (step * 30 - 90) * Math.PI / 180
+                        readonly property real knobDistance: 2 * ringRadius * Math.sin(Math.abs(((root.handAngle - step * 30) % 360 + 540) % 360 - 180) * Math.PI / 360)
+                        readonly property bool underKnob: root._minuteMode && !selected && knobDistance < (root.numberSize + label.implicitWidth) / 2
+
+                        z: selected ? 2 : 0
+                        opacity: underKnob ? 0 : 1
+
+                        Behavior on opacity {
+                            DAnim {
+                                duration: Style.expressiveDurations.expressiveEffects
+                                easing.bezierCurve: Style.expressiveCurves.expressiveEffects
+                            }
+                        }
 
                         width: root.numberSize
                         height: root.numberSize
@@ -650,6 +700,7 @@ FocusScope {
                         y: root.faceSize / 2 + ringRadius * Math.sin(angle) - height / 2
 
                         NumericText {
+                            id: label
                             anchors.centerIn: parent
                             text: root._minuteMode || parent.innerRing ? root.pad(parent.value) : parent.value
                             reserveText: "00"
@@ -720,11 +771,22 @@ FocusScope {
                 }
             }
 
-            Row {
+            RowLayout {
                 id: actionRow
-                Layout.alignment: Qt.AlignRight
+                Layout.fillWidth: true
                 Layout.topMargin: Style.spacingXL
                 spacing: Style.spacingS
+
+                DIconButton {
+                    iconName: root._inputMode ? "schedule" : "keyboard"
+                    tooltipText: root._inputMode ? I18n.tr("Switch to clock", "time picker input mode toggle") : I18n.tr("Switch to text input", "time picker input mode toggle")
+                    Accessible.name: tooltipText
+                    onClicked: root.toggleInputMode()
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                }
 
                 DButton {
                     text: I18n.tr("Cancel")
