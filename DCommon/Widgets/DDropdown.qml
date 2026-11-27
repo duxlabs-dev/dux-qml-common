@@ -23,6 +23,8 @@ FocusScope {
     property var optionIconMap: ({})
     property var optionImageMap: ({})
     property var optionColorMap: ({})
+    // Option key to font token or family, to preview fonts in the menu
+    property var optionFontMap: ({})
     // Handlers can fire mid-initialisation before this has a value, so rebuild from it, not from its inputs
     readonly property var optionKeys: {
         if (Array.isArray(optionValues) && optionValues.length > 0)
@@ -859,6 +861,7 @@ FocusScope {
                                     StyledText {
                                         anchors.verticalCenter: parent.verticalCenter
                                         text: root.labelOf(delegateRoot.modelData)
+                                        fontToken: root.optionFontMap[delegateRoot.modelData] ?? "ui"
                                         font.pixelSize: Style.fontSizeMedium
                                         color: delegateRoot.contentColor
                                         font.weight: delegateRoot.isCurrentValue ? Style.fontWeightMedium : Style.fontWeight
