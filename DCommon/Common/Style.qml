@@ -353,6 +353,8 @@ Singleton {
     readonly property real popupEnterScale: theme?.popupEnterScale ?? 0.92
     readonly property real pendingOpacity: theme?.pendingOpacity ?? 0.6
     readonly property real spinnerStrokeWidth: theme?.spinnerStrokeWidth ?? 2
+    readonly property real linearProgressThickness: theme?.linearProgressThickness ?? 4
+    readonly property real linearProgressGapSize: theme?.linearProgressGapSize ?? 4
     readonly property color circularWavyProgressColor: theme?.circularWavyProgressColor ?? primary
     readonly property color circularWavyProgressTrackColor: theme?.circularWavyProgressTrackColor ?? secondaryContainer
     readonly property real circularWavyProgressSize: theme?.circularWavyProgressSize ?? 48

@@ -701,6 +701,33 @@ ShellRoot {
                         }
 
                         Section {
+                            text: "Progress"
+                        }
+
+                        Column {
+                            width: parent.width
+                            spacing: Theme.spacingL
+
+                            DLinearProgress {
+                                width: parent.width
+                                indeterminate: true
+                            }
+
+                            DLinearProgress {
+                                width: parent.width
+                                value: progressSlider.value / 100
+                            }
+
+                            DSlider {
+                                id: progressSlider
+                                width: parent.width
+                                Accessible.name: "Progress"
+                                value: 40
+                                onSliderValueChanged: newValue => value = newValue
+                            }
+                        }
+
+                        Section {
                             text: "List view"
                         }
 

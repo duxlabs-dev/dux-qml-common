@@ -279,7 +279,7 @@ FocusScope {
             Item {
                 id: header
                 x: root.padding
-                y: handleArea.height
+                y: root.title !== "" ? (handleArea.height + Style.bottomSheetHandleHeight) / 2 + Style.spacingS : handleArea.height
                 width: parent.width - root.padding * 2
                 height: heading.implicitHeight
                 visible: root.title !== ""
@@ -290,7 +290,7 @@ FocusScope {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     text: root.title
-                    font.pixelSize: Style.fontSizeLarge
+                    font.pixelSize: Style.fontSizeXLarge
                     font.weight: Style.fontWeightMedium
                     color: Style.onSurface
                     elide: Text.ElideRight
