@@ -19,13 +19,16 @@ FocusScope {
     property int _hour: 7
     property int _minute: 0
     property bool _minuteMode: false
-    property bool _minuteInnerRing: false
     property bool _dragging: false
     property string _digitBuffer: ""
 
     on_MinuteModeChanged: {
         _digitBuffer = "";
         digitBufferTimer.stop();
+        if (!_minuteMode) {
+            minuteHoldTimer.stop();
+            faceArea.preciseDrag = false;
+        }
     }
 
     readonly property bool animationsEnabled: Style.currentAnimationSpeed !== Style.AnimationSpeed.None
@@ -38,12 +41,7 @@ FocusScope {
     readonly property bool isPm: _hour >= 12
     readonly property int displayHour: is24Hour ? _hour : ((_hour % 12) === 0 ? 12 : _hour % 12)
     readonly property real handAngle: _minuteMode ? _minute * 6 : (_hour % 12) * 30
-    readonly property real handLength: {
-        if (_minuteMode) {
-            return _minuteInnerRing ? innerRingRadius : outerRingRadius;
-        }
-        return (is24Hour && (_hour === 0 || _hour > 12)) ? innerRingRadius : outerRingRadius;
-    }
+    readonly property real handLength: (!_minuteMode && is24Hour && (_hour === 0 || _hour > 12)) ? innerRingRadius : outerRingRadius
 
     function pad(v) {
         return (v < 10 ? "0" : "") + v;
@@ -53,7 +51,6 @@ FocusScope {
         _hour = Math.max(0, Math.min(23, hour));
         _minute = Math.max(0, Math.min(59, minute));
         _minuteMode = false;
-        _minuteInnerRing = (_minute % 5 !== 0);
         _digitBuffer = "";
         digitBufferTimer.stop();
         _opened = true;
@@ -86,7 +83,6 @@ FocusScope {
         if (_minuteMode) {
             if (_digitBuffer === "") {
                 _minute = digit;
-                _minuteInnerRing = (_minute % 5 !== 0);
                 if (digit <= 5) {
                     _digitBuffer = String(digit);
                     digitBufferTimer.restart();
@@ -99,7 +95,6 @@ FocusScope {
             _digitBuffer = "";
             digitBufferTimer.stop();
             _minute = nextMinute;
-            _minuteInnerRing = (_minute % 5 !== 0);
             return;
         }
 
@@ -189,22 +184,16 @@ FocusScope {
         return Math.sqrt(dx * dx + dy * dy);
     }
 
-    function applyPoint(x, y) {
+    function applyPoint(x, y, snap) {
         _digitBuffer = "";
         digitBufferTimer.stop();
         const angle = angleFromPoint(x, y);
-        const dist = distanceFromCenter(x, y);
-        const threshold = (outerRingRadius + innerRingRadius) / 2;
         if (_minuteMode) {
-            const isInner = dist < threshold;
-            _minuteInnerRing = isInner;
-            if (isInner) {
-                _minute = Math.round(angle / 6) % 60;
-            } else {
-                _minute = Math.round(angle / 30) * 5 % 60;
-            }
+            _minute = snap ? (Math.round(angle / 30) * 5 % 60) : (Math.round(angle / 6) % 60);
             return;
         }
+        const dist = distanceFromCenter(x, y);
+        const threshold = (outerRingRadius + innerRingRadius) / 2;
         const step = Math.round(angle / 30) % 12;
         if (!is24Hour) {
             _hour = isPm ? (step === 0 ? 12 : step + 12) : (step === 0 ? 0 : step);
@@ -272,7 +261,6 @@ FocusScope {
         digitBufferTimer.stop();
         if (_minuteMode) {
             _minute = (_minute + direction + 60) % 60;
-            _minuteInnerRing = (_minute % 5 !== 0);
             return;
         }
         _hour = (_hour + direction + 24) % 24;
@@ -625,7 +613,7 @@ FocusScope {
 
                         NumericText {
                             anchors.centerIn: parent
-                            visible: root._minuteMode && root._minuteInnerRing
+                            visible: root._minuteMode && (root._minute % 5 !== 0)
                             text: root.pad(root._minute)
                             reserveText: "00"
                             font.pixelSize: Style.fontSizeMedium
@@ -652,7 +640,7 @@ FocusScope {
                         readonly property bool innerRing: !root._minuteMode && root.is24Hour && index >= 12
                         readonly property int step: index % 12
                         readonly property int value: root._minuteMode ? step * 5 : (innerRing ? (step === 0 ? 0 : step + 12) : (step === 0 ? 12 : step))
-                        readonly property bool selected: root._minuteMode ? (!root._minuteInnerRing && root._minute === value) : (root.is24Hour ? root._hour === value : (root._hour % 12) === (value % 12))
+                        readonly property bool selected: root._minuteMode ? (root._minute === value) : (root.is24Hour ? root._hour === value : (root._hour % 12) === (value % 12))
                         readonly property real ringRadius: innerRing ? root.innerRingRadius : root.outerRingRadius
                         readonly property real angle: (step * 30 - 90) * Math.PI / 180
 
@@ -672,25 +660,62 @@ FocusScope {
                     }
                 }
 
+                Timer {
+                    id: minuteHoldTimer
+                    interval: 250
+                    onTriggered: {
+                        if (!faceArea.pressed || !root._minuteMode)
+                            return;
+                        faceArea.preciseDrag = true;
+                        root.applyPoint(faceArea.lastX, faceArea.lastY, false);
+                    }
+                }
+
                 MouseArea {
                     id: faceArea
+                    property real pressX: 0
+                    property real pressY: 0
+                    property real lastX: 0
+                    property real lastY: 0
+                    property bool preciseDrag: false
+
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onPressed: mouse => {
                         root._dragging = true;
-                        root.applyPoint(mouse.x, mouse.y);
+                        pressX = mouse.x;
+                        pressY = mouse.y;
+                        lastX = mouse.x;
+                        lastY = mouse.y;
+                        preciseDrag = false;
+                        root.applyPoint(mouse.x, mouse.y, true);
+                        if (root._minuteMode)
+                            minuteHoldTimer.restart();
                     }
                     onPositionChanged: mouse => {
                         if (!pressed)
                             return;
-                        root.applyPoint(mouse.x, mouse.y);
+                        lastX = mouse.x;
+                        lastY = mouse.y;
+                        if (root._minuteMode && !preciseDrag && Math.hypot(mouse.x - pressX, mouse.y - pressY) >= Qt.styleHints.startDragDistance) {
+                            preciseDrag = true;
+                            minuteHoldTimer.stop();
+                        }
+                        root.applyPoint(mouse.x, mouse.y, root._minuteMode && !preciseDrag);
                     }
                     onReleased: {
+                        minuteHoldTimer.stop();
+                        preciseDrag = false;
                         root._dragging = false;
                         if (root._minuteMode)
                             return;
                         advanceTimer.restart();
+                    }
+                    onCanceled: {
+                        minuteHoldTimer.stop();
+                        preciseDrag = false;
+                        root._dragging = false;
                     }
                 }
             }
