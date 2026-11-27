@@ -8,7 +8,9 @@ FocusScope {
     property int hour: 7
     property int minute: 0
     property bool is24Hour: false
+    property bool inputMode: false
     property string title: I18n.tr("Select time")
+    property string inputTitle: I18n.tr("Enter time")
     property real faceSize: Math.min(Style.clockFaceSize, height - chromeHeight)
 
     signal accepted(int hour, int minute)
@@ -19,7 +21,18 @@ FocusScope {
     property int _hour: 7
     property int _minute: 0
     property bool _minuteMode: false
+    property bool _inputMode: false
     property bool _dragging: false
+    property string _digitBuffer: ""
+
+    on_MinuteModeChanged: {
+        _digitBuffer = "";
+        digitBufferTimer.stop();
+        if (!_minuteMode) {
+            minuteHoldTimer.stop();
+            faceArea.preciseDrag = false;
+        }
+    }
 
     readonly property real digitHeight: Style.iconButtonSize * 2
     readonly property real chromeHeight: Style.spacingXL * 5 + Style.spacingL + Style.spacingXS + Style.spacingM + titleText.implicitHeight + digitHeight + actionRow.implicitHeight
@@ -40,8 +53,16 @@ FocusScope {
         _hour = Math.max(0, Math.min(23, hour));
         _minute = Math.max(0, Math.min(59, minute));
         _minuteMode = false;
+        _inputMode = inputMode;
+        _digitBuffer = "";
+        digitBufferTimer.stop();
         _opened = true;
         hourDigit.forceActiveFocus();
+    }
+
+    function toggleInputMode() {
+        _inputMode = !_inputMode;
+        (_minuteMode ? minuteDigit : hourDigit).forceActiveFocus(Qt.TabFocusReason);
     }
 
     function close() {
@@ -51,6 +72,103 @@ FocusScope {
     function setPeriod(pm) {
         const base = _hour % 12;
         _hour = pm ? base + 12 : base;
+    }
+
+    function setDisplayHour(h12) {
+        _hour = h12 === 12 ? (isPm ? 12 : 0) : (isPm ? h12 + 12 : h12);
+    }
+
+    function switchToMinutes() {
+        advanceTimer.stop();
+        _minuteMode = true;
+        if (hourDigit.activeFocus)
+            minuteDigit.forceActiveFocus(Qt.TabFocusReason);
+    }
+
+    function handleDigitInput(digit) {
+        if (!_minuteMode && advanceTimer.running)
+            switchToMinutes();
+        if (_minuteMode) {
+            if (_digitBuffer === "") {
+                _minute = digit;
+                if (digit <= 5) {
+                    _digitBuffer = String(digit);
+                    digitBufferTimer.restart();
+                } else {
+                    digitBufferTimer.stop();
+                }
+                return;
+            }
+            const nextMinute = parseInt(_digitBuffer, 10) * 10 + digit;
+            _digitBuffer = "";
+            digitBufferTimer.stop();
+            _minute = nextMinute;
+            return;
+        }
+
+        if (is24Hour) {
+            if (_digitBuffer === "") {
+                _hour = digit;
+                if (digit <= 2) {
+                    _digitBuffer = String(digit);
+                    digitBufferTimer.restart();
+                } else {
+                    digitBufferTimer.stop();
+                    advanceTimer.restart();
+                }
+                return;
+            }
+            const candidate = parseInt(_digitBuffer, 10) * 10 + digit;
+            _digitBuffer = "";
+            digitBufferTimer.stop();
+            if (candidate <= 23) {
+                _hour = candidate;
+                advanceTimer.restart();
+                return;
+            }
+            switchToMinutes();
+            handleDigitInput(digit);
+            return;
+        }
+
+        if (_digitBuffer === "") {
+            if (digit === 0) {
+                _digitBuffer = "0";
+                digitBufferTimer.restart();
+                return;
+            }
+            setDisplayHour(digit);
+            if (digit === 1) {
+                _digitBuffer = "1";
+                digitBufferTimer.restart();
+            } else {
+                digitBufferTimer.stop();
+                advanceTimer.restart();
+            }
+            return;
+        }
+
+        const prefix = _digitBuffer;
+        _digitBuffer = "";
+        digitBufferTimer.stop();
+        if (prefix === "0") {
+            if (digit >= 1) {
+                setDisplayHour(digit);
+                advanceTimer.restart();
+            } else {
+                _digitBuffer = "0";
+                digitBufferTimer.restart();
+            }
+            return;
+        }
+
+        if (digit <= 2) {
+            setDisplayHour(10 + digit);
+            advanceTimer.restart();
+            return;
+        }
+        switchToMinutes();
+        handleDigitInput(digit);
     }
 
     function selectHour(h) {
@@ -74,18 +192,22 @@ FocusScope {
         return Math.sqrt(dx * dx + dy * dy);
     }
 
-    function applyPoint(x, y) {
+    function applyPoint(x, y, snap) {
+        _digitBuffer = "";
+        digitBufferTimer.stop();
         const angle = angleFromPoint(x, y);
         if (_minuteMode) {
-            _minute = Math.round(angle / 30) * 5 % 60;
+            _minute = snap ? (Math.round(angle / 30) * 5 % 60) : (Math.round(angle / 6) % 60);
             return;
         }
+        const dist = distanceFromCenter(x, y);
+        const threshold = (outerRingRadius + innerRingRadius) / 2;
         const step = Math.round(angle / 30) % 12;
         if (!is24Hour) {
             _hour = isPm ? (step === 0 ? 12 : step + 12) : (step === 0 ? 0 : step);
             return;
         }
-        const inner = distanceFromCenter(x, y) < (outerRingRadius + innerRingRadius) / 2;
+        const inner = dist < threshold;
         _hour = inner ? (step === 0 ? 0 : step + 12) : (step === 0 ? 12 : step);
     }
 
@@ -102,7 +224,16 @@ FocusScope {
     }
 
     Keys.onPressed: event => {
+        if (event.key >= Qt.Key_0 && event.key <= Qt.Key_9) {
+            root.handleDigitInput(event.key - Qt.Key_0);
+            event.accepted = true;
+            return;
+        }
         switch (event.key) {
+        case Qt.Key_Backspace:
+            root._digitBuffer = "";
+            digitBufferTimer.stop();
+            break;
         case Qt.Key_Escape:
             root.rejected();
             root.close();
@@ -133,21 +264,29 @@ FocusScope {
     }
 
     function nudge(direction) {
+        _digitBuffer = "";
+        digitBufferTimer.stop();
         if (_minuteMode) {
-            _minute = (_minute + direction * 5 + 60) % 60;
+            _minute = (_minute + direction + 60) % 60;
             return;
         }
         _hour = (_hour + direction + 24) % 24;
     }
 
     Timer {
+        id: digitBufferTimer
+        interval: 1500
+        onTriggered: {
+            if (!root._minuteMode && !(root._digitBuffer === "0" && !root.is24Hour))
+                advanceTimer.restart();
+            root._digitBuffer = "";
+        }
+    }
+
+    Timer {
         id: advanceTimer
         interval: Style.clockSwitchDelay
-        onTriggered: {
-            root._minuteMode = true;
-            if (hourDigit.activeFocus)
-                minuteDigit.forceActiveFocus(Qt.TabFocusReason);
-        }
+        onTriggered: root.switchToMinutes()
     }
 
     Rectangle {
@@ -207,7 +346,7 @@ FocusScope {
 
             StyledText {
                 id: titleText
-                text: root.title
+                text: root._inputMode ? root.inputTitle : root.title
                 font.pixelSize: Style.fontSizeMedium
                 font.weight: Style.fontWeightMedium
                 color: Style.onSurfaceVariant
@@ -217,6 +356,7 @@ FocusScope {
                 id: digitRow
                 Layout.alignment: Qt.AlignHCenter
                 Layout.topMargin: Style.spacingL + Style.spacingXS
+                Layout.bottomMargin: root._inputMode ? hourCaption.implicitHeight + Style.spacingXS : 0
                 spacing: 0
 
                 StyledButton {
@@ -231,6 +371,8 @@ FocusScope {
                     Layout.preferredHeight: root.digitHeight
                     radius: Style.cornerRadiusS
                     color: root._minuteMode ? Style.chipSurface : Style.primaryContainer
+                    border.width: root._inputMode && !root._minuteMode ? Style.outlineWidthFocused : 0
+                    border.color: Style.primary
                     KeyNavigation.backtab: okButton
                     onActiveFocusChanged: {
                         if (!activeFocus)
@@ -257,6 +399,17 @@ FocusScope {
                     StateLayer {
                         control: hourDigit
                         stateColor: Style.primary
+                    }
+
+                    StyledText {
+                        id: hourCaption
+                        anchors.top: parent.bottom
+                        anchors.topMargin: Style.spacingXS
+                        anchors.left: parent.left
+                        visible: root._inputMode
+                        text: I18n.tr("Hour")
+                        font.pixelSize: Style.fontSizeSmall
+                        color: Style.onSurfaceVariant
                     }
 
                     FocusRing {
@@ -286,6 +439,8 @@ FocusScope {
                     Layout.preferredHeight: root.digitHeight
                     radius: Style.cornerRadiusS
                     color: root._minuteMode ? Style.primaryContainer : Style.chipSurface
+                    border.width: root._inputMode && root._minuteMode ? Style.outlineWidthFocused : 0
+                    border.color: Style.primary
                     onActiveFocusChanged: {
                         if (!activeFocus)
                             return;
@@ -311,6 +466,16 @@ FocusScope {
                     StateLayer {
                         control: minuteDigit
                         stateColor: Style.primary
+                    }
+
+                    StyledText {
+                        anchors.top: parent.bottom
+                        anchors.topMargin: Style.spacingXS
+                        anchors.left: parent.left
+                        visible: root._inputMode
+                        text: I18n.tr("Minute")
+                        font.pixelSize: Style.fontSizeSmall
+                        color: Style.onSurfaceVariant
                     }
 
                     FocusRing {
@@ -424,6 +589,7 @@ FocusScope {
                 Layout.topMargin: Style.spacingXL + Style.spacingM
                 Layout.preferredWidth: root.faceSize
                 Layout.preferredHeight: root.faceSize
+                visible: !root._inputMode
                 radius: width / 2
                 color: Style.chipSurface
 
@@ -436,6 +602,7 @@ FocusScope {
 
                 Item {
                     id: hand
+                    z: 1
                     x: root.faceSize / 2 - 1
                     y: root.faceSize / 2
                     width: Style.clockHandWidth
@@ -474,12 +641,24 @@ FocusScope {
                         color: Style.primary
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.verticalCenter: parent.bottom
+
+                        NumericText {
+                            anchors.centerIn: parent
+                            visible: root._minuteMode && (root._minute % 5 !== 0)
+                            text: root.pad(root._minute)
+                            reserveText: "00"
+                            font.pixelSize: Style.fontSizeMedium
+                            font.weight: Style.fontWeightBold
+                            color: Style.onPrimary
+                            rotation: -hand.rotation
+                        }
                     }
                 }
 
                 Rectangle {
                     width: Style.clockCenterSize
                     height: Style.clockCenterSize
+                    z: 1
                     radius: width / 2
                     anchors.centerIn: parent
                     color: Style.primary
@@ -496,6 +675,18 @@ FocusScope {
                         readonly property bool selected: root._minuteMode ? (root._minute === value) : (root.is24Hour ? root._hour === value : (root._hour % 12) === (value % 12))
                         readonly property real ringRadius: innerRing ? root.innerRingRadius : root.outerRingRadius
                         readonly property real angle: (step * 30 - 90) * Math.PI / 180
+                        readonly property real knobDistance: 2 * ringRadius * Math.sin(Math.abs(((root.handAngle - step * 30) % 360 + 540) % 360 - 180) * Math.PI / 360)
+                        readonly property bool underKnob: root._minuteMode && !selected && knobDistance < (root.numberSize + label.implicitWidth) / 2
+
+                        z: selected ? 2 : 0
+                        opacity: underKnob ? 0 : 1
+
+                        Behavior on opacity {
+                            DAnim {
+                                duration: Style.expressiveDurations.expressiveEffects
+                                easing.bezierCurve: Style.expressiveCurves.expressiveEffects
+                            }
+                        }
 
                         width: root.numberSize
                         height: root.numberSize
@@ -503,6 +694,7 @@ FocusScope {
                         y: root.faceSize / 2 + ringRadius * Math.sin(angle) - height / 2
 
                         NumericText {
+                            id: label
                             anchors.centerIn: parent
                             text: root._minuteMode || parent.innerRing ? root.pad(parent.value) : parent.value
                             reserveText: "00"
@@ -513,34 +705,82 @@ FocusScope {
                     }
                 }
 
+                Timer {
+                    id: minuteHoldTimer
+                    interval: 250
+                    onTriggered: {
+                        if (!faceArea.pressed || !root._minuteMode)
+                            return;
+                        faceArea.preciseDrag = true;
+                        root.applyPoint(faceArea.lastX, faceArea.lastY, false);
+                    }
+                }
+
                 MouseArea {
                     id: faceArea
+                    property real pressX: 0
+                    property real pressY: 0
+                    property real lastX: 0
+                    property real lastY: 0
+                    property bool preciseDrag: false
+
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onPressed: mouse => {
                         root._dragging = true;
-                        root.applyPoint(mouse.x, mouse.y);
+                        pressX = mouse.x;
+                        pressY = mouse.y;
+                        lastX = mouse.x;
+                        lastY = mouse.y;
+                        preciseDrag = false;
+                        root.applyPoint(mouse.x, mouse.y, true);
+                        if (root._minuteMode)
+                            minuteHoldTimer.restart();
                     }
                     onPositionChanged: mouse => {
                         if (!pressed)
                             return;
-                        root.applyPoint(mouse.x, mouse.y);
+                        lastX = mouse.x;
+                        lastY = mouse.y;
+                        if (root._minuteMode && !preciseDrag && Math.hypot(mouse.x - pressX, mouse.y - pressY) >= Qt.styleHints.startDragDistance) {
+                            preciseDrag = true;
+                            minuteHoldTimer.stop();
+                        }
+                        root.applyPoint(mouse.x, mouse.y, root._minuteMode && !preciseDrag);
                     }
                     onReleased: {
+                        minuteHoldTimer.stop();
+                        preciseDrag = false;
                         root._dragging = false;
                         if (root._minuteMode)
                             return;
                         advanceTimer.restart();
                     }
+                    onCanceled: {
+                        minuteHoldTimer.stop();
+                        preciseDrag = false;
+                        root._dragging = false;
+                    }
                 }
             }
 
-            Row {
+            RowLayout {
                 id: actionRow
-                Layout.alignment: Qt.AlignRight
+                Layout.fillWidth: true
                 Layout.topMargin: Style.spacingXL
                 spacing: Style.spacingS
+
+                DIconButton {
+                    iconName: root._inputMode ? "schedule" : "keyboard"
+                    tooltipText: root._inputMode ? I18n.tr("Switch to clock", "time picker input mode toggle") : I18n.tr("Switch to text input", "time picker input mode toggle")
+                    Accessible.name: tooltipText
+                    onClicked: root.toggleInputMode()
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                }
 
                 DButton {
                     text: I18n.tr("Cancel")
