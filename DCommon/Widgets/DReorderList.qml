@@ -11,22 +11,27 @@ Item {
     readonly property int count: repeater.count
     property real spacing: Style.groupedListGap
     property var flickable: null
+    property int columns: 1
     property var group: null
+    readonly property var activeGroup: columns > 1 ? null : group
     property string groupKey: ""
     property Item dropArea: root
-    property bool externalDrag: group !== null
+    property bool externalDrag: activeGroup !== null
     property bool crossSectionActive: false
     property int gapIndex: -1
     property real gapHeight: Style.listItemTwoLineHeight
     property var order: []
     property int draggingIndex: -1
     property real pressOffset: 0
+    property real pressOffsetX: 0
+    property real pointerX: 0
     property real pointerY: 0
     property int focusIndex: -1
     property var positions: []
     property int delegateRevision: 0
     property bool animateLayout: false
     property int focusReason: Qt.OtherFocusReason
+    readonly property bool mirrored: I18n.isRtl
 
     signal reordered(var indices)
     signal dragStarted(int index, point position)
@@ -55,6 +60,10 @@ Item {
     }
 
     function layout() {
+        if (columns > 1) {
+            layoutGrid();
+            return;
+        }
         let cursor = 0;
         const next = [];
         for (let slot = 0; slot < order.length; slot++) {
@@ -76,6 +85,76 @@ Item {
         implicitHeight = Math.max(0, cursor - spacing);
     }
 
+    function layoutGrid() {
+        const cellWidth = Math.max(0, (width - spacing * (columns - 1)) / columns);
+        const next = [];
+        let top = 0;
+        for (let start = 0; start < order.length; start += columns) {
+            const row = order.slice(start, start + columns);
+            row.forEach(index => {
+                const item = itemAt(index);
+                if (item)
+                    item.width = cellWidth;
+            });
+            const rowHeight = Math.max(0, ...row.map(index => itemAt(index)?.height ?? 0));
+            row.forEach((index, offset) => {
+                const x = (mirrored ? columns - 1 - offset : offset) * (cellWidth + spacing);
+                // The last cell also covers the empty cells after it, so dropping there moves an item to the end.
+                const span = offset === row.length - 1 ? columns - offset : 1;
+                const spanWidth = span * cellWidth + (span - 1) * spacing;
+                next[index] = Qt.rect(mirrored ? x + cellWidth - spanWidth : x, top, spanWidth, rowHeight);
+                const item = itemAt(index);
+                if (!item)
+                    return;
+                if (index !== draggingIndex) {
+                    item.x = x;
+                    item.y = top;
+                }
+            });
+            top += rowHeight + spacing;
+        }
+        positions = next;
+        implicitHeight = Math.max(0, top - spacing);
+    }
+
+    function listTarget(item, from) {
+        let target = from;
+        for (let slot = 0; slot < order.length; slot++) {
+            const index = order[slot];
+            if (slot === from)
+                continue;
+            const other = itemAt(index);
+            if (!other)
+                continue;
+            const middle = positions[index] + other.height / 2;
+            if (slot < from && item.y < middle)
+                target = Math.min(target, slot);
+            if (slot > from && item.y + item.height > middle)
+                target = Math.max(target, slot);
+        }
+        return target;
+    }
+
+    // The current slot is kept while the pointer is in the spacing between cells, so it can't flicker at a boundary.
+    function gridTarget(from) {
+        let target = from;
+        let nearest = Infinity;
+        for (let slot = 0; slot < order.length; slot++) {
+            const index = order[slot];
+            const cell = positions[index];
+            if (!cell)
+                continue;
+            const dx = Math.max(cell.x - pointerX, pointerX - cell.x - cell.width, 0);
+            const dy = Math.max(cell.y - pointerY, pointerY - cell.y - cell.height, 0);
+            const distance = Math.hypot(dx, dy);
+            if (distance < nearest) {
+                nearest = distance;
+                target = slot;
+            }
+        }
+        return nearest === 0 || nearest > spacing ? target : from;
+    }
+
     function insertionIndex(y) {
         for (let slot = 0; slot < order.length; slot++) {
             const index = order[slot];
@@ -94,6 +173,8 @@ Item {
         focusReason = Qt.MouseFocusReason;
         draggingIndex = index;
         pressOffset = position.y - item.y;
+        pressOffsetX = position.x - item.x;
+        pointerX = position.x;
         pointerY = position.y;
         dragStarted(index, position);
     }
@@ -102,28 +183,19 @@ Item {
         const item = itemAt(draggingIndex);
         if (!item)
             return;
+        pointerX = position.x;
         pointerY = position.y;
-        item.y = externalDrag ? position.y - pressOffset : Math.max(0, Math.min(height - item.height, position.y - pressOffset));
+        const clamp = (value, max) => externalDrag ? value : Math.max(0, Math.min(max, value));
+        if (columns > 1)
+            item.x = clamp(position.x - pressOffsetX, width - item.width);
+        item.y = clamp(position.y - pressOffset, height - item.height);
         dragMoved(position);
         if (crossSectionActive)
             return;
         const from = order.indexOf(draggingIndex);
         if (from < 0)
             return;
-        let target = from;
-        for (let slot = 0; slot < order.length; slot++) {
-            const index = order[slot];
-            if (slot === from)
-                continue;
-            const other = itemAt(index);
-            if (!other)
-                continue;
-            const middle = positions[index] + other.height / 2;
-            if (slot < from && item.y < middle)
-                target = Math.min(target, slot);
-            if (slot > from && item.y + item.height > middle)
-                target = Math.max(target, slot);
-        }
+        const target = columns > 1 ? gridTarget(from) : listTarget(item, from);
         if (target === from)
             return;
         const next = order.slice();
@@ -182,18 +254,32 @@ Item {
         focusTimer.restart();
     }
 
-    onDragStarted: (index, position) => group?.begin(root, index, position)
-    onDragMoved: position => group?.move(position)
-    onDragFinished: group?.finish()
-    onDragCanceled: group?.cancel()
+    onDragStarted: (index, position) => activeGroup?.begin(root, index, position)
+    onDragMoved: position => activeGroup?.move(position)
+    onDragFinished: activeGroup?.finish()
+    onDragCanceled: activeGroup?.cancel()
 
-    Component.onCompleted: group?.registerList(root)
+    Component.onCompleted: activeGroup?.registerList(root)
     Component.onDestruction: group?.unregisterList(root)
 
     onModelChanged: reset()
     onCountChanged: reset()
     onOrderChanged: root.layout()
     onWidthChanged: root.layout()
+    onColumnsChanged: {
+        if (columns > 1) {
+            group?.unregisterList(root);
+        } else {
+            group?.registerList(root);
+            for (let i = 0; i < count; i++) {
+                const item = itemAt(i);
+                if (item)
+                    item.x = 0;
+            }
+        }
+        root.layout();
+    }
+    onMirroredChanged: root.layout()
     onSpacingChanged: root.layout()
     onGapIndexChanged: {
         if (gapIndex >= 0)
@@ -268,7 +354,20 @@ Item {
             view.contentY = Math.max(view.originY, Math.min(view.originY + Math.max(0, view.contentHeight - view.height), before + speed * Style.spacingM));
             const delta = view.contentY - before;
             if (delta !== 0)
-                root.dragTo(Qt.point(0, root.pointerY + delta));
+                root.dragTo(Qt.point(root.pointerX, root.pointerY + delta));
+        }
+    }
+
+    Connections {
+        target: root.model && typeof root.model === "object" && !Array.isArray(root.model) ? root.model : null
+        ignoreUnknownSignals: true
+
+        function onRowsMoved() {
+            Qt.callLater(root.reset);
+        }
+
+        function onLayoutChanged() {
+            Qt.callLater(root.reset);
         }
     }
 }

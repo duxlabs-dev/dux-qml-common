@@ -111,7 +111,7 @@ Item {
         id: optional
 
         anchors.right: parent.right
-        anchors.rightMargin: Style.spacingM
+        anchors.rightMargin: FileBrowserMetrics.listRowPadding
         spacing: FileBrowserMetrics.columnGap
 
         Repeater {

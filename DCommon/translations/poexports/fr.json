@@ -1,66 +1,66 @@
 {
   "%1 items": {
-    "%1 items": ""
+    "%1 items": "%1 éléments"
   },
   "%1 of %2": {
-    "%1 of %2": ""
+    "%1 of %2": "%1 sur %2"
   },
   "%1 selected": {
-    "%1 selected": ""
+    "%1 selected": "%1 sélectionnés"
   },
   "%1 × %2": {
-    "%1 × %2": ""
+    "%1 × %2": "%1 × %2"
   },
   "%1, %2": {
-    "%1, %2": ""
+    "%1, %2": "%1, %2"
   },
   "1 item": {
-    "1 item": ""
+    "1 item": "1 élément"
   },
   "1 selected": {
-    "1 selected": ""
+    "1 selected": "1 sélectionné"
   },
   "A file with this name already exists. Do you want to overwrite it?": {
-    "A file with this name already exists. Do you want to overwrite it?": ""
+    "A file with this name already exists. Do you want to overwrite it?": "Un fichier portant ce nom existe déjà. Voulez-vous le remplacer ?"
   },
   "A name cannot be empty or contain a slash": {
-    "A name cannot be empty or contain a slash": ""
+    "A name cannot be empty or contain a slash": "Un nom ne peut pas être vide ni contenir de barre oblique"
   },
   "AM": {
-    "AM": ""
+    "AM": "AM"
   },
   "Actions": {
     "Actions": "Actions"
   },
   "Ascending": {
-    "Ascending": ""
+    "Ascending": "Croissant"
   },
   "B": {
-    "B": ""
+    "B": "o"
   },
   "Back": {
     "Back": "Retour"
   },
   "Backspace": {
-    "Backspace": ""
+    "Backspace": "Retour arrière"
   },
   "Binary file": {
-    "Binary file": ""
+    "Binary file": "Fichier binaire"
   },
   "Broken link": {
-    "Broken link": ""
+    "Broken link": "Lien cassé"
   },
   "Cancel": {
     "Cancel": "Annuler"
   },
   "Choose icon": {
-    "Choose icon": ""
+    "Choose icon": "Choisir une icône"
   },
   "Clear": {
     "Clear": "Effacer"
   },
   "Clear the selection": {
-    "Clear the selection": ""
+    "Clear the selection": "Effacer la sélection"
   },
   "Close": {
     "Close": "Fermer"
@@ -69,130 +69,130 @@
     "Color": "Couleur"
   },
   "Communication": {
-    "Communication": ""
+    "Communication": "Communication"
   },
   "Confirm": {
     "Confirm": "Confirmer"
   },
   "Copy path": {
-    "Copy path": "Copier chemin"
+    "Copy path": "Copier le chemin"
   },
   "Create": {
     "Create": "Créer"
   },
   "Created": {
-    "Created": ""
+    "Created": "Création"
   },
   "Decrease": {
-    "Decrease": ""
+    "Decrease": "Diminuer"
   },
   "Deleted": {
-    "Deleted": ""
+    "Deleted": "Supprimé"
   },
   "Descending": {
-    "Descending": ""
+    "Descending": "Décroissant"
   },
   "Development": {
     "Development": "Développement"
   },
   "Dimensions": {
-    "Dimensions": ""
+    "Dimensions": "Dimensions"
   },
   "Drag to reorder": {
-    "Drag to reorder": ""
+    "Drag to reorder": "Glisser pour réordonner"
   },
   "Edit": {
-    "Edit": ""
+    "Edit": "Modifier"
   },
   "Enter": {
-    "Enter": ""
+    "Enter": "Entrée"
   },
   "Enter filename...": {
-    "Enter filename...": ""
+    "Enter filename...": "Saisissez le nom du fichier…"
   },
   "File": {
     "File": "Fichier"
   },
   "File Already Exists": {
-    "File Already Exists": ""
+    "File Already Exists": "Le fichier existe déjà"
   },
   "File System": {
-    "File System": ""
+    "File System": "Système de fichiers"
   },
   "Files - %1": {
-    "Files - %1": ""
+    "Files - %1": "Fichiers – %1"
   },
   "Files are unavailable because the file service is not running": {
-    "Files are unavailable because the file service is not running": ""
+    "Files are unavailable because the file service is not running": "Les fichiers sont indisponibles car le service de fichiers n’est pas en cours d’exécution"
   },
   "First %1 of %2": {
-    "First %1 of %2": ""
+    "First %1 of %2": "%1 premiers sur %2"
   },
   "Folder": {
     "Folder": "Dossier"
   },
   "Folder name": {
-    "Folder name": ""
+    "Folder name": "Nom du dossier"
   },
   "Forward": {
-    "Forward": ""
+    "Forward": "Suivant"
   },
   "Fun": {
-    "Fun": ""
+    "Fun": "Divertissement"
   },
   "GB": {
-    "GB": ""
+    "GB": "Go"
   },
   "Grid view": {
-    "Grid view": ""
+    "Grid view": "Vue en grille"
   },
   "Hibernate": {
     "Hibernate": "Veille prolongée"
   },
   "Hide keyboard": {
-    "Hide keyboard": ""
+    "Hide keyboard": "Masquer le clavier"
   },
   "Hide password": {
-    "Hide password": ""
+    "Hide password": "Masquer le mot de passe"
   },
   "Hide preview": {
-    "Hide preview": ""
+    "Hide preview": "Masquer l’aperçu"
   },
   "Hold longer to confirm": {
     "Hold longer to confirm": "Maintenez plus longtemps pour confirmer"
   },
   "Hold to confirm (%1 ms)": {
-    "Hold to confirm (%1 ms)": "Maintenir pour confirmer (%1 ms)"
+    "Hold to confirm (%1 ms)": "Maintenir pour confirmer (%1 ms)"
   },
   "Hold to confirm (%1s)": {
-    "Hold to confirm (%1s)": "Maintenir pour confirmer (%1s)"
+    "Hold to confirm (%1s)": "Maintenir pour confirmer (%1 s)"
   },
   "Home": {
-    "Home": ""
+    "Home": "Dossier personnel"
   },
   "Hour": {
-    "Hour": ""
+    "Hour": "Heure"
   },
   "Increase": {
-    "Increase": ""
+    "Increase": "Augmenter"
   },
   "Jump to a folder you visited": {
-    "Jump to a folder you visited": ""
+    "Jump to a folder you visited": "Aller à un dossier déjà visité"
   },
   "Last used": {
-    "Last used": ""
+    "Last used": "Dernière utilisation"
   },
   "List view": {
-    "List view": ""
+    "List view": "Vue en liste"
   },
   "Location": {
     "Location": "Emplacement"
   },
   "Log Out": {
-    "Log Out": "Déconnexion"
+    "Log Out": "Se déconnecter"
   },
   "MB": {
-    "MB": ""
+    "MB": "Mo"
   },
   "Maximize": {
     "Maximize": "Maximiser"
@@ -201,34 +201,34 @@
     "Media": "Média"
   },
   "Minimize": {
-    "Minimize": ""
+    "Minimize": "Réduire"
   },
   "Minute": {
-    "Minute": ""
+    "Minute": "Minute"
   },
   "Modified": {
     "Modified": "Modifié"
   },
   "Move to Trash": {
-    "Move to Trash": ""
+    "Move to Trash": "Mettre à la corbeille"
   },
   "Name": {
     "Name": "Nom"
   },
   "Navigation": {
-    "Navigation": ""
+    "Navigation": "Navigation"
   },
   "New folder": {
-    "New folder": ""
+    "New folder": "Nouveau dossier"
   },
   "No locations found": {
-    "No locations found": ""
+    "No locations found": "Aucun lieu trouvé"
   },
   "Nothing is at this location": {
-    "Nothing is at this location": ""
+    "Nothing is at this location": "Rien à cet emplacement"
   },
   "Numbers": {
-    "Numbers": ""
+    "Numbers": "Nombres"
   },
   "OK": {
     "OK": "OK"
@@ -237,28 +237,28 @@
     "Open": "Ouvrir"
   },
   "Original location": {
-    "Original location": ""
+    "Original location": "Emplacement d’origine"
   },
   "Overwrite": {
-    "Overwrite": ""
+    "Overwrite": "Remplacer"
   },
   "Owner": {
-    "Owner": ""
+    "Owner": "Propriétaire"
   },
   "PM": {
-    "PM": ""
+    "PM": "PM"
   },
   "Permissions": {
-    "Permissions": ""
+    "Permissions": "Permissions"
   },
   "Power Off": {
-    "Power Off": "Arrêter"
+    "Power Off": "Éteindre"
   },
   "Power Options": {
-    "Power Options": ""
+    "Power Options": "Options d’alimentation"
   },
   "Quick Access": {
-    "Quick Access": ""
+    "Quick Access": "Accès rapide"
   },
   "Reboot": {
     "Reboot": "Redémarrer"
@@ -270,40 +270,40 @@
     "Rename": "Renommer"
   },
   "Restore": {
-    "Restore": ""
+    "Restore": "Restaurer"
   },
   "Review changes": {
-    "Review changes": ""
+    "Review changes": "Examiner les modifications"
   },
   "Saturation %1%, brightness %2%": {
-    "Saturation %1%, brightness %2%": ""
+    "Saturation %1%, brightness %2%": "Saturation %1 %, luminosité %2 %"
   },
   "Save": {
     "Save": "Enregistrer"
   },
   "Search for a location...": {
-    "Search for a location...": ""
+    "Search for a location...": "Rechercher un lieu…"
   },
   "Search...": {
-    "Search...": "Rechercher..."
+    "Search...": "Rechercher…"
   },
   "Searching...": {
-    "Searching...": ""
+    "Searching...": "Recherche…"
   },
   "Select File": {
-    "Select File": ""
+    "Select File": "Sélectionner un fichier"
   },
   "Select time": {
-    "Select time": ""
+    "Select time": "Sélectionner l’heure"
   },
   "Shift": {
-    "Shift": ""
+    "Shift": "Maj"
   },
   "Show hidden files": {
-    "Show hidden files": ""
+    "Show hidden files": "Afficher les fichiers cachés"
   },
   "Show password": {
-    "Show password": ""
+    "Show password": "Afficher le mot de passe"
   },
   "Size": {
     "Size": "Taille"
@@ -312,81 +312,81 @@
     "Sort By": "Trier par"
   },
   "Space": {
-    "Space": ""
+    "Space": "Espace"
   },
   "Status": {
-    "Status": "Statut"
+    "Status": "État"
   },
   "Suspend": {
     "Suspend": "Mettre en veille"
   },
   "Switch User": {
-    "Switch User": "Changer d'utilisateur"
+    "Switch User": "Changer d’utilisateur"
   },
   "System": {
     "System": "Système"
   },
   "TB": {
-    "TB": ""
+    "TB": "To"
   },
   "This folder could not be opened": {
-    "This folder could not be opened": ""
+    "This folder could not be opened": "Ce dossier n’a pas pu être ouvert"
   },
   "This folder is empty": {
-    "This folder is empty": ""
+    "This folder is empty": "Ce dossier est vide"
   },
   "This folder no longer exists": {
-    "This folder no longer exists": ""
+    "This folder no longer exists": "Ce dossier n’existe plus"
   },
   "This item already exists": {
-    "This item already exists": ""
+    "This item already exists": "Cet élément existe déjà"
   },
   "This item cannot be moved here directly": {
-    "This item cannot be moved here directly": ""
+    "This item cannot be moved here directly": "Cet élément ne peut pas être déplacé directement ici"
   },
   "This item could not be handled": {
-    "This item could not be handled": ""
+    "This item could not be handled": "Cet élément n’a pas pu être traité"
   },
   "This item is in use": {
-    "This item is in use": ""
+    "This item is in use": "Cet élément est en cours d’utilisation"
   },
   "This item no longer exists": {
-    "This item no longer exists": ""
+    "This item no longer exists": "Cet élément n’existe plus"
   },
   "This kind of location is not supported": {
-    "This kind of location is not supported": ""
+    "This kind of location is not supported": "Ce type d’emplacement n’est pas pris en charge"
   },
   "Today, %1": {
-    "Today, %1": ""
+    "Today, %1": "Aujourd’hui, %1"
   },
   "Type": {
     "Type": "Type"
   },
   "Type a path, ~ or an address such as sftp://host": {
-    "Type a path, ~ or an address such as sftp://host": ""
+    "Type a path, ~ or an address such as sftp://host": "Saisissez un chemin, ~ ou une adresse comme sftp://hôte"
   },
   "Unknown": {
     "Unknown": "Inconnu"
   },
   "Use this folder": {
-    "Use this folder": ""
+    "Use this folder": "Utiliser ce dossier"
   },
   "Use ~ for your own home folder or type the full path": {
-    "Use ~ for your own home folder or type the full path": ""
+    "Use ~ for your own home folder or type the full path": "Utilisez ~ pour votre dossier personnel ou saisissez le chemin complet"
   },
   "Workspace": {
     "Workspace": "Espace de travail"
   },
   "Yesterday, %1": {
-    "Yesterday, %1": ""
+    "Yesterday, %1": "Hier, %1"
   },
   "You do not have permission to do this": {
-    "You do not have permission to do this": ""
+    "You do not have permission to do this": "Vous n’avez pas l’autorisation de faire cela"
   },
   "You do not have permission to view this folder": {
-    "You do not have permission to view this folder": ""
+    "You do not have permission to view this folder": "Vous n’avez pas l’autorisation d’afficher ce dossier"
   },
   "kB": {
-    "kB": ""
+    "kB": "ko"
   }
 }

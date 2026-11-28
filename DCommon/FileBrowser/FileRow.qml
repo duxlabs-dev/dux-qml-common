@@ -90,6 +90,7 @@ FileItemSurface {
             StyledText {
                 required property string modelData
 
+                anchors.verticalCenter: parent.verticalCenter
                 width: row.view.columnWidth(modelData)
                 horizontalAlignment: FileColumns.specFor(modelData)?.align ?? Text.AlignLeft
                 text: FileColumns.value(modelData, row.entry, row.childCount)

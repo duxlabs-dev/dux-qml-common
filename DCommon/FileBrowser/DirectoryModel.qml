@@ -49,6 +49,7 @@ QtObject {
     property var _pageToken: null
     property string _matcherQuery: ""
     property var _matcher: null
+    property int _resumeAt: 0
 
     signal gone
     signal listed
@@ -168,13 +169,25 @@ QtObject {
         listed();
     }
 
-    function _filteredIndexBefore(rawIndex) {
-        let count = 0;
-        for (let i = 0; i < rawIndex && i < _all.length; i++) {
-            if (_passes(_all[i]))
-                count++;
+    function _eachListed(wanted, visit) {
+        const filtering = nameFilter !== "";
+        const count = _all.length;
+        const start = filtering || _resumeAt >= count ? 0 : _resumeAt;
+        let shown = 0;
+        let left = wanted.size;
+        for (let step = 0; step < count && left > 0; step++) {
+            const raw = (start + step) % count;
+            const current = _all[raw];
+            const visible = !filtering || _passes(current);
+            if (wanted.has(current.path)) {
+                const index = filtering ? shown : raw;
+                visit(raw, visible ? index : -1, wanted.get(current.path));
+                left--;
+                _resumeAt = raw + 1;
+            }
+            if (visible)
+                shown++;
         }
-        return count;
     }
 
     function setSort(key, desc) {
@@ -217,9 +230,11 @@ QtObject {
                 paths.push(entry.path);
         }
         _thumbnails.request(paths, watchId, items => {
-            const at = _positions();
-            for (const item of items)
-                _setThumbnail(item.path, item.thumbnail, at);
+            _eachListed(new Map(items.map(item => [item.path, item.thumbnail])), (raw, shown, thumbnail) => {
+                _all[raw].thumbnail = thumbnail;
+                if (shown >= 0)
+                    entries.setProperty(shown, "thumbnail", thumbnail);
+            });
         });
     }
 
@@ -394,92 +409,107 @@ QtObject {
     function _applyBatch(data) {
         if (data.hidden !== undefined)
             hiddenCount = data.hidden;
-        let removed = false;
-        for (const name of data.removed || []) {
-            total = Math.max(0, total - 1);
-            const raw = _rawIndexOfName(name);
-            if (raw < 0)
-                continue;
-            const shown = _passes(_all[raw]);
-            const index = _filteredIndexBefore(raw);
-            _all.splice(raw, 1);
-            if (!shown)
-                continue;
-            entries.remove(index);
-            removed = true;
-        }
-        if (removed)
-            entriesRemoved();
-
+        _removeNamed(data.removed || []);
         _applyChanged(data.changed || []);
+        _insertAt(data.added || [], data.addedAt || []);
+    }
 
-        const added = data.added || [];
-        const at = data.addedAt || [];
-        let inserted = false;
-        for (let i = 0; i < added.length; i++) {
-            total++;
-            const index = at[i] ?? _all.length;
-            if (index > _all.length || (index === _all.length && hasMore))
-                continue;
-            const filteredIndex = _filteredIndexBefore(index);
-            _all.splice(index, 0, added[i]);
-            if (!_passes(added[i]))
-                continue;
-            entries.insert(filteredIndex, added[i]);
-            inserted = true;
+    function _removeNamed(names) {
+        if (names.length === 0)
+            return;
+        total = Math.max(0, total - names.length);
+
+        const gone = new Set(names);
+        const filtering = nameFilter !== "";
+        const kept = [];
+        const dropped = [];
+        let shown = 0;
+        for (const entry of _all) {
+            const visible = !filtering || _passes(entry);
+            if (!gone.has(entry.name))
+                kept.push(entry);
+            else if (visible)
+                dropped.push(shown);
+            if (visible)
+                shown++;
         }
-        if (inserted)
+        if (kept.length === _all.length)
+            return;
+        _all = kept;
+
+        for (let last = dropped.length - 1; last >= 0; ) {
+            let first = last;
+            while (first > 0 && dropped[first - 1] === dropped[first] - 1)
+                first--;
+            entries.remove(dropped[first], last - first + 1);
+            last = first - 1;
+        }
+        if (dropped.length > 0)
+            entriesRemoved();
+    }
+
+    function _insertAt(added, at) {
+        if (added.length === 0)
+            return;
+        total += added.length;
+
+        const filtering = nameFilter !== "";
+        const merged = [];
+        const runs = [];
+        let source = 0;
+        let shown = 0;
+        for (let i = 0; i < added.length; i++) {
+            const length = merged.length + _all.length - source;
+            const index = at[i] ?? length;
+            if (index < merged.length) {
+                repage();
+                return;
+            }
+            if (index > length || (index === length && hasMore))
+                continue;
+            while (merged.length < index) {
+                const existing = _all[source++];
+                merged.push(existing);
+                if (!filtering || _passes(existing))
+                    shown++;
+            }
+            merged.push(added[i]);
+            if (filtering && !_passes(added[i]))
+                continue;
+            const run = runs[runs.length - 1];
+            if (run && run.at + run.items.length === shown)
+                run.items.push(added[i]);
+            else
+                runs.push({
+                    "at": shown,
+                    "items": [added[i]]
+                });
+            shown++;
+        }
+        if (merged.length === 0)
+            return;
+        while (source < _all.length)
+            merged.push(_all[source++]);
+        _all = merged;
+
+        for (const run of runs)
+            entries.insert(run.at, run.items);
+        if (runs.length > 0)
             entriesAdded();
     }
 
     function _applyChanged(changed) {
         if (changed.length === 0)
             return;
-        const at = _positions();
         let awaitsThumbnail = false;
-        for (const entry of changed) {
-            const raw = at.raw.get(entry.path);
-            if (raw === undefined)
-                continue;
+        _eachListed(new Map(changed.map(entry => [entry.path, entry])), (raw, shown, entry) => {
             _all[raw] = entry;
-            const index = at.shown.get(entry.path);
-            if (index !== undefined)
-                entries.set(index, entry);
+            if (shown >= 0)
+                entries.set(shown, entry);
             awaitsThumbnail = awaitsThumbnail || _thumbnails.wanted(entry);
-        }
+        });
         if (awaitsThumbnail)
             _thumbnailRetry.restart();
-    }
-
-    function _rawIndexOfName(name) {
-        return _all.findIndex(entry => entry.name === name);
-    }
-
-    function _positions() {
-        const raw = new Map();
-        const shown = new Map();
-        let visible = 0;
-        for (let i = 0; i < _all.length; i++) {
-            const entry = _all[i];
-            raw.set(entry.path, i);
-            if (_passes(entry))
-                shown.set(entry.path, visible++);
-        }
-        return {
-            "raw": raw,
-            "shown": shown
-        };
-    }
-
-    function _setThumbnail(target, thumbnail, at) {
-        const raw = at.raw.get(target);
-        if (raw === undefined)
-            return;
-        _all[raw].thumbnail = thumbnail;
-        const index = at.shown.get(target);
-        if (index === undefined)
-            return;
-        entries.setProperty(index, "thumbnail", thumbnail);
     }
 
     function _release() {

@@ -226,6 +226,7 @@ Singleton {
     }
 
     property bool shapeMorph: true
+    property bool buttonPressExpand: true
     property bool pillControls: true
 
     function buttonRadius(width, height, sizeHeight, pressed, round) {
@@ -296,6 +297,8 @@ Singleton {
     readonly property real popupEnterScale: 0.92
     readonly property real pendingOpacity: 0.6
     readonly property real spinnerStrokeWidth: 2
+    readonly property real linearProgressThickness: 4
+    readonly property real linearProgressGapSize: 4
     readonly property color circularWavyProgressColor: primary
     readonly property color circularWavyProgressTrackColor: secondaryContainer
     readonly property real circularWavyProgressSize: 48

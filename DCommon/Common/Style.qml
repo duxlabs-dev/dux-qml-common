@@ -236,6 +236,7 @@ Singleton {
     readonly property real cornerRadiusLarge: cornerRadiusL
     readonly property real windowRadius: theme?.windowRadius ?? cornerRadiusL
     readonly property bool shapeMorph: theme?.shapeMorph ?? true
+    readonly property bool buttonPressExpand: theme?.buttonPressExpand ?? true
     readonly property bool pillControls: theme?.pillControls ?? true
 
     // Steps of 4 keep a raster within a few pixels of the size it is drawn at, and bound how often
@@ -352,6 +353,8 @@ Singleton {
     readonly property real popupEnterScale: theme?.popupEnterScale ?? 0.92
     readonly property real pendingOpacity: theme?.pendingOpacity ?? 0.6
     readonly property real spinnerStrokeWidth: theme?.spinnerStrokeWidth ?? 2
+    readonly property real linearProgressThickness: theme?.linearProgressThickness ?? 4
+    readonly property real linearProgressGapSize: theme?.linearProgressGapSize ?? 4
     readonly property color circularWavyProgressColor: theme?.circularWavyProgressColor ?? primary
     readonly property color circularWavyProgressTrackColor: theme?.circularWavyProgressTrackColor ?? secondaryContainer
     readonly property real circularWavyProgressSize: theme?.circularWavyProgressSize ?? 48

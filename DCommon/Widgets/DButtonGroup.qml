@@ -159,7 +159,7 @@ Row {
             values: root.model
         }
 
-        delegate: StyledButton {
+        delegate: DButtonGroupSegment {
             id: segment
 
             focusPolicy: activeFocus || index === root.focusIndex ? Qt.StrongFocus : Qt.ClickFocus
@@ -176,18 +176,22 @@ Row {
             }
 
             Accessible.role: root.multiSelect ? Accessible.CheckBox : root.arrowKeysSelect ? Accessible.RadioButton : Accessible.Button
-            Accessible.name: buttonText.text
-            checkable: true
+            text: typeof modelData === "string" ? modelData : modelData.text || ""
             checked: selected
             property bool selected: multiSelect ? root.currentSelection.includes(modelData) : (index === root.currentIndex)
-            property bool visualFirst: index === 0
-            property bool visualLast: index === repeater.count - 1
-            property bool prevSelected: index > 0 ? root.isSelected(index - 1) : false
-            property bool nextSelected: index < repeater.count - 1 ? root.isSelected(index + 1) : false
-            readonly property real joinRadius: !Style.shapeMorph ? root.innerRadius : (pressed ? root.pressedInnerRadius : (selected ? root.outerRadius : root.innerRadius))
-            readonly property real leftRadius: visualFirst ? root.outerRadius : joinRadius
-            readonly property real rightRadius: visualLast ? root.outerRadius : joinRadius
-            readonly property color contentColor: !root.enabled ? Style.onSurface_38 : (selected ? root.selectedContentColor : root.unselectedContentColor)
+            first: index === 0
+            last: index === repeater.count - 1
+            outerRadius: root.outerRadius
+            innerRadius: root.innerRadius
+            pressedInnerRadius: root.pressedInnerRadius
+            animateShape: root.interactionStarted
+            animateColor: root.userInteracted
+            selectedColor: root.selectedColor
+            selectedContentColor: root.selectedContentColor
+            unselectedColor: root.unselectedColor
+            unselectedContentColor: root.unselectedContentColor
+            focusRingColor: root.focusRingColor
+            tooltipText: (typeof modelData === "object" && modelData.tooltip) ? modelData.tooltip : (buttonText.visible ? "" : buttonText.text)
 
             readonly property bool showsCheck: root.checkEnabled && !root.iconOnly && selected
             readonly property bool hasOptionIcon: typeof modelData === "object" && !!modelData.icon
@@ -234,72 +238,6 @@ Row {
                     duration: Style.expressiveDurations.expressiveFastSpatial
                     easing.bezierCurve: Style.expressiveCurves.expressiveFastSpatial
                 }
-            }
-
-            color: !root.enabled ? Style.onSurface_10 : (selected ? root.selectedColor : root.unselectedColor)
-            border.color: "transparent"
-            border.width: 0
-
-            topLeftRadius: mirrored ? rightRadius : leftRadius
-            bottomLeftRadius: mirrored ? rightRadius : leftRadius
-            topRightRadius: mirrored ? leftRadius : rightRadius
-            bottomRightRadius: mirrored ? leftRadius : rightRadius
-
-            Behavior on topLeftRadius {
-                enabled: root.interactionStarted && !Style.reduceMotion
-                DAnim {
-                    duration: Style.expressiveDurations.expressiveSlowEffects
-                    easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
-                }
-            }
-
-            Behavior on topRightRadius {
-                enabled: root.interactionStarted && !Style.reduceMotion
-                DAnim {
-                    duration: Style.expressiveDurations.expressiveSlowEffects
-                    easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
-                }
-            }
-
-            Behavior on bottomLeftRadius {
-                enabled: root.interactionStarted && !Style.reduceMotion
-                DAnim {
-                    duration: Style.expressiveDurations.expressiveSlowEffects
-                    easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
-                }
-            }
-
-            Behavior on bottomRightRadius {
-                enabled: root.interactionStarted && !Style.reduceMotion
-                DAnim {
-                    duration: Style.expressiveDurations.expressiveSlowEffects
-                    easing.bezierCurve: Style.expressiveCurves.expressiveSlowEffects
-                }
-            }
-
-            Behavior on color {
-                enabled: root.userInteracted && !Style.reduceMotion
-                DColorAnim {
-                    duration: Style.expressiveDurations.expressiveEffects
-                    easing.bezierCurve: Style.expressiveCurves.expressiveEffects
-                }
-            }
-
-            StateLayer {
-                id: stateLayer
-                control: segment
-                enabled: root.enabled
-                disabled: !root.enabled
-                stateColor: segment.contentColor
-                transitionDuration: Style.expressiveDurations.expressiveEffects
-                transitionCurve: Style.expressiveCurves.expressiveEffects
-                tooltipText: (typeof modelData === "object" && modelData.tooltip) ? modelData.tooltip : (buttonText.visible ? "" : buttonText.text)
-            }
-
-            FocusRing {
-                radius: Math.min(Style.fullRadius(width, height), root.outerRadius + Style.focusRingOffset)
-                visible: segment.visualFocus
-                border.color: root.focusRingColor
             }
 
             Item {
@@ -363,7 +301,7 @@ Row {
                             return Math.max(0, cap - root.buttonPadding * 2 - (segment.showsCheck ? checkIcon.width + contentRow.spacing : 0) - (segment.hasOptionIcon ? optionIcon.width + contentRow.spacing : 0));
                         }
 
-                        text: typeof modelData === "string" ? modelData : modelData.text || ""
+                        text: segment.text
                         font.pixelSize: root.textSize
                         font.weight: Style.fontWeightMedium
                         color: segment.revealsLabel ? Style.withAlpha(segment.contentColor, segment.contentColor.a * segment.labelReveal) : segment.contentColor

@@ -35,7 +35,7 @@ Item {
             dots.push(dotColorsFor ? (dotColorsFor(dateAt(i)) ?? []) : []);
         return dots;
     }
-    readonly property bool hasDots: dayDots.some(colors => colors.length > 0)
+    readonly property bool reservesDotRow: !!dotColorsFor
     readonly property bool floatingWindow: Style.isFloatingWindow(root)
     readonly property int firstFocusIndex: {
         for (let i = 0; i < columns * rows; i++) {
@@ -195,7 +195,7 @@ Item {
 
             StyledText {
                 anchors.top: parent.top
-                anchors.topMargin: root.hasDots ? Style.spacingXS : (parent.height - height) / 2
+                anchors.topMargin: root.reservesDotRow ? Style.spacingXS : (parent.height - height) / 2
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: cell.dayDate.getDate()
                 font.pixelSize: Style.fontSizeMedium
