@@ -202,7 +202,7 @@ Row {
             // Reading Text.implicitWidth lays the label out on the spot and notifies mid-binding, so the exported width measures it instead
             readonly property real naturalWidth: Math.max(iconsNaturalWidth + (showsLabel ? Math.ceil(labelMetrics.advanceWidth) : 0) + root.buttonPadding * 2, root.minButtonWidth)
 
-            readonly property real widthShare: selected ? root.selectedWidthShare : (pressed ? root.pressedWidthShare : 1)
+            readonly property real widthShare: selected ? root.selectedWidthShare : (pressed && Style.shapeMorph && Style.buttonPressExpand ? root.pressedWidthShare : 1)
             readonly property bool revealsLabel: root.labelOnlySelected && hasOptionIcon
             property real labelReveal: showsLabel ? 1 : 0
 
