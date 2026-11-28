@@ -357,4 +357,17 @@ Item {
                 root.dragTo(Qt.point(root.pointerX, root.pointerY + delta));
         }
     }
+
+    Connections {
+        target: root.model && typeof root.model === "object" && !Array.isArray(root.model) ? root.model : null
+        ignoreUnknownSignals: true
+
+        function onRowsMoved() {
+            Qt.callLater(root.reset);
+        }
+
+        function onLayoutChanged() {
+            Qt.callLater(root.reset);
+        }
+    }
 }
