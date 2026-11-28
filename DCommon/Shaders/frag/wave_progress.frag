@@ -24,6 +24,17 @@ layout(std140, binding = 0) uniform buf {
     float handleHeightPx;
     vec4 handleColor;
     float handleGapPx;
+    float limit;
+    float pastHatch;
+    float dimOpacity;
+    vec4 hatchColor;
+    float hatchPeriodPx;
+    float trackGapPx;
+    float roundEnds;
+    float showPlayhead;
+    float showStopDot;
+    vec4 stopDotColor;
+    float mirrored;
 } ubuf;
 
 const float TAU = 6.28318530718;
@@ -40,10 +51,21 @@ vec4 blendOver(vec4 dst, vec3 rgb, float a) {
     return vec4(rgb * a + dst.rgb * (1.0 - a), a + dst.a * (1.0 - a));
 }
 
+// Straight band on the midline from x0 to x1, with round ends whose centers sit at x0 and x1 when rounded.
+float band(vec2 px, float x0, float x1, float mid, float halfW, bool rounded) {
+    if (x1 < x0)
+        return 0.0;
+    float x = rounded ? clamp(px.x, x0, x1) : px.x;
+    float m = 1.0 - smoothstep(-AA, AA, length(px - vec2(x, mid)) - halfW);
+    return rounded ? m : m * step(x0, px.x) * step(px.x, x1);
+}
+
 void main() {
     float w = ubuf.widthPx;
     float h = ubuf.heightPx;
     vec2 px = vec2(qt_TexCoord0.x * w, qt_TexCoord0.y * h);
+    if (ubuf.mirrored > 0.5)
+        px.x = w - px.x;
 
     float mid = h * 0.5;
     float halfW = ubuf.lineWidthPx * 0.5;
@@ -60,11 +82,22 @@ void main() {
 
     float loX = min(playX, actualX);
     float hiX = max(playX, actualX);
-    float fillEnd = seeking ? loX : playX;   // filled progress ends here
+    bool roundEnds = ubuf.roundEnds > 0.5;
+    bool rounded = roundHandle || roundEnds;
+    bool limited = ubuf.limit < 1.0;
+    float gap = ubuf.trackGapPx;
+    float limitX = ubuf.limit * w;
+    float trackEdge = limited ? limitX - gap : w;  // outer edge of the track, ends included
+
+    float fillEnd = min(seeking ? loX : playX, trackEdge); // filled progress ends here
     float actStart = seeking ? loX : playX;  // seek-preview segment
     float actEnd = seeking ? hiX : playX;
-    float trackStart = seeking ? hiX : (roundHandle ? playX + handleHalfW + ubuf.handleGapPx : playX); // unplayed remainder
-    float trackEnd = roundHandle ? w - halfW : w;
+    float trackStart = (seeking ? hiX : (roundHandle ? playX + handleHalfW + ubuf.handleGapPx : playX)) + gap; // unplayed remainder
+    float trackEnd = rounded ? trackEdge - halfW : trackEdge;
+    // Round ends: the fill is at least a dot and its end cap center sits half a stroke inside fillEnd.
+    float fillCap = clamp(fillEnd, 2.0 * halfW, max(2.0 * halfW, trackEdge)) - halfW;
+    if (roundEnds && !seeking && !roundHandle)
+        trackStart = fillCap + 2.0 * halfW + gap;
 
     // Perpendicular distance to the animated sine stroke.
     float ang = k * px.x + ubuf.phase;
@@ -84,7 +117,7 @@ void main() {
     // 1. Track (unplayed remainder), to the right of the progress head.
     {
         float m = lineStroke * step(trackStart, px.x) * step(px.x, trackEnd);
-        if (roundHandle) {
+        if (rounded) {
             // Rounded ends, each leaving the line along its own direction.
             float capD = length(px - vec2(trackStart, mid)) - halfW;
             float startCap = (1.0 - smoothstep(-aaL, aaL, capD)) * step(px.x, trackStart);
@@ -93,6 +126,21 @@ void main() {
             m = max(m, max(startCap, endCap) * step(trackStart, trackEnd));
         }
         col = blendOver(col, ubuf.trackColor.rgb, ubuf.trackColor.a * m);
+    }
+
+    // Past the limit: the track color dimmed, or diagonal stripes.
+    if (limited) {
+        float x0 = limitX + gap;
+        float m = rounded ? band(px, x0 + halfW, w - halfW, mid, halfW, true) : band(px, x0, w, mid, halfW, false);
+        if (ubuf.pastHatch > 0.5) {
+            float period = max(ubuf.hatchPeriodPx, 1.0);
+            float u = (px.x + px.y) / period - 0.25;
+            float dist = abs(u - floor(u + 0.5)) * period * 0.70710678;
+            m *= 1.0 - smoothstep(0.25 * period * 0.70710678 - AA, 0.25 * period * 0.70710678 + AA, dist);
+            col = blendOver(col, ubuf.hatchColor.rgb, ubuf.hatchColor.a * m);
+        } else {
+            col = blendOver(col, ubuf.trackColor.rgb, ubuf.trackColor.a * ubuf.dimOpacity * m);
+        }
     }
 
     // 2. Seek-preview segment (only while seeking).
@@ -109,9 +157,20 @@ void main() {
         vec2 capCenter = vec2(halfW, mid + ubuf.ampPx * sin(capPhase));
         vec2 tangent = normalize(vec2(1.0, ubuf.ampPx * k * cos(capPhase)));
         float side = dot(px - capCenter, tangent);
-        float m = waveStroke * step(0.0, side) * step(px.x, fillEnd);
+        float m = waveStroke * step(0.0, side);
         float capD = length(px - capCenter) - halfW;
         float capM = (1.0 - smoothstep(-aaW, aaW, capD)) * step(side, 0.0);
+        if (roundEnds) {
+            float endPhase = k * fillCap + ubuf.phase;
+            vec2 endCenter = vec2(fillCap, mid + ubuf.ampPx * sin(endPhase));
+            vec2 endTangent = normalize(vec2(1.0, ubuf.ampPx * k * cos(endPhase)));
+            float endSide = dot(px - endCenter, endTangent);
+            m *= step(endSide, 0.0);
+            float endD = length(px - endCenter) - halfW;
+            capM = max(capM, (1.0 - smoothstep(-aaW, aaW, endD)) * step(0.0, endSide));
+        } else {
+            m *= step(px.x, fillEnd);
+        }
         m = max(m, capM);
         col = blendOver(col, ubuf.fillColor.rgb, ubuf.fillColor.a * m);
     }
@@ -125,6 +184,12 @@ void main() {
         col = blendOver(col, ubuf.actualColor.rgb, ubuf.actualColor.a * m);
     }
 
+    if (ubuf.showStopDot > 0.5 && (limited || trackStart <= trackEnd)) {
+        float dotX = trackEdge - halfW;
+        float m = 1.0 - smoothstep(-AA, AA, length(px - vec2(dotX, mid)) - halfW * 0.5);
+        col = blendOver(col, ubuf.stopDotColor.rgb, ubuf.stopDotColor.a * m);
+    }
+
     // 5. Playhead pill, or the round handle that stretches into a pill while seeking.
     if (roundHandle) {
         // A capsule, so the ends stay round whatever the handle's proportions are.
@@ -136,7 +201,7 @@ void main() {
         float aa = AA;
         float m = 1.0 - smoothstep(-aa, aa, d);
         col = blendOver(col, ubuf.handleColor.rgb, ubuf.handleColor.a * m);
-    } else {
+    } else if (ubuf.showPlayhead > 0.5) {
         float phW = 3.5;
         float phH = max(ubuf.lineWidthPx + 12.0, 16.0);
         float d = sdRoundBar(px - vec2(playX, mid), vec2(phW * 0.5, phH * 0.5), phW * 0.5);
